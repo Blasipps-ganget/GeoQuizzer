@@ -20,11 +20,12 @@ GeoQuizzer offers a range of features to make your geography quiz experience enj
 
 Getting started with GeoQuizzer is a breeze:
 
-1. **Download**: git clone https://github.com/Blasipps-ganget/GeoQuizzer.git
+1. **Download**: ```git clone https://github.com/Blasipps-ganget/GeoQuizzer.git```
+2. **Download**: ```cd GeoQuizzer```
 
-2. **Install**: ``` npm run build```
+3. **Install**: ``` npm install```
 
-3. **Start Server**: ``` npm start```
+4. **Start Server & Backend**: ``` npm start```
 
 ## How to Play
 
