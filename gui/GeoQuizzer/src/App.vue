@@ -6,7 +6,7 @@ import { RouterLink, RouterView } from 'vue-router'
 <template>
   <div><RouterLink to="/">Home</RouterLink></div>
   <div><RouterLink to="/register">Register</RouterLink></div>
-  <div><RouterLink to="/map">map</RouterLink></div>
+  <div><RouterLink to="/map">Map</RouterLink></div>
   <!--  WHEN ADDING A NEW LINK ADD HERE AND IN ROUTER -->
 
 
