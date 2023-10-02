@@ -7,8 +7,7 @@ const emit = defineEmits(['countryClicked']);
 const nameToIdMap = ref(new Map());
 const dataMap = ref(new Map());
 
-
-onMounted(() => {
+onMounted(async () => {
   const svg = d3.select("#my_dataviz");
   const width = +svg.attr("width");
   const height = +svg.attr("height");
@@ -24,29 +23,23 @@ onMounted(() => {
 
   const jsonUrl = "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson";
   const csvUrl = "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv";
+  const [geoData] = await Promise.all([d3.json(jsonUrl), d3.csv(csvUrl, d => dataMap.value.set(d.code, d.pop))]);
 
-  Promise.all([d3.json(jsonUrl),d3.csv(csvUrl, d => dataMap.value.set(d.code, d.pop))])
-      .then(([geoData]) => {
-    geoData.features.forEach(feature => nameToIdMap.value.set(feature.properties.name, feature.id));
-    appendCountryPaths(geoData);
-  });
+  geoData.features.forEach(feature => nameToIdMap.value.set(feature.properties.name, feature.id));
+  appendCountryPaths(geoData);
+  watch([props.scale, props.centerX, props.centerY, props.failedGuesses, props.succeededGuesses, props.includedCountries], updateMap);
 
-  watch(
-      [
-        () => props.scale,
-        () => props.centerX,
-        () => props.centerY,
-        () => props.failedGuesses,
-        () => props.succeededGuesses,
-        () => props.includedCountries
-      ],
-      () => {
-        projection.scale(props.scale).center([props.centerX, props.centerY]);
-        svg.selectAll("path.Country").attr("d", d3.geoPath().projection(projection));
-        svg.selectAll("path.Country").attr("fill", d => getCountryColor(d));
-      }
-  );
+  function updateMap(){
+    projection
+        .scale(props.scale)
+        .center([props.centerX, props.centerY])
 
+
+    svg.selectAll("path.Country")
+        .attr("d", d3.geoPath().projection(projection))
+        .attr("fill", d => getCountryColor(d))
+
+  }
 
   function appendCountryPaths(geoData) {
     svg.append("g")
@@ -62,9 +55,8 @@ onMounted(() => {
         .on("mouseover", mouseOver)
         .on("mouseleave", mouseLeave)
         .on("click", mouseClick);
+
   }
-
-
 
   function getCountryColor(d) {
     let failedGuessesIds = props.failedGuesses.map(name => nameToIdMap.value.get(name));
@@ -73,7 +65,7 @@ onMounted(() => {
 
     if (failedGuessesIds.includes(d.id)) return "red";
     if (succeededGuessesIds.includes(d.id)) return "green";
-    if (includedCountriesIds.includes(d.id)) return "darkgrey";
+    if (!includedCountriesIds.includes(d.id)) return "lightgrey";
     return colorScale(dataMap.value.get(d.id) || 0);
   }
 
@@ -90,10 +82,12 @@ onMounted(() => {
     d3.selectAll(".Country")
         .transition().duration(200)
         .style("opacity", .8);
+
     d3.select(this)
         .transition()
         .duration(200)
         .style("stroke", "transparent");
+
   }
 
   function mouseClick() {
@@ -106,10 +100,6 @@ onMounted(() => {
     emit("countryClicked", name);
   }
 
-
-
-
-
 });
 
 </script>
@@ -120,10 +110,6 @@ onMounted(() => {
   </div>
 </template>
 
-
 <style scoped>
-#my_dataviz {
-  background-color: white;
-}
-
+#my_dataviz {background-color: white;}
 </style>

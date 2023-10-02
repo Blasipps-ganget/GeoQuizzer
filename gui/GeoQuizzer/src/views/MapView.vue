@@ -1,12 +1,12 @@
 <script setup>
 
 import { ref } from 'vue';
-import ClickebleMap from "@/components/ClickebleMap.vue";
+import ClickableMap from "@/components/ClickableMap.vue";
 
 const failedGuesses = ref([]);
 const succeededGuesses = ref([]);
 const includedCountries = ref(["Sweden", "Finland", "Iceland","Norway","Denmark"]);
-const scale = ref(600);
+const scale = ref(300);
 const centerX = ref(0);
 const centerY = ref(65);
 // below is entire world zoomed out and centered
@@ -16,7 +16,6 @@ const centerY = ref(65);
 const question = ref(includedCountries.value[Math.floor(Math.random() * includedCountries.value.length)]);
 
 function handleCountryClick(answer) {
-  scale.value = 300;
 
   alert(`You clicked ${answer}!`);
 
@@ -41,7 +40,7 @@ function handleCountryClick(answer) {
     <div>failedGuesses: {{failedGuesses}}</div>
     <div>succeededGuesses: {{succeededGuesses}}</div>
     <div>includedCountries: {{includedCountries}}</div>
-    <ClickebleMap
+    <ClickableMap
         :failedGuesses="failedGuesses"
         :succeededGuesses="succeededGuesses"
         :includedCountries="includedCountries"
