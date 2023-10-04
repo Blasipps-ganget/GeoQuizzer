@@ -4,10 +4,13 @@
   "description": "Welcome to GeoQuizzer, the best quiz app for geography enthusiasts! Whether you're a geography buff looking to test your knowledge or a student studying for a geography exam, GeoQuizzer has got you covered. This README file will provide you with all the information you need to get started with GeoQuizzer and make the most of its features.",
   "main": "index.js",
   "scripts": {
-    "start": "node backend/app.js && cd gui/GeoQuizzer && npm run dev",
+    "start": "concurrently \"node backend/app.js\" \"cd gui/GeoQuizzer && npm run dev\"",
     "install": "cd backend && npm install && cd ../gui/GeoQuizzer && npm install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.1"
+  }
 }
