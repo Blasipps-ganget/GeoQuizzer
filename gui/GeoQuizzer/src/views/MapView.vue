@@ -6,13 +6,13 @@ import ClickableMap from "@/components/ClickableMap.vue";
 const failedGuesses = ref([]);
 const succeededGuesses = ref([]);
 const includedCountries = ref(["Sweden", "Finland", "Iceland","Norway","Denmark"]);
-const scale = ref(300);
-const centerX = ref(0);
-const centerY = ref(65);
-// below is entire world zoomed out and centered
-// const scale = ref(140);
+// const scale = ref(300);
 // const centerX = ref(0);
-// const centerY = ref(20);
+// const centerY = ref(65);
+// below is entire world zoomed out and centered
+const scale = ref(140);
+const centerX = ref(0);
+const centerY = ref(20);
 const question = ref(includedCountries.value[Math.floor(Math.random() * includedCountries.value.length)]);
 
 function handleCountryClick(answer) {
