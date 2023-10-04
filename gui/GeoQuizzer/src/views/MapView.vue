@@ -43,7 +43,6 @@ function handleCountryClick(answer) {
     <ClickableMap
         :failedGuesses="failedGuesses"
         :succeededGuesses="succeededGuesses"
-        :includedCountries="includedCountries"
         :scale="scale"
         :centerX="centerX"
         :centerY="centerY"
