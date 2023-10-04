@@ -32,10 +32,6 @@ onMounted(async () => {
   // const oceania = await d3.json("http://localhost:8080/countries/oceania");
   populateRegionMocks();
 
-
-
-
-
   geoData.features.forEach(feature => nameToIdMap.value.set(feature.properties.name, feature.id));
   appendCountryPaths(geoData);
   watch([props.scale, props.centerX, props.centerY, props.failedGuesses, props.succeededGuesses], updateMap);
@@ -90,12 +86,15 @@ onMounted(async () => {
 
   }
 
+  /**
+   * @returns {string[]|null}
+   */
   function findRegionForCountry(countryName) {
-    if (europe.includes(countryName)) return 'europe';
-    if (asia.includes(countryName)) return 'asia';
-    if (america.includes(countryName)) return 'america';
-    if (oceania.includes(countryName)) return 'oceania';
-    if (africa.includes(countryName)) return 'africa';
+    if (europe.includes(countryName)) return europe;
+    if (asia.includes(countryName)) return asia;
+    if (america.includes(countryName)) return america;
+    if (oceania.includes(countryName)) return oceania;
+    if (africa.includes(countryName)) return africa;
     return null;
   }
 
@@ -103,25 +102,15 @@ onMounted(async () => {
     const hoveredCountryName = d3.select(this).datum().properties.name;
     const region = findRegionForCountry(hoveredCountryName);
 
-    const regionMap = {
-      'europe': europe,
-      'asia': asia,
-      'america': america,
-      'oceania': oceania,
-      'africa': africa
-    };
-
-    const regionArray = regionMap[region];
-
-    if (regionArray) {
+    if (region) {
       d3.selectAll(".Country")
-          .filter(d => regionArray.includes(d.properties.name))
+          .filter(d => region.includes(d.properties.name))
           .transition()
           .duration(200)
           .style("opacity", 1);
 
       d3.selectAll(".Country")
-          .filter(d => !regionArray.includes(d.properties.name))
+          .filter(d => !region.includes(d.properties.name))
           .transition()
           .duration(200)
           .style("opacity", .5);
