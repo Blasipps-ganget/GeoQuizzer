@@ -23,6 +23,9 @@ onMounted(async () => {
       .center([props.centerX, props.centerY])
       .translate([width / 2, height / 2]);
 
+  const zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoomed);
+  // svg.call(zoom); // delete this line to disable free zooming
+
   const geoData = await d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson");
 
   // const europe = await d3.json("http://localhost:8080/countries/europe");
@@ -99,8 +102,6 @@ onMounted(async () => {
   }
 
   function mouseOverRegions() {
-    mouseover.value = d3.select(this).datum().properties.name;
-
     const hoveredCountryName = d3.select(this).datum().properties.name;
     const region = findRegionForCountry(hoveredCountryName);
     const regionMap = {
@@ -115,26 +116,17 @@ onMounted(async () => {
 
     if(!regionArray) return;
 
-    if (regionArray) {
-      d3.selectAll(".Country")
-          .filter(d => regionArray.includes(d.properties.name))
-          .transition()
-          .duration(200)
-          .style("opacity", 1);
+    d3.selectAll(".Country")
+        .filter(d => regionArray.includes(d.properties.name))
+        .transition()
+        .duration(200)
+        .style("opacity", 1);
 
-      d3.selectAll(".Country")
-          .filter(d => !regionArray.includes(d.properties.name))
-          .transition()
-          .duration(200)
-          .style("opacity", .7);
-    } else {
-      d3.selectAll(".Country").transition()
-          .duration(200)
-          .style("opacity", .7);
-      d3.select(this).transition()
-          .duration(200)
-          .style("opacity", 1);
-    }
+    d3.selectAll(".Country")
+        .filter(d => !regionArray.includes(d.properties.name))
+        .transition()
+        .duration(200)
+        .style("opacity", .7);
   }
 
   function mouseLeave() {
@@ -147,6 +139,17 @@ onMounted(async () => {
   }
 
   function mouseClick() {
+
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const scale = 2;
+    const translateX = centerX - scale * centerX;
+    const translateY = centerY - scale * centerY;
+
+    svg.transition()
+        .duration(3000)
+        .call(zoom.transform, d3.zoomIdentity.translate(translateX, translateY).scale(scale));
+
     d3.select(this)
         .transition()
         .duration(200)
@@ -155,6 +158,13 @@ onMounted(async () => {
 
     props.selectingRegions ? emit("regionClicked", findRegionForCountry(name)) : emit("countryClicked", name);
   }
+
+
+  function zoomed(event) {
+    svg.selectAll("path")
+        .attr("transform", event.transform);
+  }
+
 
 
   function populateRegionMocks() {
