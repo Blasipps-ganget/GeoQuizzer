@@ -2,19 +2,16 @@
 import { ref, onMounted, defineProps, defineEmits, watch } from 'vue';
 import * as d3 from 'd3';
 
-const props = defineProps(["failedGuesses","succeededGuesses","scale","centerX","centerY"]);
+const props = defineProps(["failedGuesses","succeededGuesses","scale","centerX","centerY", "selectingRegions"]);
 const emit = defineEmits(['countryClicked']);
 const nameToIdMap = ref(new Map());
-const selectingRegions = ref(true);
 const mouseover = ref("mouseover");
-const mouseover2 = ref("mouseover2");
 
 let europe;
 let america;
 let asia;
 let africa;
 let oceania;
-
 
 onMounted(async () => {
   const svg = d3.select("#my_dataviz");
@@ -37,7 +34,7 @@ onMounted(async () => {
 
   geoData.features.forEach(feature => nameToIdMap.value.set(feature.properties.name, feature.id));
   appendCountryPaths(geoData);
-  watch([props.scale, props.centerX, props.centerY, props.failedGuesses, props.succeededGuesses], updateMap);
+  watch([props.scale, props.centerX, props.centerY, props.failedGuesses, props.succeededGuesses, props.selectingRegions], updateMap);
 
   function updateMap(){
     projection
@@ -75,20 +72,20 @@ onMounted(async () => {
   }
 
   function mouseOver() {
-    selectingRegions.value ? mouseOverRegions.call(this) : mouseOverCountry.call(this);
+    props.selectingRegions ? mouseOverRegions.call(this) : mouseOverCountry.call(this);
   }
+
 
   function mouseOverCountry() {
 
     d3.selectAll(".Country").transition()
         .duration(200)
-        .style("opacity", .5);
+        .style("opacity", .7);
     d3.select(this).transition()
         .duration(200)
         .style("opacity", 1);
 
     mouseover.value = d3.select(this).datum().properties.name;
-
   }
 
 
