@@ -89,32 +89,41 @@ onMounted(async () => {
   }
 
 
-  /**@returns {string[]|null}*/
   function findRegionForCountry(countryName) {
-    if (europe.includes(countryName)) return europe;
-    if (asia.includes(countryName)) return asia;
-    if (america.includes(countryName)) return america;
-    if (oceania.includes(countryName)) return oceania;
-    if (africa.includes(countryName)) return africa;
+    if (europe.includes(countryName)) return "europe";
+    if (asia.includes(countryName)) return "asia";
+    if (america.includes(countryName)) return "america";
+    if (oceania.includes(countryName)) return "oceania";
+    if (africa.includes(countryName)) return "africa";
     return null;
   }
 
   function mouseOverRegions() {
     mouseover.value = d3.select(this).datum().properties.name;
+
     const hoveredCountryName = d3.select(this).datum().properties.name;
     const region = findRegionForCountry(hoveredCountryName);
+    const regionMap = {
+      "europe": europe,
+      "asia": asia,
+      "america": america,
+      "oceania": oceania,
+      "africa": africa
+    };
 
-    if(!region) return;
+    const regionArray = regionMap[region];
 
-    if (region) {
+    if(!regionArray) return;
+
+    if (regionArray) {
       d3.selectAll(".Country")
-          .filter(d => region.includes(d.properties.name))
+          .filter(d => regionArray.includes(d.properties.name))
           .transition()
           .duration(200)
           .style("opacity", 1);
 
       d3.selectAll(".Country")
-          .filter(d => !region.includes(d.properties.name))
+          .filter(d => !regionArray.includes(d.properties.name))
           .transition()
           .duration(200)
           .style("opacity", .7);
@@ -143,7 +152,8 @@ onMounted(async () => {
         .duration(200)
         .style("stroke", "black");
     let name = d3.select(this).datum().properties.name;
-    emit("countryClicked", name);
+
+    props.selectingRegions ? emit("regionClicked", findRegionForCountry(name)) : emit("countryClicked", name);
   }
 
 

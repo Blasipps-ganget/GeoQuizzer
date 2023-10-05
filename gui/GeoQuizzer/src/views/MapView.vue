@@ -16,8 +16,7 @@ function handleCountryClick(answer) {
 
   alert(`You clicked ${answer}!`);
 
-  if (!question.value)
-    return;
+  if (!question.value) return;
 
   if (answer === question.value)
     succeededGuesses.value.push(question.value);
@@ -26,9 +25,13 @@ function handleCountryClick(answer) {
 
   includedCountries.value = includedCountries.value.filter(country => country !== question.value);
   question.value = includedCountries.value[Math.floor(Math.random() * includedCountries.value.length)];
+}
+
+function handleRegionClick(region) {
+
+  if(!region) return;
+  alert(`You clicked ${region}!`);
   selectingRegions.value = false;
-
-
 }
 
 </script>
@@ -47,6 +50,8 @@ function handleCountryClick(answer) {
         :centerY="centerY"
         :selectingRegions="selectingRegions"
         @countryClicked="handleCountryClick"
+        @regionClicked="handleRegionClick"
+
     />
   </div>
 </template>
