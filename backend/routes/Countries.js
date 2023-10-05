@@ -11,6 +11,7 @@ router.get("/europe",async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 })
+
 const fetchEuropeanCountries = async () => {
     try {
         const response = await fetch('https://restcountries.com/v3.1/region/europe?fields=name');
