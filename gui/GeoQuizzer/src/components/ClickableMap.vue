@@ -6,6 +6,9 @@ const props = defineProps(["failedGuesses","succeededGuesses","scale","centerX",
 const emit = defineEmits(['countryClicked']);
 const nameToIdMap = ref(new Map());
 const selectingRegions = ref(true);
+const mouseover = ref("mouseover");
+const mouseover2 = ref("mouseover2");
+
 let europe;
 let america;
 let asia;
@@ -84,11 +87,12 @@ onMounted(async () => {
         .duration(200)
         .style("opacity", 1);
 
+    mouseover.value = d3.select(this).datum().properties.name;
+
   }
 
-  /**
-   * @returns {string[]|null}
-   */
+
+  /**@returns {string[]|null}*/
   function findRegionForCountry(countryName) {
     if (europe.includes(countryName)) return europe;
     if (asia.includes(countryName)) return asia;
@@ -99,8 +103,11 @@ onMounted(async () => {
   }
 
   function mouseOverRegions() {
+    mouseover.value = d3.select(this).datum().properties.name;
     const hoveredCountryName = d3.select(this).datum().properties.name;
     const region = findRegionForCountry(hoveredCountryName);
+
+    if(!region) return;
 
     if (region) {
       d3.selectAll(".Country")
@@ -113,52 +120,48 @@ onMounted(async () => {
           .filter(d => !region.includes(d.properties.name))
           .transition()
           .duration(200)
-          .style("opacity", .5);
+          .style("opacity", .7);
     } else {
       d3.selectAll(".Country").transition()
           .duration(200)
-          .style("opacity", .5);
+          .style("opacity", .7);
       d3.select(this).transition()
           .duration(200)
           .style("opacity", 1);
     }
   }
 
-
-
   function mouseLeave() {
     d3.selectAll(".Country")
-        .transition().duration(200)
-
-    d3.select(this)
         .transition()
         .duration(200)
-        .style("stroke", "transparent");
+        .style("opacity", .7)
+        .style("stroke", "black");
+
   }
 
   function mouseClick() {
     d3.select(this)
         .transition()
         .duration(200)
-        .style("stroke", "transparent")
         .style("stroke", "black");
     let name = d3.select(this).datum().properties.name;
     emit("countryClicked", name);
-
   }
+
 
   function populateRegionMocks() {
     europe = [
-      "Albania", "Andorra", "Armenia", "Austria", "Azerbaijan",
+      "Albania", "Andorra", "Austria",
       "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria",
       "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "England",
-      "Finland", "France", "Georgia", "Germany", "Greece",
-      "Hungary", "Iceland", "Ireland", "Italy", "Kazakhstan",
+      "Finland", "France", "Germany", "Greece",
+      "Hungary", "Iceland", "Ireland", "Italy",
       "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg",
       "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands",
       "North Macedonia", "Norway", "Poland", "Portugal", "Romania",
-      "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia",
-      "Spain", "Sweden", "Switzerland", "Turkey", "Ukraine",
+      "San Marino", "Republic of Serbia", "Slovakia", "Slovenia",
+      "Spain", "Sweden", "Switzerland", "Ukraine",
       "United Kingdom", "Vatican City"
     ];
     asia = [
@@ -181,7 +184,7 @@ onMounted(async () => {
       "El Salvador", "Grenada", "Guatemala", "Guyana", "Haiti",
       "Honduras", "Jamaica", "Mexico", "Nicaragua", "Panama",
       "Paraguay", "Peru", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines",
-      "Suriname", "Trinidad and Tobago", "United States", "Uruguay", "Venezuela"
+      "Suriname", "Trinidad and Tobago", "USA", "Uruguay", "Venezuela", "Greenland"
     ];
 
     oceania = [
@@ -193,14 +196,14 @@ onMounted(async () => {
     africa = [
       "Algeria", "Angola", "Benin", "Botswana", "Burkina Faso",
       "Burundi", "Cabo Verde", "Cameroon", "Central African Republic", "Chad",
-      "Comoros", "Congo", "Djibouti", "Egypt", "Equatorial Guinea",
+      "Comoros", "Democratic Republic of the Congo", "Republic of the Congo", "Djibouti", "Egypt", "Equatorial Guinea",
       "Eritrea", "Eswatini", "Ethiopia", "Gabon", "Gambia",
       "Ghana", "Guinea", "Guinea-Bissau", "Ivory Coast", "Kenya",
       "Lesotho", "Liberia", "Libya", "Madagascar", "Malawi",
       "Mali", "Mauritania", "Mauritius", "Morocco", "Mozambique",
       "Namibia", "Niger", "Nigeria", "Rwanda", "Sao Tome and Principe",
-      "Senegal", "Seychelles", "Sierra Leone", "Somalia", "South Africa",
-      "South Sudan", "Sudan", "Tanzania", "Togo", "Tunisia",
+      "Senegal", "Seychelles", "Sierra Leone", "Somalia", "Somaliland", "South Africa",
+      "South Sudan", "Sudan", "United Republic of Tanzania", "Togo", "Tunisia", "Western Sahara",
       "Uganda", "Zambia", "Zimbabwe"
     ];
   }
