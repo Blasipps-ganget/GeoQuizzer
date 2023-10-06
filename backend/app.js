@@ -1,22 +1,25 @@
 const express=require('express')
+const router=express.Router()
+const cors = require('cors');
 const app=express();
 const PORT=8080
-const router=express.Router()
+
 const capitalQuizRoute = require('./routes/CapitalQuiz')
 const countriesRoute = require('./routes/Countries')
 const countryQuizRoute = require('./routes/CountryQuiz')
 const flagQuizRoute = require('./routes/FlagQuiz')
 const userRoute = require('./routes/User')
 
+
 app.listen(PORT, () => console.log(serverStartUpMessage));
+app.use(cors())
 app.use("/capitalquiz", capitalQuizRoute);
 app.use("/flagquiz", flagQuizRoute);
 app.use("/countryquiz", countryQuizRoute);
 app.use("/countries", countriesRoute);
 app.use("/user", userRoute);
-
-router.get("/",(req,res)=>{
-    res.send("User route is displaying data")
+router.get("/", (req,res)=>{
+    res.send( 'Content-Type', 'application/json');
 })
 
 module.exports=router;
