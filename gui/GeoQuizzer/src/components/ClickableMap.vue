@@ -2,7 +2,7 @@
 import { ref, onMounted, defineProps, defineEmits, watch } from 'vue';
 import * as d3 from 'd3';
 
-const props = defineProps(["failedGuesses","succeededGuesses","scale","centerX","centerY", "selectingRegions"]);
+const props = defineProps(["failedGuesses","succeededGuesses","selectingRegions"]);
 const emit = defineEmits(['countryClicked']);
 const nameToIdMap = ref(new Map());
 const mouseover = ref("mouseover");
@@ -19,12 +19,12 @@ onMounted(async () => {
   const height = +svg.attr("height");
 
   const projection = d3.geoMercator()
-      .scale(props.scale)
-      .center([props.centerX, props.centerY])
+      .scale(140)
+      .center([0, 20])
       .translate([width / 2, height / 2]);
 
   const zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoomed);
-  // svg.call(zoom); // delete this line to disable free zooming
+  svg.call(zoom); // delete this line to disable free zooming
 
   const geoData = await d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson");
 
@@ -37,13 +37,9 @@ onMounted(async () => {
 
   geoData.features.forEach(feature => nameToIdMap.value.set(feature.properties.name, feature.id));
   appendCountryPaths(geoData);
-  watch([props.scale, props.centerX, props.centerY, props.failedGuesses, props.succeededGuesses, props.selectingRegions], updateMap);
+  watch([props.failedGuesses, props.succeededGuesses, props.selectingRegions], updateMap);
 
   function updateMap(){
-    projection
-        .scale(props.scale)
-        .center([props.centerX, props.centerY])
-
     svg.selectAll("path.Country")
         .attr("d", d3.geoPath().projection(projection))
         .attr("fill", d => getCountryColor(d))
@@ -140,11 +136,20 @@ onMounted(async () => {
 
   function mouseClick() {
 
-    const centerX = width / 2;
-    const centerY = height / 2;
-    const scale = 2;
-    const translateX = centerX - scale * centerX;
-    const translateY = centerY - scale * centerY;
+
+
+    let fractionX = 1; // 0 is leftmost, 1 is rightmost, 0.5 is middle
+    let fractionY = 1; // 0 is topmost, 1 is bottommost, 0.5 is middle
+    let scale = 2;
+    let translateX = (width * fractionX) - (scale * width * fractionX);
+    let translateY = (height * fractionY) - (scale * height * fractionY);
+
+
+
+
+
+    console.log(translateX);
+    console.log(translateY);
 
     svg.transition()
         .duration(3000)
