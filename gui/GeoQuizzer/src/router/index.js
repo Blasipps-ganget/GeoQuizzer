@@ -15,14 +15,14 @@ const router = createRouter({
       component: () => import('../views/RegiesterView.vue')
     },
     {
+      path: '/GuessFlag',
+      name: 'flags',
+      component: () => import('../views/FlagView.vue')
+    },
+    {
         path: '/map',
         name: 'map',
         component: () => import('../views/MapView.vue')
-    },
-    {
-      path: '/flag',
-      name: 'flag',
-      component: () => import('../views/FlagView.vue')
     }
   ]
 })
