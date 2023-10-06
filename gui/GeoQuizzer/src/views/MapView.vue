@@ -27,7 +27,6 @@ function handleCountryClick(answer) {
 function handleRegionClick(region) {
 
   if(!region) return;
-  alert(`You clicked ${region}!`);
   selectingRegions.value = false;
 }
 

@@ -2,7 +2,12 @@
 import { ref, onMounted, defineProps, defineEmits, watch } from 'vue';
 import * as d3 from 'd3';
 
-const props = defineProps(["failedGuesses","succeededGuesses","selectingRegions"]);
+
+const props = defineProps({
+  failedGuesses: Array,
+  succeededGuesses: Array,
+  selectingRegions: Boolean
+});
 const emit = defineEmits(['countryClicked']);
 const nameToIdMap = ref(new Map());
 const mouseover = ref("mouseover");
@@ -136,32 +141,36 @@ onMounted(async () => {
 
   function mouseClick() {
 
+    let country = d3.select(this).datum().properties.name;
+    let region = findRegionForCountry(country);
+
+    if (props.selectingRegions) {
 
 
-    let fractionX = 1; // 0 is leftmost, 1 is rightmost, 0.5 is middle
-    let fractionY = 1; // 0 is topmost, 1 is bottommost, 0.5 is middle
-    let scale = 2;
-    let translateX = (width * fractionX) - (scale * width * fractionX);
-    let translateY = (height * fractionY) - (scale * height * fractionY);
+      let fractionX; // 0 is leftmost, 1 is rightmost, 0.5 is middle
+      let fractionY; // 0 is topmost, 1 is bottommost, 0.5 is middle
+      let scale;       // 1 is normal, 2 is double size, 0.5 is half size
 
+      if (region === "europe") { fractionX = 0.6; fractionY = 0.2; scale = 2.5; }
+      if (region === "asia") { fractionX = 1; fractionY = 0.3; scale = 2; }
+      if (region === "america") { fractionX = 0.1; fractionY = 0.6; scale = 1.5; }
+      if (region === "oceania") { fractionX = 1; fractionY = 0.8; scale = 2.5; }
+      if (region === "africa") { fractionX = 0.6; fractionY = 0.6; scale = 2.5; }
 
+      let translateX = (width * fractionX) - (scale * width * fractionX);
+      let translateY = (height * fractionY) - (scale * height * fractionY);
 
-
-
-    console.log(translateX);
-    console.log(translateY);
-
-    svg.transition()
-        .duration(3000)
-        .call(zoom.transform, d3.zoomIdentity.translate(translateX, translateY).scale(scale));
+      svg.transition()
+          .duration(2000)
+          .call(zoom.transform, d3.zoomIdentity.translate(translateX, translateY).scale(scale));
+      }
 
     d3.select(this)
         .transition()
         .duration(200)
         .style("stroke", "black");
-    let name = d3.select(this).datum().properties.name;
 
-    props.selectingRegions ? emit("regionClicked", findRegionForCountry(name)) : emit("countryClicked", name);
+    props.selectingRegions ? emit("regionClicked", region) : emit("countryClicked", country);
   }
 
 
