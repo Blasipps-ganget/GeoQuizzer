@@ -6,21 +6,14 @@ import ClickableMap from "@/components/ClickableMap.vue";
 const failedGuesses = ref([]);
 const succeededGuesses = ref([]);
 const includedCountries = ref(["Sweden", "Finland", "Iceland","Norway","Denmark"]);
-const scale = ref(300);
-const centerX = ref(0);
-const centerY = ref(65);
-// below is entire world zoomed out and centered
-// const scale = ref(140);
-// const centerX = ref(0);
-// const centerY = ref(20);
 const question = ref(includedCountries.value[Math.floor(Math.random() * includedCountries.value.length)]);
+const selectingRegions = ref(true);
 
 function handleCountryClick(answer) {
 
   alert(`You clicked ${answer}!`);
 
-  if (!question.value)
-    return;
+  if (!question.value) return;
 
   if (answer === question.value)
     succeededGuesses.value.push(question.value);
@@ -29,7 +22,12 @@ function handleCountryClick(answer) {
 
   includedCountries.value = includedCountries.value.filter(country => country !== question.value);
   question.value = includedCountries.value[Math.floor(Math.random() * includedCountries.value.length)];
+}
 
+function handleRegionClick(region) {
+
+  if(!region) return;
+  selectingRegions.value = false;
 }
 
 </script>
@@ -43,10 +41,10 @@ function handleCountryClick(answer) {
     <ClickableMap
         :failedGuesses="failedGuesses"
         :succeededGuesses="succeededGuesses"
-        :scale="scale"
-        :centerX="centerX"
-        :centerY="centerY"
+        :selectingRegions="selectingRegions"
         @countryClicked="handleCountryClick"
+        @regionClicked="handleRegionClick"
+
     />
   </div>
 </template>
