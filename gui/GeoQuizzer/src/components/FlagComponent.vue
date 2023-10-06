@@ -1,46 +1,51 @@
 <template>
     <body>
       <div class="container">
-      <div class="question-number" id="question-number-area">Fråga 1</div>
       <div class="flag">
         <img :src="data.flagUrl" alt="Flag" style="width: 300px;
          height: 200px;" />
       </div>
   
       <div class="content" id="question-area">
-        <div class="question-text" id="question-text-area"> Välj flaggjävel då</div>         <div class="options">
+        <div id="question-text">Which country does this flag belong to?</div>
+      <div class="options">
         <button class="btn btn-option">{{ answerOne }}</button>
         <button class="btn btn-option">{{ answerTwo }}</button>
         <button class="btn btn-option">{{ answerThree }}</button>
         <button class="btn btn-option">{{ answerFour }}</button>
       </div>
+  
+  
       </div>
-        </div>
+      </div>
     </body>
     </template>
     
     <script setup>
     import { onMounted, ref } from 'vue';
+    import { fetchCountryFlag } from '../js/flagApi'
   
     const answerOne = ref ('Sverige')
     const answerTwo = ref ('Norge')
     const answerThree = ref ('Blåsippa')
     const answerFour = ref ('Uzbekistan')
-    
-    
-    const fetchData = () => {
-      return {
-        country: "Sweden",
-        flagUrl: "https://flagcdn.com/se.svg",
-        wrongAnswers: ["Finland", "Norway"]
   
-      };
-    };
     
-    const data = fetchData(); 
-    
-    onMounted(() => {
-    });
+    const data = ref({
+  country: 'Sweden',
+  flagUrl: '',
+  wrongAnswers: ['Finland', 'Norway'],
+});
+
+onMounted(async () => {
+  try {
+    const flagUrl = await fetchCountryFlag(data.value.country);
+    console.log('Flag URL:', flagUrl);
+    data.value.flagUrl = flagUrl;
+  } catch (error) {
+    console.error(error);
+  }
+});
     </script>
       
     <style scoped>
@@ -51,7 +56,7 @@
       font-family: 'Poppins', sans-serif;
     }
     body {
-      height: 100vh;
+      height: 50vh;
       width: 200vh;
       display: flex;
       align-items: center;
@@ -60,7 +65,7 @@
     .container {
       width: 50vw;
       max-width: 80%;
-      height: 85vh;
+      height: 70vh;
       box-shadow: 0 0 5px 4px;
       display: flex;
       flex-direction: column;
@@ -78,7 +83,6 @@
     }
    
     .btn {
-
       font-size: large;
       font-weight: bold;
       box-shadow: 0 6px 12px -2px;
@@ -93,15 +97,5 @@
       color:green;
       padding: 12px;
     }
-    .hide {
-      display: none;
-    }
-    .question-number {
-      font-size: 24px;
-    }
-    .question-text {
-      font-size: 24px;
-    }
-   
   
     </style>
