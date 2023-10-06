@@ -1,23 +1,23 @@
 <template>
     <body>
       <div class="container">
+      <div class="question-number" id="question-number-area">Fråga 1</div>
       <div class="flag">
         <img :src="data.flagUrl" alt="Flag" style="width: 300px;
+         height: 200px;" />
          height: 200px;" />
       </div>
   
       <div class="content" id="question-area">
-        <div id="question-text">Which country does this flag belong to?</div>
+        <div id="question-text"> Välj flaggjävel då</div>
       <div class="options">
         <button class="btn btn-option">{{ answerOne }}</button>
         <button class="btn btn-option">{{ answerTwo }}</button>
         <button class="btn btn-option">{{ answerThree }}</button>
         <button class="btn btn-option">{{ answerFour }}</button>
       </div>
-  
-  
       </div>
-      </div>
+        </div>
     </body>
     </template>
     
@@ -29,7 +29,7 @@
     const answerTwo = ref ('Norge')
     const answerThree = ref ('Blåsippa')
     const answerFour = ref ('Uzbekistan')
-  
+    
     
     const data = ref({
   country: 'Sweden',
@@ -56,7 +56,7 @@ onMounted(async () => {
       font-family: 'Poppins', sans-serif;
     }
     body {
-      height: 50vh;
+      height: 100vh;
       width: 200vh;
       display: flex;
       align-items: center;
@@ -65,7 +65,7 @@ onMounted(async () => {
     .container {
       width: 50vw;
       max-width: 80%;
-      height: 70vh;
+      height: 85vh;
       box-shadow: 0 0 5px 4px;
       display: flex;
       flex-direction: column;
@@ -83,6 +83,7 @@ onMounted(async () => {
     }
    
     .btn {
+
       font-size: large;
       font-weight: bold;
       box-shadow: 0 6px 12px -2px;
@@ -97,5 +98,15 @@ onMounted(async () => {
       color:green;
       padding: 12px;
     }
+    .hide {
+      display: none;
+    }
+    .question-number {
+      font-size: 24px;
+    }
+    .question-text {
+      font-size: 24px;
+    }
+   
   
     </style>
