@@ -5,11 +5,10 @@
       <div class="flag">
         <img :src="data.flagUrl" alt="Flag" style="width: 300px;
          height: 200px;" />
-         height: 200px;" />
       </div>
   
       <div class="content" id="question-area">
-        <div id="question-text"> Välj flaggjävel då</div>
+        <div id="question-text"> Which country does the flag belongs to? </div>
       <div class="options">
         <button class="btn btn-option">{{ answerOne }}</button>
         <button class="btn btn-option">{{ answerTwo }}</button>
