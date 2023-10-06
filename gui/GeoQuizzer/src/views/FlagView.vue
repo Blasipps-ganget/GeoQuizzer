@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>From view.vue</h1>
     <FlagComponent>
     
     </FlagComponent>
@@ -8,7 +7,9 @@
 </template>
 
 <script>
+
 import FlagComponent from "../components/FlagComponent.vue";
+
 
 export default {
   components: {
