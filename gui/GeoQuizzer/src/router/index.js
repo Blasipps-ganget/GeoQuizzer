@@ -23,6 +23,11 @@ const router = createRouter({
       path: '/flag',
       name: 'flag',
       component: () => import('../views/FlagView.vue')
+    },
+    {
+      path: '/quiz',
+      name: 'quiz',
+      component: () => import('../views/QuizStartupScreen.vue')
     }
   ]
 })

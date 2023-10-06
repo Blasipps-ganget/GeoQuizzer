@@ -7,7 +7,9 @@
 </template>
 
 <script>
-import FlagComponent from "../components/FlagComponent.vue"; 
+
+import FlagComponent from "../components/FlagComponent.vue";
+
 
 export default {
   components: {
