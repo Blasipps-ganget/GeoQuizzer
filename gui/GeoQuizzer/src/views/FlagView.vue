@@ -1,18 +1,17 @@
 <template>
   <div>
-    <h1>From view.vue</h1>
-    <GuessFlagComponent>
+    <FlagComponent>
     
-    </GuessFlagComponent>
+    </FlagComponent>
   </div>
 </template>
 
 <script>
-import GuessFlagComponent from "../components/GuessFlagComponent.vue"; 
+import FlagComponent from "../components/FlagComponent.vue"; 
 
 export default {
   components: {
-  GuessFlagComponent ,
+  FlagComponent ,
   },
 };
 </script>
