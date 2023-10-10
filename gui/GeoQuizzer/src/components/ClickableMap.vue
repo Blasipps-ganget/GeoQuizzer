@@ -2,13 +2,12 @@
 import { ref, onMounted, watch } from 'vue';
 import * as d3 from 'd3';
 
-
 const props = defineProps({
   failedGuesses: Array,
   succeededGuesses: Array,
   selectingRegions: Boolean
 });
-const emit = defineEmits(['countryClicked']);
+const emit = defineEmits(['countryClicked', 'regionClicked']);
 const nameToIdMap = ref(new Map());
 const mouseover = ref("mouseover");
 

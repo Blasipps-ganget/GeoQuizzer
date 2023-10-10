@@ -4,6 +4,7 @@ import {ref} from 'vue';
 import ClickableMap from "@/components/ClickableMap.vue";
 import * as d3 from "d3";
 
+
 const failedGuesses = ref([]);
 const succeededGuesses = ref([]);
 const includedCountries = ref([]);
