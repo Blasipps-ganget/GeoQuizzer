@@ -31,7 +31,7 @@
     
     
     const data = ref({
-  country: 'Sweden',
+  country: '',
   flagUrl: '',
   wrongAnswers: ['Finland', 'Norway'],
 });
@@ -39,8 +39,9 @@
 onMounted(async () => {
   try {
     const flagUrl = await fetchCountryFlag(data.value.country);
-    console.log('Flag URL:', flagUrl);
-    data.value.flagUrl = flagUrl;
+    console.log('Flag URL:', flagUrl.flagga);
+    data.value.flagUrl = flagUrl.flagga;
+    data.value.country = flagUrl.namn;
   } catch (error) {
     console.error(error);
   }
