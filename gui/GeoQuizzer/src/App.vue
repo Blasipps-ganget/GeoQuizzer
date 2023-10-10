@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 
+import { useSelectQuizStore } from './stores/selectQuiz.js';
+const selectQuizStore = useSelectQuizStore()
+
+function selectQuiz(selection) {
+  selectQuizStore.selectedQuiz = selection
+
+}
+
 </script>
 
 <template>
@@ -15,17 +23,17 @@ import { RouterLink, RouterView } from 'vue-router'
 
     <div class="menuitem">
       <img class="nav__images" height="50" src="./assets/images/icons/flag.png">
-      <RouterLink to="/flags">Flags</RouterLink>
+      <RouterLink to="/quiz" @click="selectQuiz('flags')">Flags</RouterLink>
     </div>
 
     <div class="menuitem">
       <img class="nav__images"  height="50" src="./assets/images/icons/planet-earth.png" alt="">
-        <RouterLink to="/countries">Countries</RouterLink>
+        <RouterLink to="/quiz" @click="selectQuiz('countries')">Countries</RouterLink>
     </div>
 
     <div class="menuitem">
       <img class="nav__images"  height="50" src="./assets/images/icons/capitals.png" alt="">
-      <RouterLink to="/capitals">Capitals</RouterLink>
+      <RouterLink to="/quiz" @click="selectQuiz('capitals')">Capitals</RouterLink>
     </div>
 
     <div class="menuitem">
@@ -66,13 +74,13 @@ import { RouterLink, RouterView } from 'vue-router'
     <div class="buttonsTopRight">
 
       <v-col cols="auto">
-      <RouterLink class="button-link" to="/login"><v-btn class="custom-btn" density="default" block rounded="xl">Login</v-btn></RouterLink>
+      <RouterLink class="button-link" to="/login"><v-btn class="custom-btn" density="default" block>Login</v-btn></RouterLink>
       </v-col>
     </div>
       <div class="buttonsTopRight">
 
         <v-col cols="auto">
-          <RouterLink class="button-link" to="/register"><v-btn class="custom-btn" density="default" block rounded="xl">Register</v-btn></RouterLink>
+          <RouterLink class="button-link" to="/register"><v-btn class="custom-btn" density="default" block>Register</v-btn></RouterLink>
         </v-col>
 
 
@@ -158,6 +166,16 @@ import { RouterLink, RouterView } from 'vue-router'
 
 }
 
+.profileContent  {
+
+  border: 2px solid white;
+  border-radius: 15px;
+  height: 50px;
+  margin-left: 50px;
+  padding: 5px;
+
+}
+
 .login {
 
  //margin-left: auto;
@@ -198,6 +216,7 @@ import { RouterLink, RouterView } from 'vue-router'
   color: #EEEEEE;
   font-weight: bolder;
   padding: 20px;
+  border-radius: 15px;
   box-shadow: 1px 3px 5px 0px rgba(0,0,0,0.75);
 
 }
@@ -250,15 +269,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
 
 
-.profileContent  {
 
-  border: 2px solid black;
-  border-radius: 35px;
-  height: 50px;
-  margin-left: 50px;
-  padding: 5px;
-
-}
 
 
 

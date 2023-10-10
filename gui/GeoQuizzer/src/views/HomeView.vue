@@ -1,5 +1,13 @@
 <script setup lang="ts">
 import {RouterLink} from "vue-router";
+import { useSelectQuizStore } from '../stores/selectQuiz.js';
+const selectQuizStore = useSelectQuizStore()
+
+function selectQuiz(selection) {
+  selectQuizStore.selectedQuiz = selection
+
+}
+
 </script>
 
 <template>
@@ -9,26 +17,25 @@ import {RouterLink} from "vue-router";
 
     <div class="quizBox">
       <div class="headerBackground">
-        <RouterLink to="/countries"><h2>Place the country</h2></RouterLink>
+        <RouterLink to="/quiz" @click="selectQuiz('countries')"><h2>Place the<br>country</h2></RouterLink>
       </div>
-      <RouterLink to="/countries"><img class="selectionImage" src="../assets/images/countries.png" alt=""></RouterLink>
+      <RouterLink to="/quiz" @click="selectQuiz('countries')"><img class="selectionImage" src="../assets/images/countries.png" alt=""></RouterLink>
     </div>
 
     <div class="quizBox">
       <div class="headerBackground">
-      <RouterLink to="/flags"><h2>Learn the flags of the world</h2></RouterLink>
+      <RouterLink to="/quiz" @click="selectQuiz('flags')"><h2>Learn the flags<br>of the world</h2></RouterLink>
       </div>
-      <RouterLink to="/flags"><img class="selectionImage" src="../assets/images/flags.jpg" alt=""></RouterLink>
+      <RouterLink to="/quiz" @click="selectQuiz('flags')"><img class="selectionImage" src="../assets/images/flags.jpg" alt=""></RouterLink>
 
     </div>
       <div class="capitalsdiv">
       <div class="quizBox">
         <div class="headerBackground">
-          <RouterLink to="/capitals"><h2>Learn the capitals of the world</h2></RouterLink>
-
+          <RouterLink to="/quiz" @click="selectQuiz('capitals')"><h2>Learn the capitals<br>of the world</h2></RouterLink>
 
         </div>
-        <RouterLink to="/capitals">  <img  class="selectionImage"  src="../assets/images/capitals.png" alt=""></RouterLink>
+        <RouterLink to="/quiz" @click="selectQuiz('capitals')">  <img  class="selectionImage"  src="../assets/images/capitals.png" alt=""></RouterLink>
       </div>
 
       </div>
@@ -47,8 +54,9 @@ import {RouterLink} from "vue-router";
 .centerContent {
 
   margin-top: 40px;
-  justify-content: center;
   display: flex;
+  justify-content: center;
+
 
 
 }
@@ -56,12 +64,9 @@ import {RouterLink} from "vue-router";
 .mainContent {
 
   display: grid;
-  gap: 170px;
-  grid-template-columns: 553px 553px;
-  grid-template-rows: 250px 250px ;
-
-
-
+  gap: 50px;
+  grid-template-columns: 267px 267px 267px;
+  grid-template-rows: 250px;
 
   padding-bottom: 180px;
 
@@ -74,8 +79,10 @@ import {RouterLink} from "vue-router";
 
 .selectionImage {
 
-  height: 311px;
-  width: 553px;
+  height: 150px;
+  width: 267px;
+  border-bottom-right-radius: 15px;
+  border-bottom-left-radius: 15px;
   box-shadow: 0px 7px 10px rgba(0,0,0,.4);
 
 
@@ -84,12 +91,8 @@ import {RouterLink} from "vue-router";
 .quizBox {
 
 background: #053B50;
- box-sizing: border-box;
-
-
-
-
-
+box-sizing: border-box;
+border-radius: 15px;
 
 
 }
@@ -106,7 +109,7 @@ background: #053B50;
 }
 
 .headerBackground h2 {
-
+  font-size: 20px;
   color: #EEEEEE;
 
 }
@@ -121,7 +124,7 @@ background: #053B50;
 
 .capitalsdiv {
 
-  grid-column: span 2;
+
   display: flex;
   justify-content: center;
 
