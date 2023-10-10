@@ -12,37 +12,32 @@ function selectQuiz(selection) {
 </script>
 
 <template>
-  <div><RouterLink to="/">Home</RouterLink></div>
-  <div><RouterLink to="/register">Register</RouterLink></div>
-  <div><RouterLink to="/map">Map</RouterLink></div>
-  <div><RouterLink to="/flag">FlagQuiz</RouterLink></div>
-  <div><RouterLink to="/quiz">ChooseQuiz</RouterLink></div>
-  <!--  WHEN ADDING A NEW LINK ADD HERE AND IN ROUTER -->
+
 
   <div class="menu">
 
     <div class="menuitem">
-      <img class="nav__images" height="50" src="./assets/images/icons/flag.png">
+      <img class="nav__images" height="50" src="./assets/images/icons/flag.png" alt="Flags">
       <RouterLink to="/quiz" @click="selectQuiz('flags')">Flags</RouterLink>
     </div>
 
     <div class="menuitem">
-      <img class="nav__images"  height="50" src="./assets/images/icons/planet-earth.png" alt="">
+      <img class="nav__images"  height="50" src="./assets/images/icons/planet-earth.png" alt="Countries">
         <RouterLink to="/quiz" @click="selectQuiz('countries')">Countries</RouterLink>
     </div>
 
     <div class="menuitem">
-      <img class="nav__images"  height="50" src="./assets/images/icons/capitals.png" alt="">
+      <img class="nav__images"  height="50" src="./assets/images/icons/capitals.png" alt="Capitals">
       <RouterLink to="/quiz" @click="selectQuiz('capitals')">Capitals</RouterLink>
     </div>
 
     <div class="menuitem">
-      <img class="nav__images"  height="50"  src="./assets/images/icons/classroom.png" alt="">
+      <img class="nav__images"  height="50"  src="./assets/images/icons/classroom.png" alt="Classroom">
         <RouterLink to="/classroom">Classroom</RouterLink>
     </div>
 
     <div class="menuitem">
-      <img class="nav__images" height="50"  src="./assets/images/icons/user.png" alt="">
+      <img class="nav__images" height="50"  src="./assets/images/icons/user.png" alt="Profile">
         <RouterLink to="/userProfile">Profile</RouterLink>
     </div>
 
@@ -74,13 +69,13 @@ function selectQuiz(selection) {
     <div class="buttonsTopRight">
 
       <v-col cols="auto">
-      <RouterLink class="button-link" to="/login"><v-btn class="custom-btn" density="default" block>Login</v-btn></RouterLink>
+      <RouterLink class="button-link" to="/login"><v-btn class="custom-btn" density="default" block="true">Login</v-btn></RouterLink>
       </v-col>
     </div>
       <div class="buttonsTopRight">
 
         <v-col cols="auto">
-          <RouterLink class="button-link" to="/register"><v-btn class="custom-btn" density="default" block>Register</v-btn></RouterLink>
+          <RouterLink class="button-link" to="/register"><v-btn class="custom-btn" density="default" block="true">Register</v-btn></RouterLink>
         </v-col>
 
 
@@ -91,6 +86,16 @@ function selectQuiz(selection) {
 
   </div>
   <div><RouterView/></div>
+
+  <div class="centerLinks">
+  <div><RouterLink to="/">Home</RouterLink></div>
+  <div><RouterLink to="/register">Register</RouterLink></div>
+  <div><RouterLink to="/map">Map</RouterLink></div>
+  <div><RouterLink to="/flag">FlagQuiz</RouterLink></div>
+  <div><RouterLink to="/quiz">ChooseQuiz</RouterLink></div>
+  </div>
+  <!--  WHEN ADDING A NEW LINK ADD HERE AND IN ROUTER -->
+
   <footer>
     <div class="footerContent">
       <span>Contact us</span>
@@ -102,6 +107,10 @@ function selectQuiz(selection) {
 </template>
 
 <style scoped>
+
+.centerLinks {
+  text-align: center;
+}
 
 :root {
 
