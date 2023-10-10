@@ -1,6 +1,12 @@
-<script setup lang="ts">
+<script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import {ref} from "vue";
+import LoginRegistrationModal from "@/components/LoginRegistrationModal.vue";
+const showLoginModal = ref(false);
 
+const showModal = () => {
+  showLoginModal.value = !showLoginModal.value;
+}
 </script>
 
 <template>
@@ -42,6 +48,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
 
   </div>
+  <LoginRegistrationModal v-show="showLoginModal"></LoginRegistrationModal>
 
 
   <div class="headerContent">
@@ -65,15 +72,10 @@ import { RouterLink, RouterView } from 'vue-router'
     <div class="login">
     <div class="buttonsTopRight">
 
-      <v-col cols="auto">
-      <RouterLink class="button-link" to="/login"><v-btn class="custom-btn" density="default" block rounded="xl">Login</v-btn></RouterLink>
-      </v-col>
     </div>
+      <v-btn class="custom-btn" density="default" rounded="xl" @click="showModal()">Login</v-btn>
       <div class="buttonsTopRight">
-
-        <v-col cols="auto">
-          <RouterLink class="button-link" to="/register"><v-btn class="custom-btn" density="default" block rounded="xl">Register</v-btn></RouterLink>
-        </v-col>
+      <v-btn class="custom-btn" density="default" rounded="xl" @click="showModal()">Register</v-btn>
 
 
       </div>
@@ -90,7 +92,6 @@ import { RouterLink, RouterView } from 'vue-router'
       <span>Follow us on socials</span>
     </div>
   </footer>
-
 </template>
 
 <style scoped>
