@@ -88,8 +88,7 @@ onMounted(async () => {
   font-weight: 700;
   color: #fff;
   text-decoration: none;
-  font-family: sans-serif;
-  background-color: yellow;
+  background-color: #176B87;
   height: 60px;
   line-height: 60px;
   text-align: center;
