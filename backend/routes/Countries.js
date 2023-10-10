@@ -50,7 +50,7 @@ router.get("/northAmerica", (req, res) => res.send([
 router.get("/southAmerica", (req, res) => res.send([
     "Argentina", "Bolivia", "Brazil", "Chile", "Colombia",
     "Ecuador", "Guyana", "Paraguay", "Peru", "Suriname",
-    "Uruguay", "Venezuela"
+    "Uruguay", "Venezuela", "Falkland Islands"
 ]));
 
 

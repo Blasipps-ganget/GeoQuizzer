@@ -36,7 +36,7 @@ async function handleRegionClick(region) {
 </script>
 
 <template>
-  <div className="content">
+  <div class="content">
     <div>currentQuestion: {{ question }}</div>
     <div>failedGuesses: {{ failedGuesses }}</div>
     <div>succeededGuesses: {{ succeededGuesses }}</div>
