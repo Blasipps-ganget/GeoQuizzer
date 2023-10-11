@@ -1,22 +1,23 @@
 <script setup>
-import { ref, onMounted, defineProps, defineEmits, watch } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import * as d3 from 'd3';
-
 
 const props = defineProps({
   failedGuesses: Array,
   succeededGuesses: Array,
   selectingRegions: Boolean
 });
-const emit = defineEmits(['countryClicked']);
+const emit = defineEmits(['countryClicked', 'regionClicked']);
 const nameToIdMap = ref(new Map());
 const mouseover = ref("mouseover");
 
 let europe;
-let america;
 let asia;
 let africa;
 let oceania;
+let southAmerica;
+let northAmerica;
+
 
 onMounted(async () => {
   const svg = d3.select("#my_dataviz");
@@ -32,13 +33,7 @@ onMounted(async () => {
   svg.call(zoom); // delete this line to disable free zooming
 
   const geoData = await d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson");
-
-  // const europe = await d3.json("http://localhost:8080/countries/europe");
-  // const america = await d3.json("http://localhost:8080/countries/america");
-  // const asia = await d3.json("http://localhost:8080/countries/asia");
-  // const africa = await d3.json("http://localhost:8080/countries/africa");
-  // const oceania = await d3.json("http://localhost:8080/countries/oceania");
-  populateRegionMocks();
+  await populateRegionMocks();
 
   geoData.features.forEach(feature => nameToIdMap.value.set(feature.properties.name, feature.id));
   appendCountryPaths(geoData);
@@ -68,14 +63,18 @@ onMounted(async () => {
   }
 
   function getCountryColor(d) {
-    let failedGuessesIds = props.failedGuesses.map(name => nameToIdMap.value.get(name));
-    let succeededGuessesIds = props.succeededGuesses.map(name => nameToIdMap.value.get(name));
-    if (failedGuessesIds.includes(d.id)) return "red";
-    if (succeededGuessesIds.includes(d.id)) return "green";
+
+    if(!props.selectingRegions) {
+      let failedGuessesIds = props.failedGuesses.map(name => nameToIdMap.value.get(name));
+      let succeededGuessesIds = props.succeededGuesses.map(name => nameToIdMap.value.get(name));
+      if (failedGuessesIds.includes(d.id)) return "red";
+      if (succeededGuessesIds.includes(d.id)) return "green";
+    }
     return "grey";
   }
 
   function mouseOver() {
+    mouseover.value = d3.select(this).datum().properties.name;
     props.selectingRegions ? mouseOverRegions.call(this) : mouseOverCountry.call(this);
   }
 
@@ -89,16 +88,17 @@ onMounted(async () => {
         .duration(200)
         .style("opacity", 1);
 
-    mouseover.value = d3.select(this).datum().properties.name;
+
   }
 
 
   function findRegionForCountry(countryName) {
     if (europe.includes(countryName)) return "europe";
     if (asia.includes(countryName)) return "asia";
-    if (america.includes(countryName)) return "america";
     if (oceania.includes(countryName)) return "oceania";
     if (africa.includes(countryName)) return "africa";
+    if (southAmerica.includes(countryName)) return "southAmerica";
+    if (northAmerica.includes(countryName)) return "northAmerica";
     return null;
   }
 
@@ -108,9 +108,10 @@ onMounted(async () => {
     const regionMap = {
       "europe": europe,
       "asia": asia,
-      "america": america,
       "oceania": oceania,
-      "africa": africa
+      "africa": africa,
+      "southAmerica": southAmerica,
+      "northAmerica": northAmerica
     };
 
     const regionArray = regionMap[region];
@@ -153,17 +154,18 @@ onMounted(async () => {
 
       if (region === "europe") { fractionX = 0.6; fractionY = 0.2; scale = 2.5; }
       if (region === "asia") { fractionX = 1; fractionY = 0.3; scale = 2; }
-      if (region === "america") { fractionX = 0.1; fractionY = 0.6; scale = 1.5; }
       if (region === "oceania") { fractionX = 1; fractionY = 0.8; scale = 2.5; }
       if (region === "africa") { fractionX = 0.6; fractionY = 0.6; scale = 2.5; }
+      if (region === "northAmerica") { fractionX = 0; fractionY = 0.2; scale = 2; }
+      if (region === "southAmerica") { fractionX = 0.18; fractionY = 0.8; scale = 2.5; }
 
       let translateX = (width * fractionX) - (scale * width * fractionX);
       let translateY = (height * fractionY) - (scale * height * fractionY);
 
       svg.transition()
-          .duration(2000)
+          .duration(1000)
           .call(zoom.transform, d3.zoomIdentity.translate(translateX, translateY).scale(scale));
-      }
+    }
 
     d3.select(this)
         .transition()
@@ -181,72 +183,24 @@ onMounted(async () => {
 
 
 
-  function populateRegionMocks() {
-    europe = [
-      "Albania", "Andorra", "Austria",
-      "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria",
-      "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "England",
-      "Finland", "France", "Germany", "Greece",
-      "Hungary", "Iceland", "Ireland", "Italy",
-      "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg",
-      "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands",
-      "North Macedonia", "Norway", "Poland", "Portugal", "Romania",
-      "San Marino", "Republic of Serbia", "Slovakia", "Slovenia",
-      "Spain", "Sweden", "Switzerland", "Ukraine",
-      "United Kingdom", "Vatican City"
-    ];
-    asia = [
-      "Afghanistan", "Armenia", "Azerbaijan", "Bahrain", "Bangladesh",
-      "Bhutan", "Brunei", "Cambodia", "China", "Cyprus",
-      "Georgia", "India", "Indonesia", "Iran", "Iraq",
-      "Israel", "Japan", "Jordan", "Kazakhstan", "Kuwait",
-      "Kyrgyzstan", "Laos", "Lebanon", "Malaysia", "Maldives",
-      "Mongolia", "Myanmar", "Nepal", "North Korea", "Oman",
-      "Pakistan", "Palestine", "Philippines", "Qatar", "Russia",
-      "Saudi Arabia", "Singapore", "South Korea", "Sri Lanka", "Syria",
-      "Taiwan", "Tajikistan", "Thailand", "Turkey", "Turkmenistan",
-      "United Arab Emirates", "Uzbekistan", "Vietnam", "Yemen"
-    ];
-
-    america = [
-      "Antigua and Barbuda", "Argentina", "Bahamas", "Barbados", "Belize",
-      "Bolivia", "Brazil", "Canada", "Chile", "Colombia",
-      "Costa Rica", "Cuba", "Dominica", "Dominican Republic", "Ecuador",
-      "El Salvador", "Grenada", "Guatemala", "Guyana", "Haiti",
-      "Honduras", "Jamaica", "Mexico", "Nicaragua", "Panama",
-      "Paraguay", "Peru", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines",
-      "Suriname", "Trinidad and Tobago", "USA", "Uruguay", "Venezuela", "Greenland"
-    ];
-
-    oceania = [
-      "Australia", "Fiji", "Kiribati", "Marshall Islands", "Micronesia",
-      "Nauru", "New Zealand", "Palau", "Papua New Guinea", "Samoa",
-      "Solomon Islands", "Tonga", "Tuvalu", "Vanuatu"
-    ];
-
-    africa = [
-      "Algeria", "Angola", "Benin", "Botswana", "Burkina Faso",
-      "Burundi", "Cabo Verde", "Cameroon", "Central African Republic", "Chad",
-      "Comoros", "Democratic Republic of the Congo", "Republic of the Congo", "Djibouti", "Egypt", "Equatorial Guinea",
-      "Eritrea", "Eswatini", "Ethiopia", "Gabon", "Gambia",
-      "Ghana", "Guinea", "Guinea-Bissau", "Ivory Coast", "Kenya",
-      "Lesotho", "Liberia", "Libya", "Madagascar", "Malawi",
-      "Mali", "Mauritania", "Mauritius", "Morocco", "Mozambique",
-      "Namibia", "Niger", "Nigeria", "Rwanda", "Sao Tome and Principe",
-      "Senegal", "Seychelles", "Sierra Leone", "Somalia", "Somaliland", "South Africa",
-      "South Sudan", "Sudan", "United Republic of Tanzania", "Togo", "Tunisia", "Western Sahara",
-      "Uganda", "Zambia", "Zimbabwe"
-    ];
+  async function populateRegionMocks() {
+    europe = await d3.json("http://localhost:8080/countries/europe");
+    asia = await d3.json("http://localhost:8080/countries/asia");
+    africa = await d3.json("http://localhost:8080/countries/africa");
+    oceania = await d3.json("http://localhost:8080/countries/oceania");
+    southAmerica = await d3.json("http://localhost:8080/countries/southAmerica");
+    northAmerica = await d3.json("http://localhost:8080/countries/northAmerica");
   }
 });
 
 </script>
 
 <template>
+  <div>{{mouseover}}</div>
   <div>
     <svg id="my_dataviz" width="800" height="600"></svg>
   </div>
-  <div>{{mouseover}}</div>
+
 </template>
 
 <style scoped>
