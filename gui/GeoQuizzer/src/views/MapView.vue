@@ -11,7 +11,6 @@ const question = ref();
 const selectingRegions = ref(true);
 const mapResetTrigger = ref([]);
 
-
 function handleCountryClick(answer) {
 
   alert(`You clicked ${answer}!`);
@@ -42,9 +41,6 @@ function resetMap() {
   includedCountries.value = [];
   question.value = null;
   mapResetTrigger.value.length === 0 ? mapResetTrigger.value.push(1) : mapResetTrigger.value.pop();
-
-  console.log(mapResetTrigger.value);
-
 }
 
 </script>
