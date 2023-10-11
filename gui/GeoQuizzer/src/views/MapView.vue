@@ -1,12 +1,14 @@
 <script setup>
 
-import { ref } from 'vue';
+import {ref} from 'vue';
 import ClickableMap from "@/components/ClickableMap.vue";
+import * as d3 from "d3";
+
 
 const failedGuesses = ref([]);
 const succeededGuesses = ref([]);
-const includedCountries = ref(["Sweden", "Finland", "Iceland","Norway","Denmark"]);
-const question = ref(includedCountries.value[Math.floor(Math.random() * includedCountries.value.length)]);
+const includedCountries = ref([]);
+const question = ref();
 const selectingRegions = ref(true);
 
 function handleCountryClick(answer) {
@@ -24,20 +26,22 @@ function handleCountryClick(answer) {
   question.value = includedCountries.value[Math.floor(Math.random() * includedCountries.value.length)];
 }
 
-function handleRegionClick(region) {
+async function handleRegionClick(region) {
 
-  if(!region) return;
+  if (!region) return;
   selectingRegions.value = false;
+  includedCountries.value = await d3.json(`http://localhost:8080/countries/${region}`);
+  question.value = includedCountries.value[0];
 }
 
 </script>
 
 <template>
-  <div>
-    <div>currentQuestion: {{question}}</div>
-    <div>failedGuesses: {{failedGuesses}}</div>
-    <div>succeededGuesses: {{succeededGuesses}}</div>
-    <div>includedCountries: {{includedCountries}}</div>
+  <div class="content">
+    <div>currentQuestion: {{ question }}</div>
+    <div>failedGuesses: {{ failedGuesses }}</div>
+    <div>succeededGuesses: {{ succeededGuesses }}</div>
+    <div>includedCountries: {{ includedCountries }}</div>
     <ClickableMap
         :failedGuesses="failedGuesses"
         :succeededGuesses="succeededGuesses"
@@ -51,5 +55,12 @@ function handleRegionClick(region) {
 
 
 <style>
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 
 </style>

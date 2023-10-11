@@ -1,5 +1,8 @@
-<script setup lang="ts">
+<script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import {ref} from "vue";
+import LoginRegistrationModal from "@/components/LoginRegistrationModal.vue";
+const showLoginModal = ref(false);
 
 import { useGeneralStore } from './stores/general.js';
 const generalStore = useGeneralStore()
@@ -7,6 +10,10 @@ const generalStore = useGeneralStore()
 function selectQuiz(selection) {
   generalStore.selectedQuiz = selection
 
+}
+
+const showModal = () => {
+  showLoginModal.value = !showLoginModal.value;
 }
 
 </script>
@@ -45,6 +52,7 @@ function selectQuiz(selection) {
 
 
   </div>
+  <LoginRegistrationModal v-show="showLoginModal"></LoginRegistrationModal>
 
 
   <div class="headerContent">
@@ -68,15 +76,13 @@ function selectQuiz(selection) {
     <div class="login">
     <div class="buttonsTopRight">
 
-      <v-col cols="auto">
-      <RouterLink class="button-link" to="/login"><v-btn class="custom-btn" density="default" block="true">Login</v-btn></RouterLink>
-      </v-col>
+
     </div>
+      <v-btn class="custom-btn" density="default" rounded="xl" @click="showModal()">Login</v-btn>
       <div class="buttonsTopRight">
 
-        <v-col cols="auto">
-          <RouterLink class="button-link" to="/register"><v-btn class="custom-btn" density="default" block="true">Register</v-btn></RouterLink>
-        </v-col>
+
+      <v-btn class="custom-btn" density="default" rounded="xl" @click="showModal()">Register</v-btn>
 
 
       </div>
@@ -103,7 +109,6 @@ function selectQuiz(selection) {
       <span>Social media</span>
     </div>
   </footer>
-
 </template>
 
 <style scoped>
