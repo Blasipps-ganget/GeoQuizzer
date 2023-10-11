@@ -2,11 +2,15 @@
 import { ref, onMounted, watch } from 'vue';
 import * as d3 from 'd3';
 
+
 const props = defineProps({
   failedGuesses: Array,
   succeededGuesses: Array,
-  selectingRegions: Boolean
+  selectingRegions: Boolean,
+  mapResetTrigger: Array
 });
+
+
 const emit = defineEmits(['countryClicked', 'regionClicked']);
 const nameToIdMap = ref(new Map());
 const mouseover = ref("mouseover");
@@ -17,6 +21,8 @@ let africa;
 let oceania;
 let southAmerica;
 let northAmerica;
+
+
 
 
 onMounted(async () => {
@@ -37,12 +43,17 @@ onMounted(async () => {
 
   geoData.features.forEach(feature => nameToIdMap.value.set(feature.properties.name, feature.id));
   appendCountryPaths(geoData);
-  watch([props.failedGuesses, props.succeededGuesses, props.selectingRegions], updateMap);
+
+  watch([props.failedGuesses, props.succeededGuesses], updateMap);
+  watch([props.mapResetTrigger], resetMap);
+
 
   function updateMap(){
     svg.selectAll("path.Country")
         .attr("d", d3.geoPath().projection(projection))
         .attr("fill", d => getCountryColor(d))
+
+    console.log("updating map");
   }
 
   function appendCountryPaths(geoData) {
@@ -87,8 +98,6 @@ onMounted(async () => {
     d3.select(this).transition()
         .duration(200)
         .style("opacity", 1);
-
-
   }
 
 
@@ -176,9 +185,18 @@ onMounted(async () => {
   }
 
 
+
+
   function zoomed(event) {
     svg.selectAll("path")
         .attr("transform", event.transform);
+  }
+
+  function resetMap() {
+    console.log("resetting map");
+    svg.transition()
+        .duration(200)
+        .call(zoom.transform, d3.zoomIdentity);
   }
 
 

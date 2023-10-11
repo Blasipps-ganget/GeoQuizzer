@@ -4,12 +4,13 @@ import {ref} from 'vue';
 import ClickableMap from "@/components/ClickableMap.vue";
 import * as d3 from "d3";
 
-
 const failedGuesses = ref([]);
 const succeededGuesses = ref([]);
 const includedCountries = ref([]);
 const question = ref();
 const selectingRegions = ref(true);
+const mapResetTrigger = ref([]);
+
 
 function handleCountryClick(answer) {
 
@@ -34,6 +35,18 @@ async function handleRegionClick(region) {
   question.value = includedCountries.value[0];
 }
 
+function resetMap() {
+  selectingRegions.value = true;
+  failedGuesses.value = [];
+  succeededGuesses.value = [];
+  includedCountries.value = [];
+  question.value = null;
+  mapResetTrigger.value.length === 0 ? mapResetTrigger.value.push(1) : mapResetTrigger.value.pop();
+
+  console.log(mapResetTrigger.value);
+
+}
+
 </script>
 
 <template>
@@ -42,16 +55,19 @@ async function handleRegionClick(region) {
     <div>failedGuesses: {{ failedGuesses }}</div>
     <div>succeededGuesses: {{ succeededGuesses }}</div>
     <div>includedCountries: {{ includedCountries }}</div>
+    <button @click="resetMap">Reset</button>
     <ClickableMap
         :failedGuesses="failedGuesses"
         :succeededGuesses="succeededGuesses"
         :selectingRegions="selectingRegions"
+        :mapResetTrigger="mapResetTrigger"
+
         @countryClicked="handleCountryClick"
         @regionClicked="handleRegionClick"
-
     />
   </div>
 </template>
+
 
 
 <style>
