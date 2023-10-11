@@ -96,7 +96,6 @@ onMounted(async () => {
   padding: 0;
   position: relative;
   margin: 5%;
-  z-index: 1;
   overflow: hidden;
   border-radius: 10px;
   margin-top: 20px;

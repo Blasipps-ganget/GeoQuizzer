@@ -1,12 +1,25 @@
 <script setup>
-
 import {ref} from "vue";
 
-const valid = ref(false);
-const firstname = ref('');
+const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+const password = ref('');
 const email = ref('');
+const name = ref('');
+const validEmail = ref(false);
+const validName = ref(false);
+const validPassword = ref(false);
+const showPassword = ref(false);
+
+const validate = () => {
+  console.log(email.value);
+}
 
 const nameRules = [
+  () => {
+    validName.value = false;
+  },
   (value) => {
     if (value) return true;
     return 'Name is required.';
@@ -15,59 +28,96 @@ const nameRules = [
     if (value?.length <= 10) return true;
     return 'Name must be less than 10 characters.';
   },
-  (value) =>{
-   if(/^[A-Za-z0-9!?\s]+$/.test(value)) return true;
-   return 'Username must contains only characters, numbers or ! and ?'
+  (value) => {
+    if (/^[A-Za-z0-9!?\s]+$/.test(value)) return true;
+    return 'Username must contains only characters, numbers or ! and ?'
+  },
+  () => {
+    validName.value = true;
   }
 ];
 
+
 const emailRules = [
+  () => {
+    validEmail.value = false;
+  },
   (value) => {
     if (value) return true;
     return 'E-mail is required.';
   },
   (value) => {
-    if (/.+@.+\..+/.test(value)) return true;
+    if (emailRegex.test(value)) return true;
     return 'E-mail must be valid.';
   },
+  () => {
+    validEmail.value = true;
+  }
 ];
+const passwordRules = [
+  () => {
+   validPassword.value = false;
+  },
+  (value) => {
+    if(value) return true;
+    return 'Passsword is required.';
+},
+  (value) => {
+    if (!passwordRegex.test(value)) return true;
+    return 'invalid password'
+  },
+  () =>{
+  validPassword.value = true;
+  }]
+
 </script>
 
 <template>
-<div class="modal-mask">
-  <div class="modal-wrapper">
-    <div class="modal-content">
-      <form class="loginForm">
-        <p class="loginText">Please log in before quizzing</p>
-        <v-text-field
-            v-model="firstname"
-            :rules="nameRules"
-            :counter="10"
-            label="Username"
-            required
-            hide-details
-        ></v-text-field>
-        <v-text-field
-            v-model="email"
-            :rules="emailRules"
-            :counter="10"
-            label="Email Address"
-            hide-details
-            required
-        ></v-text-field>
-      </form>
-      <v-card-text class="showRegister" @click="console.log('Nej')">Don't have an account? no worries king sign up here</v-card-text>
-      <div class="btn">
-      <v-btn class="loginBtn">Login</v-btn>
+  <div class="modal-mask">
+    <div class="modal-wrapper">
+      <div class="modal-content">
+        <form class="loginForm" @submit.prevent>
+          <p class="loginText">Please log in before quizzing</p>
+          <v-text-field
+              v-model="name"
+              :rules="nameRules"
+              :counter="10"
+              label="Username"
+              hide-details
+              required
+          ></v-text-field>
+          <v-text-field
+              v-model="password"
+              :rules="passwordRules"
+              :counter="10"
+              :type="showPassword ?'text' : 'password'"
+              :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+              label="password"
+              required
+              @click:append-inner="showPassword = !showPassword"
+              hide-details
+          ></v-text-field>
+          <v-btn :disabled="!(validEmail && validPassword)"
+                 class="loginBtn"
+                 size="large"
+                 color="#053B50"
+                 variant="elevated"
+                 type="submit"
+                 @click="validate()"
+          >Log in
+          </v-btn>
+        </form>
+        <v-card-text class="showRegister" @click="console.log(validName)">Don't have an account? no worries king sign up
+          here
+        </v-card-text>
       </div>
     </div>
   </div>
-</div>
 
 </template>
 
 <style scoped>
-.modal-mask{
+.modal-mask {
   position: fixed;
   z-index: 1;
   top: 0;
@@ -78,21 +128,24 @@ const emailRules = [
   transition: opacity 0.3s ease;
   display: table;
 }
-.modal-wrapper{
+
+.modal-wrapper {
   display: table-cell;
   vertical-align: middle;
 
 }
-.modal-content{
+
+.modal-content {
   height: 400px;
   width: 350px;
   margin: auto;
   padding: 20px 20px;
   border-radius: 5px;
-  background-color: white;
+  background-color: #F5F0F6;
   display: grid;
 }
-.loginText{
+
+.loginText {
   text-align: center
 
 }
@@ -102,23 +155,27 @@ const emailRules = [
   margin: 0 -.25rem;
   padding: 0 .25rem;
   text-align: center;
-  align-self: top;
+  align-self: auto;
 }
+
 .showRegister:hover {
   color: blue;
   text-decoration: underline;
   cursor: pointer;
 }
-.loginForm{
+
+.loginForm {
   display: grid;
 }
 
-.loginBtn{
+.loginBtn {
   width: 100px;
 }
-.btn{
+
+.loginBtn {
   display: grid;
-  justify-items: center;
-  height: 50px;
+  justify-self: center;
+  color: #053B50;
+
 }
 </style>
