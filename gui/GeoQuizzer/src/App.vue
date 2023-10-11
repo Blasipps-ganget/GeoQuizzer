@@ -4,44 +4,48 @@ import {ref} from "vue";
 import LoginRegistrationModal from "@/components/LoginRegistrationModal.vue";
 const showLoginModal = ref(false);
 
+import { useGeneralStore } from './stores/general.js';
+const generalStore = useGeneralStore()
+
+function selectQuiz(selection) {
+  generalStore.selectedQuiz = selection
+
+}
+
 const showModal = () => {
   showLoginModal.value = !showLoginModal.value;
 }
+
 </script>
 
 <template>
-  <div><RouterLink to="/">Home</RouterLink></div>
-  <div><RouterLink to="/register">Register</RouterLink></div>
-  <div><RouterLink to="/map">Map</RouterLink></div>
-  <div><RouterLink to="/flag">FlagQuiz</RouterLink></div>
-  <div><RouterLink to="/quiz">ChooseQuiz</RouterLink></div>
-  <!--  WHEN ADDING A NEW LINK ADD HERE AND IN ROUTER -->
+
 
   <div class="menu">
 
     <div class="menuitem">
-      <img class="nav__images" height="50" src="./assets/images/icons/flag.png">
-      <RouterLink to="/flags">Flags</RouterLink>
+      <img class="nav__images" height="50" src="./assets/images/icons/flag.png" alt="Flags">
+      <RouterLink class="navLink" to="/quiz" @click="selectQuiz('flags')">Flags</RouterLink>
     </div>
 
     <div class="menuitem">
-      <img class="nav__images"  height="50" src="./assets/images/icons/planet-earth.png" alt="">
-        <RouterLink to="/countries">Countries</RouterLink>
+      <img class="nav__images"  height="50" src="./assets/images/icons/planet-earth.png" alt="Countries">
+        <RouterLink class="navLink" to="/quiz" @click="selectQuiz('countries')">Countries</RouterLink>
     </div>
 
     <div class="menuitem">
-      <img class="nav__images"  height="50" src="./assets/images/icons/capitals.png" alt="">
-      <RouterLink to="/capitals">Capitals</RouterLink>
+      <img class="nav__images"  height="50" src="./assets/images/icons/capitals.png" alt="Capitals">
+      <RouterLink class="navLink" to="/quiz" @click="selectQuiz('capitals')">Capitals</RouterLink>
     </div>
 
     <div class="menuitem">
-      <img class="nav__images"  height="50"  src="./assets/images/icons/classroom.png" alt="">
-        <RouterLink to="/classroom">Classroom</RouterLink>
+      <img class="nav__images"  height="50"  src="./assets/images/icons/classroom.png" alt="Classroom">
+        <RouterLink class="navLink" to="/classroom">Classroom</RouterLink>
     </div>
 
     <div class="menuitem">
-      <img class="nav__images" height="50"  src="./assets/images/icons/user.png" alt="">
-        <RouterLink to="/userProfile">Profile</RouterLink>
+      <img class="nav__images" height="50"  src="./assets/images/icons/user.png" alt="Profile">
+        <RouterLink class="navLink" to="/userProfile">Profile</RouterLink>
     </div>
 
 
@@ -72,9 +76,12 @@ const showModal = () => {
     <div class="login">
     <div class="buttonsTopRight">
 
+
     </div>
       <v-btn class="custom-btn" density="default" rounded="xl" @click="showModal()">Login</v-btn>
       <div class="buttonsTopRight">
+
+
       <v-btn class="custom-btn" density="default" rounded="xl" @click="showModal()">Register</v-btn>
 
 
@@ -85,16 +92,35 @@ const showModal = () => {
 
   </div>
   <div><RouterView/></div>
+
+  <div class="centerLinks">
+  <div><RouterLink to="/">Home</RouterLink></div>
+  <div><RouterLink to="/register">Register</RouterLink></div>
+  <div><RouterLink to="/map">Map</RouterLink></div>
+  <div><RouterLink to="/flag">FlagQuiz</RouterLink></div>
+  <div><RouterLink to="/quiz">ChooseQuiz</RouterLink></div>
+  </div>
+  <!--  WHEN ADDING A NEW LINK ADD HERE AND IN ROUTER -->
+
   <footer>
     <div class="footerContent">
       <span>Contact us</span>
       <span>Patreon</span>
-      <span>Follow us on socials</span>
+      <span>Social media</span>
     </div>
   </footer>
 </template>
 
 <style scoped>
+
+.navLink:hover {
+  text-decoration: underline;
+}
+
+
+.centerLinks {
+  text-align: center;
+}
 
 :root {
 
@@ -159,6 +185,16 @@ const showModal = () => {
 
 }
 
+.profileContent  {
+
+  border: 2px solid white;
+  border-radius: 15px;
+  height: 50px;
+  margin-left: 50px;
+  padding: 5px;
+
+}
+
 .login {
 
  //margin-left: auto;
@@ -199,6 +235,7 @@ const showModal = () => {
   color: #EEEEEE;
   font-weight: bolder;
   padding: 20px;
+  border-radius: 15px;
   box-shadow: 1px 3px 5px 0px rgba(0,0,0,0.75);
 
 }
@@ -251,15 +288,7 @@ const showModal = () => {
 
 
 
-.profileContent  {
 
-  border: 2px solid black;
-  border-radius: 35px;
-  height: 50px;
-  margin-left: 50px;
-  padding: 5px;
-
-}
 
 
 
