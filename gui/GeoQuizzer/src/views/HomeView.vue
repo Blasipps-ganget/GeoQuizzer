@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {RouterLink} from "vue-router";
-import { useSelectQuizStore } from '../stores/selectQuiz.js';
-const selectQuizStore = useSelectQuizStore()
+import { useGeneralStore } from '../stores/general.js';
+const generalStore = useGeneralStore()
 
 function selectQuiz(selection) {
-  selectQuizStore.selectedQuiz = selection
+  generalStore.selectedQuiz = selection
 
 }
 
@@ -129,6 +129,19 @@ border-radius: 15px;
   justify-content: center;
 
 }
+
+@media screen and (max-width: 720px) {
+  .mainContent {
+
+    display: grid;
+    gap: 50px;
+    grid-template-columns: 267px;
+    grid-template-rows: 250px 250px 250px;
+
+    padding-bottom: 180px;
+  }
+}
+
 
 
 

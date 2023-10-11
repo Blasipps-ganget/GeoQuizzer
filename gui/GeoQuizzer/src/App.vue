@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 
-import { useSelectQuizStore } from './stores/selectQuiz.js';
-const selectQuizStore = useSelectQuizStore()
+import { useGeneralStore } from './stores/general.js';
+const generalStore = useGeneralStore()
 
 function selectQuiz(selection) {
-  selectQuizStore.selectedQuiz = selection
+  generalStore.selectedQuiz = selection
 
 }
 
@@ -18,27 +18,27 @@ function selectQuiz(selection) {
 
     <div class="menuitem">
       <img class="nav__images" height="50" src="./assets/images/icons/flag.png" alt="Flags">
-      <RouterLink to="/quiz" @click="selectQuiz('flags')">Flags</RouterLink>
+      <RouterLink class="navLink" to="/quiz" @click="selectQuiz('flags')">Flags</RouterLink>
     </div>
 
     <div class="menuitem">
       <img class="nav__images"  height="50" src="./assets/images/icons/planet-earth.png" alt="Countries">
-        <RouterLink to="/quiz" @click="selectQuiz('countries')">Countries</RouterLink>
+        <RouterLink class="navLink" to="/quiz" @click="selectQuiz('countries')">Countries</RouterLink>
     </div>
 
     <div class="menuitem">
       <img class="nav__images"  height="50" src="./assets/images/icons/capitals.png" alt="Capitals">
-      <RouterLink to="/quiz" @click="selectQuiz('capitals')">Capitals</RouterLink>
+      <RouterLink class="navLink" to="/quiz" @click="selectQuiz('capitals')">Capitals</RouterLink>
     </div>
 
     <div class="menuitem">
       <img class="nav__images"  height="50"  src="./assets/images/icons/classroom.png" alt="Classroom">
-        <RouterLink to="/classroom">Classroom</RouterLink>
+        <RouterLink class="navLink" to="/classroom">Classroom</RouterLink>
     </div>
 
     <div class="menuitem">
       <img class="nav__images" height="50"  src="./assets/images/icons/user.png" alt="Profile">
-        <RouterLink to="/userProfile">Profile</RouterLink>
+        <RouterLink class="navLink" to="/userProfile">Profile</RouterLink>
     </div>
 
 
@@ -100,13 +100,18 @@ function selectQuiz(selection) {
     <div class="footerContent">
       <span>Contact us</span>
       <span>Patreon</span>
-      <span>Follow us on socials</span>
+      <span>Social media</span>
     </div>
   </footer>
 
 </template>
 
 <style scoped>
+
+.navLink:hover {
+  text-decoration: underline;
+}
+
 
 .centerLinks {
   text-align: center;
