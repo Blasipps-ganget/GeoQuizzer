@@ -15,7 +15,7 @@ router.get("/getFlag", async (req, res) => {
 const fetchCountryFlag = async (namn) => {
   try {
 //    const response = await fetch("https://restcountries.com/v3.1/all?fields=name,flags");
-      const response = await fetch("https://restcountries.com/v3.1/region/asia");
+      const response = await fetch("https://restcountries.com/v3.1/region/europe");
 
     if (!response.ok) {
       throw new Error("Failed to fetch European countries");
@@ -31,8 +31,6 @@ const fetchCountryFlag = async (namn) => {
       flagga: flag,
       namn: name
     }
-    console.log(flag);
-    console.log(name);
     return info
   } catch (error) {
     throw error;
