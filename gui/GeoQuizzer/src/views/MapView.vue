@@ -51,15 +51,17 @@ async function handleCountryClick(answer) {
 
   answerArray.value.push(answer);
   question.value = includedCountries.value[0];
-  await sleep(2000);
-
-
-
   if (!question.value) {
-    alert("Score: " + succeededGuesses.value.length + "/" + (succeededGuesses.value.length + failedGuesses.value.length));
+
+    await sleep(2000);
+    displayResults();
     resetQuiz();
   }
+}
 
+function displayResults() {
+  alert(`Your score is ${succeededGuesses.value.length}/${succeededGuesses.value.length + failedGuesses.value.length}`);
+  // Todo Post to backend here
 }
 
 async function sleep(ms) {
