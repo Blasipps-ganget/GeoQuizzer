@@ -6,17 +6,16 @@ module.exports=router;
 
 
 router.get("/europe", (req, res) => res.send([
-    "Albania", "Andorra", "Austria",
+    "Albania", "Austria",
     "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria",
     "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "England",
     "Finland", "France", "Germany", "Greece",
     "Hungary", "Iceland", "Ireland", "Italy",
-    "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg",
-    "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands",
-    "North Macedonia", "Norway", "Poland", "Portugal", "Romania",
-    "San Marino", "Republic of Serbia", "Slovakia", "Slovenia",
-    "Spain", "Sweden", "Switzerland", "Ukraine",
-    "United Kingdom", "Vatican City"
+    "Kosovo", "Latvia", "Lithuania", "Luxembourg",
+    "Moldova", "Montenegro", "Netherlands",
+    "Norway", "Poland", "Portugal", "Romania",
+    "Republic of Serbia", "Slovakia", "Slovenia",
+    "Spain", "Sweden", "Switzerland", "Ukraine"
 ]));
 
 router.get("/asia", (req, res) => res.send([

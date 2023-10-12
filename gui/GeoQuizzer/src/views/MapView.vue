@@ -4,7 +4,9 @@
     <div>failedGuesses: {{ failedGuesses }}</div>
     <div>succeededGuesses: {{ succeededGuesses }}</div>
     <div>includedCountries: {{ includedCountries }}</div>
-    <button @click="exitQuiz">Exit Quiz</button>
+    <div>answerArray: {{ answerArray }}</div>
+    <button @click="reloadQuiz">Reload Quiz</button>
+    <button @click="resetQuiz">Reset Map</button>
 
     <ClickableMap
         ref="myClickableMap"
@@ -14,6 +16,7 @@
         :mapResetTrigger="mapResetTrigger"
         @countryClicked="handleCountryClick"
         @regionClicked="handleRegionClick"
+        @resetQuiz="resetQuiz"
     />
   </div>
 </template>
@@ -27,6 +30,7 @@ const failedGuesses = ref([]);
 const succeededGuesses = ref([]);
 const includedCountries = ref([]);
 const question = ref();
+const answerArray = ref([]);
 const selectingRegions = ref(true);
 const mapResetTrigger = ref([]);
 
@@ -41,7 +45,14 @@ function handleCountryClick(answer) {
     failedGuesses.value.push(question.value);
 
   includedCountries.value = includedCountries.value.filter(country => country !== question.value);
-  question.value = includedCountries.value[Math.floor(Math.random() * includedCountries.value.length)];
+
+  answerArray.value.push(answer);
+  question.value = includedCountries.value[0];
+  if (!question.value) {
+      alert(`Du fick ${succeededGuesses.value.length} av ${succeededGuesses.value.length + failedGuesses.value.length} rätt!`);
+      // Todo Post to backend here
+      resetQuiz();
+  }
 }
 
 async function handleRegionClick(region) {
@@ -54,7 +65,19 @@ async function handleRegionClick(region) {
 }
 
 
-function exitQuiz() {
+
+function resetQuiz() {
+  selectingRegions.value = true;
+  failedGuesses.value = [];
+  succeededGuesses.value = [];
+  includedCountries.value = [];
+  answerArray.value = [];
+  question.value = null;
+  mapResetTrigger.value.length === 0 ? mapResetTrigger.value.push(1) : mapResetTrigger.value.pop();
+}
+
+
+function reloadQuiz() {
   location.reload();
 }
 </script>

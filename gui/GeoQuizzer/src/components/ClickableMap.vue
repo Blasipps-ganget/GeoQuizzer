@@ -6,6 +6,7 @@ const props = defineProps({
   failedGuesses: Array,
   succeededGuesses: Array,
   selectingRegions: { type: Boolean, default: true },
+  mapResetTrigger: Array
 });
 
 const emit = defineEmits(['countryClicked', 'regionClicked']);
@@ -40,16 +41,7 @@ onMounted(async () => {
   geoData.features.forEach(feature => nameToIdMap.value.set(feature.properties.name, feature.id));
   appendCountryPaths(geoData);
 
-  watch([props.failedGuesses, props.succeededGuesses], updateMap);
-  // watch([props.mapResetTrigger], resetMap);
-
-
-  function updateMap(){
-    svg.selectAll("path.Country")
-        .attr("d", d3.geoPath().projection(projection))
-        .attr("fill", d => getCountryColor(d))
-
-  }
+  watch([props.mapResetTrigger], () => {resetZoom();updateMap();});
 
   function appendCountryPaths(geoData) {
     svg.append("g")
@@ -68,8 +60,13 @@ onMounted(async () => {
         .on("click", mouseClick);
   }
 
-  function getCountryColor(d) {
+  function updateMap(){
+    svg.selectAll("path.Country")
+        .attr("d", d3.geoPath().projection(projection))
+        .attr("fill", d => getCountryColor(d))
+  }
 
+  function getCountryColor(d) {
     if(!props.selectingRegions) {
       let failedGuessesIds = props.failedGuesses.map(name => nameToIdMap.value.get(name));
       let succeededGuessesIds = props.succeededGuesses.map(name => nameToIdMap.value.get(name));
@@ -84,9 +81,7 @@ onMounted(async () => {
     props.selectingRegions ? mouseOverRegions.call(this) : mouseOverCountry.call(this);
   }
 
-
   function mouseOverCountry() {
-
     d3.selectAll(".Country").transition()
         .duration(200)
         .style("opacity", .7);
@@ -94,7 +89,6 @@ onMounted(async () => {
         .duration(200)
         .style("opacity", 1);
   }
-
 
   function findRegionForCountry(countryName) {
     if (europe.includes(countryName)) return "europe";
@@ -119,7 +113,6 @@ onMounted(async () => {
     };
 
     const regionArray = regionMap[region];
-
     if(!regionArray) return;
 
     d3.selectAll(".Country")
@@ -150,17 +143,16 @@ onMounted(async () => {
 
     if (props.selectingRegions) {
 
-
       let fractionX; // 0 is leftmost, 1 is rightmost, 0.5 is middle
       let fractionY; // 0 is topmost, 1 is bottommost, 0.5 is middle
       let scale;       // 1 is normal, 2 is double size, 0.5 is half size
 
-      if (region === "europe") { fractionX = 0.6; fractionY = 0.2; scale = 2.5; }
+      if (region === "europe") { fractionX = 0.55; fractionY = 0.25; scale = 3.8; }
       if (region === "asia") { fractionX = 1; fractionY = 0.3; scale = 2; }
-      if (region === "oceania") { fractionX = 1; fractionY = 0.73; scale = 5; }
+      if (region === "oceania") { fractionX = 1; fractionY = 0.721; scale = 5; }
       if (region === "africa") { fractionX = 0.6; fractionY = 0.6; scale = 2.5; }
       if (region === "northAmerica") { fractionX = 0; fractionY = 0.2; scale = 2; }
-      if (region === "southAmerica") { fractionX = 0.18; fractionY = 0.8; scale = 2.5; }
+      if (region === "southAmerica") { fractionX = 0.22; fractionY = 0.758; scale = 3.25; }
 
       let translateX = (width * fractionX) - (scale * width * fractionX);
       let translateY = (height * fractionY) - (scale * height * fractionY);
@@ -170,12 +162,8 @@ onMounted(async () => {
           .call(zoom.transform, d3.zoomIdentity.translate(translateX, translateY).scale(scale));
     }
 
-    d3.select(this)
-        .transition()
-        .duration(200)
-        .style("stroke", "black");
-
     props.selectingRegions ? emit("regionClicked", region) : emit("countryClicked", country);
+    updateMap();
   }
 
   function zoomed(event) {
@@ -183,9 +171,9 @@ onMounted(async () => {
         .attr("transform", event.transform);
   }
 
-  // function resetZone() {
-  //   svg.transition().duration(200).call(zoom.transform, d3.zoomIdentity);
-  // }
+  function resetZoom() {
+    svg.transition().duration(200).call(zoom.transform, d3.zoomIdentity);
+  }
 
   async function populateRegionMocks() {
     europe = await d3.json("http://localhost:8080/countries/europe");
