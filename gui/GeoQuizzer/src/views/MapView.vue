@@ -1,6 +1,25 @@
-<script setup>
+<template>
+  <div class="content">
+    <div>currentQuestion: {{ question }}</div>
+    <div>failedGuesses: {{ failedGuesses }}</div>
+    <div>succeededGuesses: {{ succeededGuesses }}</div>
+    <div>includedCountries: {{ includedCountries }}</div>
+    <button @click="exitQuiz">Exit Quiz</button>
 
-import {ref} from 'vue';
+    <ClickableMap
+        ref="myClickableMap"
+        :failedGuesses="failedGuesses"
+        :succeededGuesses="succeededGuesses"
+        :selectingRegions="selectingRegions"
+        :mapResetTrigger="mapResetTrigger"
+        @countryClicked="handleCountryClick"
+        @regionClicked="handleRegionClick"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
 import ClickableMap from "@/components/ClickableMap.vue";
 import * as d3 from "d3";
 
@@ -12,9 +31,7 @@ const selectingRegions = ref(true);
 const mapResetTrigger = ref([]);
 
 function handleCountryClick(answer) {
-
-  alert(`You clicked ${answer}!`);
-
+  // alert(`You clicked ${answer}!`);
   if (!question.value) return;
 
   if (answer === question.value)
@@ -27,44 +44,19 @@ function handleCountryClick(answer) {
 }
 
 async function handleRegionClick(region) {
-
   if (!region) return;
   selectingRegions.value = false;
   includedCountries.value = await d3.json(`http://localhost:8080/countries/${region}`);
   question.value = includedCountries.value[0];
+
+  // alert(`You clicked ${region}!`);
 }
 
-function resetMap() {
-  selectingRegions.value = true;
-  failedGuesses.value = [];
-  succeededGuesses.value = [];
-  includedCountries.value = [];
-  question.value = null;
-  mapResetTrigger.value.length === 0 ? mapResetTrigger.value.push(1) : mapResetTrigger.value.pop();
-}
 
+function exitQuiz() {
+  location.reload();
+}
 </script>
-
-<template>
-  <div class="content">
-    <div>currentQuestion: {{ question }}</div>
-    <div>failedGuesses: {{ failedGuesses }}</div>
-    <div>succeededGuesses: {{ succeededGuesses }}</div>
-    <div>includedCountries: {{ includedCountries }}</div>
-    <button @click="resetMap">Reset</button>
-    <ClickableMap
-        :failedGuesses="failedGuesses"
-        :succeededGuesses="succeededGuesses"
-        :selectingRegions="selectingRegions"
-        :mapResetTrigger="mapResetTrigger"
-
-        @countryClicked="handleCountryClick"
-        @regionClicked="handleRegionClick"
-    />
-  </div>
-</template>
-
-
 
 <style>
 .content {
@@ -73,6 +65,4 @@ function resetMap() {
   align-items: center;
   justify-content: center;
 }
-
-
 </style>

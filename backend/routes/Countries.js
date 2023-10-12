@@ -33,9 +33,7 @@ router.get("/asia", (req, res) => res.send([
 ]));
 
 router.get("/oceania", (req, res) => res.send([
-    "Australia", "Fiji", "Kiribati", "Marshall Islands", "Micronesia",
-    "Nauru", "New Zealand", "Palau", "Papua New Guinea", "Samoa",
-    "Solomon Islands", "Tonga", "Tuvalu", "Vanuatu"
+    "Australia", "Fiji", "New Zealand", "Papua New Guinea", "Solomon Islands", "Vanuatu"
 ]));
 
 router.get("/northAmerica", (req, res) => res.send([

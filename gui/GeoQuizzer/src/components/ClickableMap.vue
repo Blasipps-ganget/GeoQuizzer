@@ -2,14 +2,11 @@
 import { ref, onMounted, watch } from 'vue';
 import * as d3 from 'd3';
 
-
 const props = defineProps({
   failedGuesses: Array,
   succeededGuesses: Array,
   selectingRegions: { type: Boolean, default: true },
-  mapResetTrigger: Array
 });
-
 
 const emit = defineEmits(['countryClicked', 'regionClicked']);
 const nameToIdMap = ref(new Map());
@@ -23,9 +20,8 @@ let southAmerica;
 let northAmerica;
 
 
-
-
 onMounted(async () => {
+
   const svg = d3.select("#my_dataviz");
   const width = +svg.attr("width");
   const height = +svg.attr("height");
@@ -36,7 +32,7 @@ onMounted(async () => {
       .translate([width / 2, height / 2]);
 
   const zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoomed);
-  svg.call(zoom); // delete this line to disable free zooming
+  // svg.call(zoom); // delete this line to disable free zooming
 
   const geoData = await d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson");
   await populateRegionMocks();
@@ -45,7 +41,7 @@ onMounted(async () => {
   appendCountryPaths(geoData);
 
   watch([props.failedGuesses, props.succeededGuesses], updateMap);
-  watch([props.mapResetTrigger], resetMap);
+  // watch([props.mapResetTrigger], resetMap);
 
 
   function updateMap(){
@@ -53,7 +49,6 @@ onMounted(async () => {
         .attr("d", d3.geoPath().projection(projection))
         .attr("fill", d => getCountryColor(d))
 
-    console.log("updating map");
   }
 
   function appendCountryPaths(geoData) {
@@ -146,7 +141,6 @@ onMounted(async () => {
         .duration(200)
         .style("opacity", .7)
         .style("stroke", "black");
-
   }
 
   function mouseClick() {
@@ -163,7 +157,7 @@ onMounted(async () => {
 
       if (region === "europe") { fractionX = 0.6; fractionY = 0.2; scale = 2.5; }
       if (region === "asia") { fractionX = 1; fractionY = 0.3; scale = 2; }
-      if (region === "oceania") { fractionX = 1; fractionY = 0.8; scale = 2.5; }
+      if (region === "oceania") { fractionX = 1; fractionY = 0.73; scale = 5; }
       if (region === "africa") { fractionX = 0.6; fractionY = 0.6; scale = 2.5; }
       if (region === "northAmerica") { fractionX = 0; fractionY = 0.2; scale = 2; }
       if (region === "southAmerica") { fractionX = 0.18; fractionY = 0.8; scale = 2.5; }
@@ -184,22 +178,14 @@ onMounted(async () => {
     props.selectingRegions ? emit("regionClicked", region) : emit("countryClicked", country);
   }
 
-
-
-
   function zoomed(event) {
     svg.selectAll("path")
         .attr("transform", event.transform);
   }
 
-  function resetMap() {
-    console.log("resetting map");
-    svg.transition()
-        .duration(200)
-        .call(zoom.transform, d3.zoomIdentity);
-  }
-
-
+  // function resetZone() {
+  //   svg.transition().duration(200).call(zoom.transform, d3.zoomIdentity);
+  // }
 
   async function populateRegionMocks() {
     europe = await d3.json("http://localhost:8080/countries/europe");
@@ -216,7 +202,7 @@ onMounted(async () => {
 <template>
   <div>{{mouseover}}</div>
   <div>
-    <svg id="my_dataviz" width="800" height="600"></svg>
+    <svg id="my_dataviz" width="885" height="650"></svg>
   </div>
 
 </template>
