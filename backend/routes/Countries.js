@@ -15,7 +15,7 @@ router.get("/europe", (req, res) => res.send([
     "Moldova", "Montenegro", "Netherlands",
     "Norway", "Poland", "Portugal", "Romania",
     "Republic of Serbia", "Slovakia", "Slovenia",
-    "Spain", "Sweden", "Switzerland", "Ukraine"
+    "Spain", "Sweden", "Switzerland", "Ukraine" ,"Macedonia"
 ]));
 
 router.get("/asia", (req, res) => res.send([
@@ -47,7 +47,7 @@ router.get("/northAmerica", (req, res) => res.send([
 router.get("/southAmerica", (req, res) => res.send([
     "Argentina", "Bolivia", "Brazil", "Chile", "Colombia",
     "Ecuador", "Guyana", "Paraguay", "Peru", "Suriname",
-    "Uruguay", "Venezuela", "Falkland Islands"
+    "Uruguay", "Venezuela", "Falkland Islands" ,"Trinidad and Tobago"
 ]));
 
 

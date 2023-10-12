@@ -53,8 +53,9 @@ onMounted(async () => {
         .attr("fill", d => getCountryColor(d))
         .style("stroke", "transparent")
         .style("stroke", "black")
+        .style("stroke-width", "0.5px")
         .attr("class", "Country")
-        .style("opacity", .8)
+        .style("opacity", 1)
         .on("mouseover", mouseOver)
         .on("mouseleave", mouseLeave)
         .on("click", mouseClick);
@@ -73,7 +74,7 @@ onMounted(async () => {
       if (failedGuessesIds.includes(d.id)) return "red";
       if (succeededGuessesIds.includes(d.id)) return "green";
     }
-    return "grey";
+    return "lightgrey";
   }
 
   function mouseOver() {
@@ -82,12 +83,18 @@ onMounted(async () => {
   }
 
   function mouseOverCountry() {
+
     d3.selectAll(".Country").transition()
-        .duration(200)
-        .style("opacity", .7);
+        .style("opacity", .9).attr("fill", getCountryColor);
+
     d3.select(this).transition()
-        .duration(200)
-        .style("opacity", 1);
+        .style("opacity", 1).attr("fill", "#053B50");
+
+    if (getCountryColor(d3.select(this).datum()) !== "lightgrey")
+      d3.select(this).transition()
+          .style("opacity", 1).attr("fill", getCountryColor);
+
+
   }
 
   function findRegionForCountry(countryName) {
@@ -119,21 +126,20 @@ onMounted(async () => {
         .filter(d => regionArray.includes(d.properties.name))
         .transition()
         .duration(200)
-        .style("opacity", 1);
+        .style("opacity", 1).attr("fill", "#053B50");
 
     d3.selectAll(".Country")
         .filter(d => !regionArray.includes(d.properties.name))
         .transition()
         .duration(200)
-        .style("opacity", .7);
+        .style("opacity", .9).attr("fill", getCountryColor);
   }
 
   function mouseLeave() {
     d3.selectAll(".Country")
         .transition()
         .duration(200)
-        .style("opacity", .7)
-        .style("stroke", "black");
+        .style("stroke", "black").attr("fill", getCountryColor);
   }
 
   function mouseClick() {
@@ -148,10 +154,10 @@ onMounted(async () => {
       let scale;       // 1 is normal, 2 is double size, 0.5 is half size
 
       if (region === "europe") { fractionX = 0.55; fractionY = 0.25; scale = 3.8; }
-      if (region === "asia") { fractionX = 1; fractionY = 0.3; scale = 2; }
+      if (region === "asia") { fractionX = 0.9; fractionY = 0.41; scale = 2.8; }
       if (region === "oceania") { fractionX = 1; fractionY = 0.721; scale = 5; }
-      if (region === "africa") { fractionX = 0.6; fractionY = 0.6; scale = 2.5; }
-      if (region === "northAmerica") { fractionX = 0; fractionY = 0.2; scale = 2; }
+      if (region === "africa") { fractionX = 0.6; fractionY = 0.6; scale = 3.4; }
+      if (region === "northAmerica") { fractionX = 0.15; fractionY = 0.3; scale = 2.8; }
       if (region === "southAmerica") { fractionX = 0.22; fractionY = 0.758; scale = 3.25; }
 
       let translateX = (width * fractionX) - (scale * width * fractionX);
@@ -188,13 +194,17 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>{{mouseover}}</div>
+
   <div>
     <svg id="my_dataviz" width="885" height="650"></svg>
   </div>
+  <div>{{mouseover}}</div>
 
 </template>
 
 <style scoped>
-#my_dataviz {background-color: white;}
+#my_dataviz {
+  background-color: #176B87;
+  border: 1px solid black;
+}
 </style>

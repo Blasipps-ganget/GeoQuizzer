@@ -1,12 +1,15 @@
 <template>
   <div class="content">
-    <div>currentQuestion: {{ question }}</div>
+    <button @click="reloadQuiz">Reload Quiz</button>
+    <button @click="resetQuiz">Reset Map</button>
+
     <div>failedGuesses: {{ failedGuesses }}</div>
     <div>succeededGuesses: {{ succeededGuesses }}</div>
     <div>includedCountries: {{ includedCountries }}</div>
     <div>answerArray: {{ answerArray }}</div>
-    <button @click="reloadQuiz">Reload Quiz</button>
-    <button @click="resetQuiz">Reset Map</button>
+    <div class="message" v-if="question">Where is: {{ question }}?</div>
+    <div class="message" v-else>Select region</div>
+
 
     <ClickableMap
         ref="myClickableMap"
@@ -34,7 +37,7 @@ const answerArray = ref([]);
 const selectingRegions = ref(true);
 const mapResetTrigger = ref([]);
 
-function handleCountryClick(answer) {
+async function handleCountryClick(answer) {
 
   // alert(`You clicked ${answer}!`);
   if (!question.value) return;
@@ -48,11 +51,19 @@ function handleCountryClick(answer) {
 
   answerArray.value.push(answer);
   question.value = includedCountries.value[0];
+  await sleep(2000);
+
+
+
   if (!question.value) {
-      alert(`Du fick ${succeededGuesses.value.length} av ${succeededGuesses.value.length + failedGuesses.value.length} rätt!`);
-      // Todo Post to backend here
-      resetQuiz();
+    alert("Score: " + succeededGuesses.value.length + "/" + (succeededGuesses.value.length + failedGuesses.value.length));
+    resetQuiz();
   }
+
+}
+
+async function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function handleRegionClick(region) {
@@ -88,5 +99,11 @@ function reloadQuiz() {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+.message {
+
+  color: #053B50;
+  font-weight: bold;
+  font-size: 40px;
 }
 </style>
