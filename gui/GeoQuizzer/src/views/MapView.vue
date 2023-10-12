@@ -31,6 +31,7 @@ const selectingRegions = ref(true);
 const mapResetTrigger = ref([]);
 
 function handleCountryClick(answer) {
+
   // alert(`You clicked ${answer}!`);
   if (!question.value) return;
 
