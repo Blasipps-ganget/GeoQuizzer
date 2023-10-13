@@ -59,9 +59,18 @@ async function handleCountryClick(answer) {
   }
 }
 
-function displayResults() {
+async function displayResults() {
   alert(`Your score is ${succeededGuesses.value.length}/${succeededGuesses.value.length + failedGuesses.value.length}`);
-  // Todo Post to backend here
+
+  await fetch(`http://localhost:8080/countries/result`, {
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    body: JSON.stringify({ answers: answerArray.value})
+  });
+
+
 }
 
 async function sleep(ms) {

@@ -5,23 +5,48 @@ const router=express.Router()
 module.exports=router;
 
 
+const app = express();
+app.use(express.json());
+
+
+
+let currentList = [];
+
 function shuffle(array) {
     let currentIndex = array.length,  randomIndex;
 
-    // While there remain elements to shuffle.
     while (currentIndex > 0) {
-
-        // Pick a remaining element.
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex--;
-
-        // And swap it with the current element.
-        [array[currentIndex], array[randomIndex]] = [
-            array[randomIndex], array[currentIndex]];
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
     }
-
     return array;
 }
+
+function compareResults(answers) {
+    let correctAnswers = 0;
+    let wrongAnswers = 0;
+    let wrongAnswersList = [];
+    for (let i = 0; i < answers.length; i++) {
+        if (answers[i] === currentList[i]) {
+            correctAnswers++;
+        } else {
+            wrongAnswers++;
+            wrongAnswersList.push(answers[i]);
+        }
+    }
+    console.log("Correct answers: " + correctAnswers);
+    console.log("Wrong answers: " + wrongAnswers);
+    console.log("Wrong answers list: " + wrongAnswersList);
+
+}
+
+router.post("/result", express.json(),  (req, res) => {
+    console.log(req.body.answers)
+    const answers = req.body.answers;
+    compareResults(answers);
+    res.sendStatus(200);
+})
 
 router.get("/:region", (req, res) => {
 const region = req.params.region;
@@ -41,8 +66,9 @@ function getSouthAmericaQuiz() {
         "Ecuador", "Guyana", "Paraguay", "Peru", "Suriname",
         "Uruguay", "Venezuela", "Falkland Islands" ,"Trinidad and Tobago"
     ]
-
-    return shuffle(southAmericanCountries);
+    let shuffledList = shuffle(southAmericanCountries);
+    currentList = shuffledList;
+    return shuffledList;
 }
 
 function getNorthAmericaQuiz() {
@@ -54,7 +80,9 @@ function getNorthAmericaQuiz() {
         "Jamaica", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines",
         "Trinidad and Tobago"
     ]
-    return shuffle(northAmericanCountries);
+    let shuffledList = shuffle(northAmericanCountries);
+    currentList = shuffledList;
+    return shuffledList;
 }
 
 function getAfricaQuiz() {
@@ -71,7 +99,9 @@ function getAfricaQuiz() {
         "South Sudan", "Sudan", "United Republic of Tanzania", "Togo", "Tunisia", "Western Sahara",
         "Uganda", "Zambia", "Zimbabwe"
         ]
-    return shuffle(africanCountries);
+    let shuffledList = shuffle(africanCountries);
+    currentList = shuffledList;
+    return shuffledList;
 }
 
 
@@ -88,7 +118,9 @@ function getEuropeQuiz() {
         "Republic of Serbia", "Slovakia", "Slovenia",
         "Spain", "Sweden", "Switzerland", "Ukraine" ,"Macedonia"
     ];
-    return shuffle(europeanCountries);
+    let shuffledList = shuffle(europeanCountries);
+    currentList = shuffledList;
+    return shuffledList;
 }
 
 function getAsianQuiz() {
@@ -104,14 +136,18 @@ function getAsianQuiz() {
         "Taiwan", "Tajikistan", "Thailand", "Turkey", "Turkmenistan",
         "United Arab Emirates", "Uzbekistan", "Vietnam", "Yemen"
     ]
-    return shuffle(asianCountries);
+    let shuffledList = shuffle(asianCountries);
+    currentList = shuffledList;
+    return shuffledList;
 }
 
 function getOceaniaQuiz() {
     const oceaniaCountries = [
         "Australia", "Fiji", "New Zealand", "Papua New Guinea", "Solomon Islands", "Vanuatu"
     ]
-    return shuffle(oceaniaCountries);
+    let shuffledList = shuffle(oceaniaCountries);
+    currentList = shuffledList;
+    return shuffledList;
 }
 
 
