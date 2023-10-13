@@ -12,7 +12,6 @@
 
 
     <ClickableMap
-        ref="myClickableMap"
         :failedGuesses="failedGuesses"
         :succeededGuesses="succeededGuesses"
         :selectingRegions="selectingRegions"

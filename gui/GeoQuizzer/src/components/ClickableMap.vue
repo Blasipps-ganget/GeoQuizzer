@@ -13,6 +13,8 @@ const emit = defineEmits(['countryClicked', 'regionClicked']);
 const nameToIdMap = ref(new Map());
 const mouseover = ref("mouseover");
 
+
+
 let europe;
 let asia;
 let africa;

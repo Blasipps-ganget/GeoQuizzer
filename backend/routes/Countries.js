@@ -6,7 +6,6 @@ module.exports=router;
 express().use(express.json());
 
 
-
 let currentList = [];
 
 function shuffle(array) {
