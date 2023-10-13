@@ -6,17 +6,16 @@ module.exports=router;
 
 
 router.get("/europe", (req, res) => res.send([
-    "Albania", "Andorra", "Austria",
+    "Albania", "Austria",
     "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria",
     "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "England",
     "Finland", "France", "Germany", "Greece",
     "Hungary", "Iceland", "Ireland", "Italy",
-    "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg",
-    "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands",
-    "North Macedonia", "Norway", "Poland", "Portugal", "Romania",
-    "San Marino", "Republic of Serbia", "Slovakia", "Slovenia",
-    "Spain", "Sweden", "Switzerland", "Ukraine",
-    "United Kingdom", "Vatican City"
+    "Kosovo", "Latvia", "Lithuania", "Luxembourg",
+    "Moldova", "Montenegro", "Netherlands",
+    "Norway", "Poland", "Portugal", "Romania",
+    "Republic of Serbia", "Slovakia", "Slovenia",
+    "Spain", "Sweden", "Switzerland", "Ukraine" ,"Macedonia"
 ]));
 
 router.get("/asia", (req, res) => res.send([
@@ -33,9 +32,7 @@ router.get("/asia", (req, res) => res.send([
 ]));
 
 router.get("/oceania", (req, res) => res.send([
-    "Australia", "Fiji", "Kiribati", "Marshall Islands", "Micronesia",
-    "Nauru", "New Zealand", "Palau", "Papua New Guinea", "Samoa",
-    "Solomon Islands", "Tonga", "Tuvalu", "Vanuatu"
+    "Australia", "Fiji", "New Zealand", "Papua New Guinea", "Solomon Islands", "Vanuatu"
 ]));
 
 router.get("/northAmerica", (req, res) => res.send([
@@ -50,7 +47,7 @@ router.get("/northAmerica", (req, res) => res.send([
 router.get("/southAmerica", (req, res) => res.send([
     "Argentina", "Bolivia", "Brazil", "Chile", "Colombia",
     "Ecuador", "Guyana", "Paraguay", "Peru", "Suriname",
-    "Uruguay", "Venezuela", "Falkland Islands"
+    "Uruguay", "Venezuela", "Falkland Islands" ,"Trinidad and Tobago"
 ]));
 
 

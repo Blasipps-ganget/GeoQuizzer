@@ -1,20 +1,45 @@
-<script setup>
+<template>
+  <div class="content">
+    <button @click="reloadQuiz">Reload Quiz</button>
+    <button @click="resetQuiz">Reset Map</button>
 
-import {ref} from 'vue';
+    <div>failedGuesses: {{ failedGuesses }}</div>
+    <div>succeededGuesses: {{ succeededGuesses }}</div>
+    <div>includedCountries: {{ includedCountries }}</div>
+    <div>answerArray: {{ answerArray }}</div>
+    <div class="message" v-if="question">Where is: {{ question }}?</div>
+    <div class="message" v-else>Select region</div>
+
+
+    <ClickableMap
+        ref="myClickableMap"
+        :failedGuesses="failedGuesses"
+        :succeededGuesses="succeededGuesses"
+        :selectingRegions="selectingRegions"
+        :mapResetTrigger="mapResetTrigger"
+        @countryClicked="handleCountryClick"
+        @regionClicked="handleRegionClick"
+        @resetQuiz="resetQuiz"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
 import ClickableMap from "@/components/ClickableMap.vue";
 import * as d3 from "d3";
-
 
 const failedGuesses = ref([]);
 const succeededGuesses = ref([]);
 const includedCountries = ref([]);
 const question = ref();
+const answerArray = ref([]);
 const selectingRegions = ref(true);
+const mapResetTrigger = ref([]);
 
-function handleCountryClick(answer) {
+async function handleCountryClick(answer) {
 
-  alert(`You clicked ${answer}!`);
-
+  // alert(`You clicked ${answer}!`);
   if (!question.value) return;
 
   if (answer === question.value)
@@ -23,36 +48,52 @@ function handleCountryClick(answer) {
     failedGuesses.value.push(question.value);
 
   includedCountries.value = includedCountries.value.filter(country => country !== question.value);
-  question.value = includedCountries.value[Math.floor(Math.random() * includedCountries.value.length)];
+
+  answerArray.value.push(answer);
+  question.value = includedCountries.value[0];
+  if (!question.value) {
+
+    await sleep(2000);
+    displayResults();
+    resetQuiz();
+  }
+}
+
+function displayResults() {
+  alert(`Your score is ${succeededGuesses.value.length}/${succeededGuesses.value.length + failedGuesses.value.length}`);
+  // Todo Post to backend here
+}
+
+async function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function handleRegionClick(region) {
-
   if (!region) return;
   selectingRegions.value = false;
   includedCountries.value = await d3.json(`http://localhost:8080/countries/${region}`);
   question.value = includedCountries.value[0];
+
+  // alert(`You clicked ${region}!`);
 }
 
+
+
+function resetQuiz() {
+  selectingRegions.value = true;
+  failedGuesses.value = [];
+  succeededGuesses.value = [];
+  includedCountries.value = [];
+  answerArray.value = [];
+  question.value = null;
+  mapResetTrigger.value.length === 0 ? mapResetTrigger.value.push(1) : mapResetTrigger.value.pop();
+}
+
+
+function reloadQuiz() {
+  location.reload();
+}
 </script>
-
-<template>
-  <div class="content">
-    <div>currentQuestion: {{ question }}</div>
-    <div>failedGuesses: {{ failedGuesses }}</div>
-    <div>succeededGuesses: {{ succeededGuesses }}</div>
-    <div>includedCountries: {{ includedCountries }}</div>
-    <ClickableMap
-        :failedGuesses="failedGuesses"
-        :succeededGuesses="succeededGuesses"
-        :selectingRegions="selectingRegions"
-        @countryClicked="handleCountryClick"
-        @regionClicked="handleRegionClick"
-
-    />
-  </div>
-</template>
-
 
 <style>
 .content {
@@ -61,6 +102,10 @@ async function handleRegionClick(region) {
   align-items: center;
   justify-content: center;
 }
+.message {
 
-
+  color: #053B50;
+  font-weight: bold;
+  font-size: 40px;
+}
 </style>
