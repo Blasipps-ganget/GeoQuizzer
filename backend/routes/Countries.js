@@ -30,7 +30,8 @@ function compareResults(answers) {
     for (let i = 0; i < answers.length; i++) {
         if (answers[i] === currentList[i]) {
             correctAnswers++;
-        } else {
+        }
+        else {
             wrongAnswers++;
             wrongAnswersList.push(answers[i]);
         }
@@ -75,10 +76,10 @@ function getNorthAmericaQuiz() {
     const northAmericanCountries = [
         "Canada", "USA", "Mexico", "Greenland",
         "Belize", "Costa Rica", "El Salvador", "Guatemala", "Honduras",
-        "Nicaragua", "Panama", "Antigua and Barbuda", "Bahamas", "Barbados",
-        "Cuba", "Dominica", "Dominican Republic", "Grenada", "Haiti",
-        "Jamaica", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines",
-        "Trinidad and Tobago"
+        "Nicaragua", "Panama", "The Bahamas",
+        "Cuba",  "Dominican Republic",  "Haiti",
+        "Jamaica", "Puerto Rico",
+
     ]
     let shuffledList = shuffle(northAmericanCountries);
     currentList = shuffledList;
@@ -105,7 +106,7 @@ function getAfricaQuiz() {
     return shuffledList;
 }
 
-
+// deleted Northern Cyprus
 function getEuropeQuiz() {
     const europeanCountries = [
         "Albania", "Austria",
