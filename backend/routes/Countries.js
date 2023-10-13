@@ -3,10 +3,7 @@
 const express=require('express')
 const router=express.Router()
 module.exports=router;
-
-
-const app = express();
-app.use(express.json());
+express().use(express.json());
 
 
 
