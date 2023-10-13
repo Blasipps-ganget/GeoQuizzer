@@ -53,7 +53,7 @@ async function handleCountryClick(answer) {
   question.value = includedCountries.value[0];
   if (!question.value) {
 
-    await sleep(2000);
+    await sleep(1000);
     displayResults();
     resetQuiz();
   }
