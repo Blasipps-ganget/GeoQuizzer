@@ -38,7 +38,6 @@ const mapResetTrigger = ref([]);
 
 async function handleCountryClick(answer) {
 
-  // alert(`You clicked ${answer}!`);
   if (!question.value) return;
 
   if (answer === question.value)
@@ -51,25 +50,19 @@ async function handleCountryClick(answer) {
   answerArray.value.push(answer);
   question.value = includedCountries.value[0];
   if (!question.value) {
-
-    await sleep(1000);
-    displayResults();
+    await sleep(500);
+    await displayResults();
     resetQuiz();
   }
 }
 
 async function displayResults() {
   alert(`Your score is ${succeededGuesses.value.length}/${succeededGuesses.value.length + failedGuesses.value.length}`);
-
   await fetch(`http://localhost:8080/countries/result`, {
-    headers: {
-      'Content-Type': 'application/json'
-    },
+    headers: {'Content-Type': 'application/json'},
     method: 'POST',
     body: JSON.stringify({ answers: answerArray.value})
   });
-
-
 }
 
 async function sleep(ms) {
