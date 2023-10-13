@@ -85,17 +85,18 @@ function getNorthAmericaQuiz() {
     return shuffledList;
 }
 
+//  deleted Gambia,
 function getAfricaQuiz() {
     const africanCountries = [
         "Algeria", "Angola", "Benin", "Botswana", "Burkina Faso",
-        "Burundi", "Cabo Verde", "Cameroon", "Central African Republic", "Chad",
-        "Comoros", "Democratic Republic of the Congo", "Republic of the Congo", "Djibouti", "Egypt", "Equatorial Guinea",
-        "Eritrea", "Eswatini", "Ethiopia", "Gabon", "Gambia",
-        "Ghana", "Guinea", "Guinea-Bissau", "Ivory Coast", "Kenya",
+        "Burundi", "Cameroon", "Central African Republic", "Chad",
+        "Democratic Republic of the Congo", "Republic of the Congo", "Djibouti", "Egypt", "Equatorial Guinea",
+        "Eritrea", "Swaziland", "Ethiopia", "Gabon",
+        "Ghana", "Guinea", "Guinea Bissau", "Ivory Coast", "Kenya",
         "Lesotho", "Liberia", "Libya", "Madagascar", "Malawi",
-        "Mali", "Mauritania", "Mauritius", "Morocco", "Mozambique",
-        "Namibia", "Niger", "Nigeria", "Rwanda", "Sao Tome and Principe",
-        "Senegal", "Seychelles", "Sierra Leone", "Somalia", "Somaliland", "South Africa",
+        "Mali", "Mauritania", "Morocco", "Mozambique",
+        "Namibia", "Niger", "Nigeria", "Rwanda",
+        "Senegal", "Sierra Leone", "Somalia", "Somaliland", "South Africa",
         "South Sudan", "Sudan", "United Republic of Tanzania", "Togo", "Tunisia", "Western Sahara",
         "Uganda", "Zambia", "Zimbabwe"
         ]
