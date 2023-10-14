@@ -5,8 +5,15 @@ const router=express.Router()
 module.exports=router;
 express().use(express.json());
 
-
-let currentList = [];
+let currentQuiz = [];
+const regions = {
+    "europe": getEuropeCountries(),
+    "asia": getAsianCountries(),
+    "oceania": getOceaniaCountries(),
+    "africa": getAfricaCountries(),
+    "northAmerica": getNorthAmericaCountries(),
+    "southAmerica": getSouthAmericaCountries()
+};
 
 router.post("/result", express.json(),  (req, res) => {
     console.log(req.body.answers)
@@ -16,54 +23,18 @@ router.post("/result", express.json(),  (req, res) => {
 })
 
 router.get("/:region", (req, res) => {
-const region = req.params.region;
-    if (region === "europe") res.send(getEuropeCountries());
-    else if (region === "asia") res.send(getAsianCountries());
-    else if (region === "oceania") res.send(getOceaniaCountries());
-    else if (region === "africa") res.send(getAfricaCountries());
-    else if (region === "northAmerica") res.send(getNorthAmericaCountries());
-    else if (region === "southAmerica") res.send(getSouthAmericaCountries());
+    const region = req.params.region;
+    res.send(regions[region]);
 });
 
 router.get("/quiz/:region", (req, res) => {
     const region = req.params.region;
-    if (region === "europe") res.send(getEuropeQuiz());
-    else if (region === "asia") res.send(getAsianQuiz());
-    else if (region === "oceania") res.send(getOceaniaQuiz());
-    else if (region === "africa") res.send(getAfricaQuiz());
-    else if (region === "northAmerica") res.send(getNorthAmericaQuiz());
-    else if (region === "southAmerica") res.send(getSouthAmericaQuiz());
+    res.send(getQuiz(region));
 });
 
-
-function getNorthAmericaQuiz() {
-    currentList = shuffle(getNorthAmericaCountries());
-    return currentList;
-}
-
-function getSouthAmericaQuiz() {
-    currentList = shuffle(getSouthAmericaCountries());
-    return currentList;
-}
-
-function getAfricaQuiz() {
-    currentList = shuffle(getAfricaCountries());
-    return currentList;
-}
-
-function getAsianQuiz() {
-    currentList = shuffle(getAsianCountries());
-    return currentList;
-}
-
-function getEuropeQuiz() {
-    currentList = shuffle(getEuropeCountries());
-    return currentList;
-}
-
-function getOceaniaQuiz() {
-    currentList = shuffle(getOceaniaCountries());
-    return currentList;
+function getQuiz(region) {
+    currentQuiz = shuffle(regions[region]);
+    return currentQuiz;
 }
 
 function shuffle(array) {
@@ -82,7 +53,7 @@ function compareResults(answers) {
     let wrongAnswers = 0;
     let wrongAnswersList = [];
     for (let i = 0; i < answers.length; i++) {
-        if (answers[i] === currentList[i]) {
+        if (answers[i] === currentQuiz[i]) {
             correctAnswers++;
         }
         else {
@@ -140,7 +111,7 @@ function getOceaniaCountries() {
 
 function getAsianCountries() {
     return [
-        "Afghanistan", "Armenia", "Azerbaijan", "Bangladesh", "Bhutan", "Brunei", "Cambodia", "China", "Cyprus",
+        "Afghanistan", "Armenia", "Azerbaijan", "Bangladesh", "Bhutan", "Brunei", "Cambodia", "China",
         "Georgia", "India", "Indonesia", "Iran", "Iraq", "Israel", "Japan", "Jordan", "Kazakhstan", "Kuwait",
         "Kyrgyzstan", "Laos", "Lebanon", "Malaysia", "Mongolia", "Myanmar", "Nepal", "North Korea", "Oman",
         "Pakistan", "Philippines", "Qatar", "Russia", "Saudi Arabia", "South Korea", "Sri Lanka", "Syria", "Taiwan",
