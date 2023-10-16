@@ -1,50 +1,117 @@
+
 <template>
-    <body>
-      <div class="container">
-      <div class="question-number" id="question-number-area">Fråga 1</div>
+  <body>
+    <div class="container">
+      <div class="question-number" id="question-number-area"> Fråga {{ questionNumber }}</div>
       <div class="flag">
-        <img :src="data.flagUrl" alt="Flag" style="width: 300px;
-         height: 200px;" />
+        <img :src="data.flagUrl" alt="Flag" style="width: 300px; height: 200px;" />
       </div>
-  
+
       <div class="content" id="question-area">
-        <div id="question-text"> Which country does the flag belongs to? </div>
-      <div class="options">
-        <button class="btn btn-option">{{ answerOne }}</button>
-        <button class="btn btn-option">{{ answerTwo }}</button>
-        <button class="btn btn-option">{{ answerThree }}</button>
-        <button class="btn btn-option">{{ answerFour }}</button>
-      </div>
-      </div>
+        <div id="question-text"> Which country does the flag belong to? </div>
+        <div class="options">
+          <button class="btn btn-option" @click="checkAnswer(answerOne)">{{ answerOne }}</button>
+          <button class="btn btn-option" @click="checkAnswer(answerTwo)">{{ answerTwo }}</button>
+          <button class="btn btn-option" @click="checkAnswer(answerThree)">{{ answerThree }}</button>
+          <button class="btn btn-option" @click="checkAnswer(answerFour)">{{ answerFour }}</button>
         </div>
-    </body>
-    </template>
-    
-    <script setup>
-    import { onMounted, ref } from 'vue';
-    import { fetchCountryFlag } from '../js/flagApi'
-  
-    const answerOne = ref ('Sverige')
-    const answerTwo = ref ('Norge')
-    const answerThree = ref ('Blåsippa')
-    const answerFour = ref ('Uzbekistan')
-    
-    
-    const data = ref({
-  country: 'Sweden',
+        <div v-if="showMessage">
+          <p>{{ message }}</p>
+          <div v-if="questionsAnswered >= 10">
+            <p>Quiz completed! Your final score is: {{ totalScore }}</p>
+          </div>
+        </div>
+        <button class="btn btn-option" @click="nextQuestion" v-if="showMessage && questionsAnswered < 10">Next Question</button>
+        </div>
+        <button class="btn btn-option" @click="TryAgain" v-if="questionsAnswered > 9"> Try again</button>
+      </div>
+  </body>
+</template>
+
+<script setup>
+import { onMounted, ref } from 'vue';
+import { fetchCountryFlag } from '../js/flagApi';
+
+const data = ref({
+  country: '',
   flagUrl: '',
-  wrongAnswers: ['Finland', 'Norway'],
+  wrongAnswers: [''],
 });
 
-onMounted(async () => {
+const correctAnswer = ref(false); 
+const questionsAnswered = ref(0);
+const totalScore = ref(0);
+let correctCountry = ref('')
+const showMessage = ref(false); 
+let message = ref ('');
+let questionNumber = ref(0);
+
+const generateRandomAnswers = async () => {
+  questionNumber.value += 1;
   try {
-    const flagUrl = await fetchCountryFlag(data.value.country);
-    console.log('Flag URL:', flagUrl);
-    data.value.flagUrl = flagUrl;
+    const response = await fetchCountryFlag(data.value.country);
+    data.value.flagUrl = response.flagurl;
+    data.value.country = response.land;
+    data.value.wrongAnswers = response.felsvar;
+
+    shuffleArray(data.value.wrongAnswers);
+    correctCountry.value = response;
+
+
+    answerOne.value = data.value.country;
+    answerTwo.value = data.value.wrongAnswers[0];
+    answerThree.value = data.value.wrongAnswers[1];
+    answerFour.value = data.value.wrongAnswers[2];
+    console.log("flaggUrl: " + data.value.flagUrl)
+    console.log("Fel länder : " + data.value.wrongAnswers)
+    console.log("Korrekt land : " + data.value.country)
   } catch (error) {
     console.error(error);
   }
+};
+
+onMounted(async () => {
+  await generateRandomAnswers();
 });
+
+const answerOne = ref('');
+const answerTwo = ref('');
+const answerThree = ref('');
+const answerFour = ref('');
+
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+};
+
+const nextQuestion = async () => {
+  showMessage.value = false;
+  if(questionsAnswered.value < 10){
+  await generateRandomAnswers();
+  }
+};
+
+
+const checkAnswer =  async (selectedAnswer) => {
+  showMessage.value = true;
+  if (selectedAnswer === correctCountry.value.land) {
+    correctAnswer.value = true; 
+    message.value = 'Rätt svar'
+    if (questionsAnswered.value < 10) {
+      totalScore.value += 1;
+    }
+    console.log('Correct!');
+  } else {
+    message.value = `FEL, rätt svar är: ${correctCountry.value.land}`;
+    console.log('Incorrect!');
+  }
+  questionsAnswered.value += 1;
+  if (questionsAnswered.value >= 10) {
+    showMessage.value = true;
+  } 
+};
 </script>
 
 <style scoped>
@@ -63,9 +130,9 @@ onMounted(async () => {
       justify-content: center;
     }
     .container {
-      width: 50vw;
+      width: 60vw;
       max-width: 80%;
-      height: 70vh;
+      height: 90vh;
       box-shadow: 0 0 5px 4px;
       display: flex;
       flex-direction: column;
