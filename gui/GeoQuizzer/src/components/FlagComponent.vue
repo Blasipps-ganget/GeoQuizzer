@@ -142,7 +142,7 @@ const checkAnswer =  async (selectedAnswer) => {
       justify-content: center;
     }
     .container {
-      width: 60vw;
+      width: 800px;
       max-width: 80%;
       height: 90vh;
       box-shadow: 0 0 5px 4px;
