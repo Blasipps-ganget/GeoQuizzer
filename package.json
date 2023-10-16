@@ -12,9 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "sqlite3": "^5.1.6",
     "vuetify": "^3.3.20"
   },
   "devDependencies": {
     "concurrently": "^8.2.1"
-}
+  }
 }
