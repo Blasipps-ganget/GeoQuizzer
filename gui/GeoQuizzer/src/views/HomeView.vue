@@ -17,16 +17,16 @@ function selectQuiz(selection) {
 
     <div class="quizBox">
       <div class="headerBackground">
-        <RouterLink to="/quiz" @click="selectQuiz('countries')"><h2>Place the<br>country</h2></RouterLink>
+        <RouterLink to="/map" @click="selectQuiz('countries')"><h2>Place the<br>country</h2></RouterLink>
       </div>
-      <RouterLink to="/quiz" @click="selectQuiz('countries')"><img class="selectionImage" src="../assets/images/countries.png" alt=""></RouterLink>
+      <RouterLink to="/map" @click="selectQuiz('countries')"><img class="selectionImage" src="../assets/images/countries.png" alt=""></RouterLink>
     </div>
 
     <div class="quizBox">
       <div class="headerBackground">
-      <RouterLink to="/quiz" @click="selectQuiz('flags')"><h2>Learn the flags<br>of the world</h2></RouterLink>
+      <RouterLink to="/flag" @click="selectQuiz('flags')"><h2>Learn the flags<br>of the world</h2></RouterLink>
       </div>
-      <RouterLink to="/quiz" @click="selectQuiz('flags')"><img class="selectionImage" src="../assets/images/flags.jpg" alt=""></RouterLink>
+      <RouterLink to="/flag" @click="selectQuiz('flags')"><img class="selectionImage" src="../assets/images/flags.jpg" alt=""></RouterLink>
 
     </div>
       <div class="capitalsdiv">
