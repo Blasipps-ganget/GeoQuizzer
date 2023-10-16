@@ -1,40 +1,50 @@
 // ID, USERID, ANTAL RÄTT, FEL SVAR, FÖRSÖKNR,  SAMMA FÖR ALLA QUIZ
-
 const express = require("express");
 const router = express.Router();
 router.get("/getFlag", async (req, res) => {
   try {
-    const europeanCountries = await fetchCountryFlag();
-    res.send(europeanCountries);
+    const worldCountries = await fetchCountryFlag();
+    res.send(worldCountries);
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
 });
 
-const fetchCountryFlag = async (namn) => {
+
+const fetchCountryFlag = async () => {
   try {
-//    const response = await fetch("https://restcountries.com/v3.1/all?fields=name,flags");
-      const response = await fetch("https://restcountries.com/v3.1/region/europe");
+    const response = await fetch("https://restcountries.com/v3.1/region/europe");
 
     if (!response.ok) {
-      throw new Error("Failed to fetch European countries");
+      throw new Error("Failed to fetch countries");
     }
-    const europeanCountries = await response.json();
+    const worldCountries = await response.json();
 
-    const randomIndex = Math.floor(Math.random() * europeanCountries.length);
+    const randomIndex = Math.floor(Math.random() * worldCountries.length);
 
-    const flag = europeanCountries[randomIndex].flags.svg;
-    const name = europeanCountries[randomIndex].name.common;
+    const flag = worldCountries[randomIndex].flags.svg;
+    const name = worldCountries[randomIndex].name.common;
+    const wrongAnswers = [];
     
-    const info ={
-      flagga: flag,
-      namn: name
+    while (wrongAnswers.length < 3) {
+      const randomWrongIndex = Math.floor(Math.random() * worldCountries.length);
+      const randomWrongName = worldCountries[randomWrongIndex].name.common;
+      if (randomWrongName !== name && !wrongAnswers.includes(randomWrongName)) {
+        wrongAnswers.push(randomWrongName);
+      }
     }
-    return info
+
+    const info = {
+      land: name,
+      flagurl: flag,
+      felsvar: wrongAnswers
+    };
+    return info;
   } catch (error) {
     throw error;
   }
 };
+
 
 module.exports = router;

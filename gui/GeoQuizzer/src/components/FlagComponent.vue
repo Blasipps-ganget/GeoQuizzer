@@ -1,3 +1,4 @@
+
 <template>
   <body>
     <div class="container">
@@ -7,7 +8,7 @@
       </div>
 
       <div class="content" id="question-area">
-        <div id="question-text"> Which country does the flag belongs to? </div>
+        <div id="question-text"> Which country does the flag belong to? </div>
         <div class="options">
           <button class="btn btn-option" @click="checkAnswer(answerOne)">{{ answerOne }}</button>
           <button class="btn btn-option" @click="checkAnswer(answerTwo)">{{ answerTwo }}</button>
@@ -20,7 +21,9 @@
             <p>Quiz completed! Your final score is: {{ totalScore }}</p>
           </div>
         </div>
+        <button class="btn btn-option" @click="nextQuestion" v-if="showMessage && questionsAnswered < 10">Next Question</button>
         </div>
+        <button class="btn btn-option" @click="TryAgain" v-if="questionsAnswered > 9"> Try again</button>
       </div>
   </body>
 </template>
@@ -38,33 +41,30 @@ const data = ref({
 const correctAnswer = ref(false); 
 const questionsAnswered = ref(0);
 const totalScore = ref(0);
-let correctCountry; 
-let wrongCountries = ([]);
-let showMessage = ref(false); 
+let correctCountry = ref('')
+const showMessage = ref(false); 
 let message = ref ('');
 let questionNumber = ref(0);
 
 const generateRandomAnswers = async () => {
   questionNumber.value += 1;
   try {
-    correctCountry = await fetchCountryFlag(data.value.country);
-    data.value.flagUrl = correctCountry.flagga;
-    wrongCountries.value = [];
+    const response = await fetchCountryFlag(data.value.country);
+    data.value.flagUrl = response.flagurl;
+    data.value.country = response.land;
+    data.value.wrongAnswers = response.felsvar;
 
-    while (wrongCountries.length < 3) {
-      const randomCountry = await fetchCountryFlag();
-      if (randomCountry.namn !== correctCountry.namn && !wrongCountries.includes(randomCountry.namn)) {
-        wrongCountries.push(randomCountry.namn);
-      }
-    }
+    shuffleArray(data.value.wrongAnswers);
+    correctCountry.value = response;
 
-    const allAnswers = [correctCountry.namn, ...wrongCountries];
-    shuffleArray(allAnswers);
 
-    answerOne.value = allAnswers[0];
-    answerTwo.value = allAnswers[1];
-    answerThree.value = allAnswers[2];
-    answerFour.value = allAnswers[3];
+    answerOne.value = data.value.country;
+    answerTwo.value = data.value.wrongAnswers[0];
+    answerThree.value = data.value.wrongAnswers[1];
+    answerFour.value = data.value.wrongAnswers[2];
+    console.log("flaggUrl: " + data.value.flagUrl)
+    console.log("Fel länder : " + data.value.wrongAnswers)
+    console.log("Korrekt land : " + data.value.country)
   } catch (error) {
     console.error(error);
   }
@@ -86,23 +86,31 @@ const shuffleArray = (array) => {
   }
 };
 
+const nextQuestion = async () => {
+  showMessage.value = false;
+  if(questionsAnswered.value < 10){
+  await generateRandomAnswers();
+  }
+};
+
+
 const checkAnswer =  async (selectedAnswer) => {
   showMessage.value = true;
-  if (selectedAnswer === correctCountry.namn) {
+  if (selectedAnswer === correctCountry.value.land) {
     correctAnswer.value = true; 
-    totalScore.value += 1;
     message.value = 'Rätt svar'
+    if (questionsAnswered.value < 10) {
+      totalScore.value += 1;
+    }
     console.log('Correct!');
   } else {
-    message.value = 'Fel svar'
+    message.value = `FEL, rätt svar är: ${correctCountry.value.land}`;
     console.log('Incorrect!');
   }
   questionsAnswered.value += 1;
   if (questionsAnswered.value >= 10) {
     showMessage.value = true;
-  } else {
-    await generateRandomAnswers(); 
-  }
+  } 
 };
 </script>
 
