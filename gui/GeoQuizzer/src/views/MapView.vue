@@ -1,18 +1,9 @@
 <template>
   <div class="content">
-    <button @click="reloadQuiz">Reload Quiz</button>
-    <button @click="resetQuiz">Reset Map</button>
-
-    <div>failedGuesses: {{ failedGuesses }}</div>
-    <div>succeededGuesses: {{ succeededGuesses }}</div>
-    <div>includedCountries: {{ includedCountries }}</div>
-    <div>answerArray: {{ answerArray }}</div>
+    <button @click="resetQuiz">Reset Quiz</button>
     <div class="message" v-if="question">Where is: {{ question }}?</div>
     <div class="message" v-else>Select region</div>
-
-
     <ClickableMap
-        ref="myClickableMap"
         :failedGuesses="failedGuesses"
         :succeededGuesses="succeededGuesses"
         :selectingRegions="selectingRegions"
@@ -39,7 +30,6 @@ const mapResetTrigger = ref([]);
 
 async function handleCountryClick(answer) {
 
-  // alert(`You clicked ${answer}!`);
   if (!question.value) return;
 
   if (answer === question.value)
@@ -52,16 +42,19 @@ async function handleCountryClick(answer) {
   answerArray.value.push(answer);
   question.value = includedCountries.value[0];
   if (!question.value) {
-
-    await sleep(2000);
-    displayResults();
+    await sleep(500);
+    await displayResults();
     resetQuiz();
   }
 }
 
-function displayResults() {
+async function displayResults() {
   alert(`Your score is ${succeededGuesses.value.length}/${succeededGuesses.value.length + failedGuesses.value.length}`);
-  // Todo Post to backend here
+  await fetch(`http://localhost:8080/countries/result`, {
+    headers: {'Content-Type': 'application/json'},
+    method: 'POST',
+    body: JSON.stringify({ answers: answerArray.value})
+  });
 }
 
 async function sleep(ms) {
@@ -71,7 +64,7 @@ async function sleep(ms) {
 async function handleRegionClick(region) {
   if (!region) return;
   selectingRegions.value = false;
-  includedCountries.value = await d3.json(`http://localhost:8080/countries/${region}`);
+  includedCountries.value = await d3.json(`http://localhost:8080/countries/quiz/${region}`);
   question.value = includedCountries.value[0];
 
   // alert(`You clicked ${region}!`);
@@ -89,10 +82,6 @@ function resetQuiz() {
   mapResetTrigger.value.length === 0 ? mapResetTrigger.value.push(1) : mapResetTrigger.value.pop();
 }
 
-
-function reloadQuiz() {
-  location.reload();
-}
 </script>
 
 <style>
