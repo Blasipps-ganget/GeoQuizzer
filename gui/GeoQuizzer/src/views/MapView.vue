@@ -1,15 +1,8 @@
 <template>
   <div class="content">
-    <button @click="reloadQuiz">Reload Quiz</button>
-    <button @click="resetQuiz">Reset Map</button>
-
-    <div>failedGuesses: {{ failedGuesses }}</div>
-    <div>succeededGuesses: {{ succeededGuesses }}</div>
-    <div>includedCountries: {{ includedCountries }}</div>
-    <div>answerArray: {{ answerArray }}</div>
+    <button @click="resetQuiz">Reset Quiz</button>
     <div class="message" v-if="question">Where is: {{ question }}?</div>
     <div class="message" v-else>Select region</div>
-
     <ClickableMap
         :failedGuesses="failedGuesses"
         :succeededGuesses="succeededGuesses"
@@ -89,10 +82,6 @@ function resetQuiz() {
   mapResetTrigger.value.length === 0 ? mapResetTrigger.value.push(1) : mapResetTrigger.value.pop();
 }
 
-
-function reloadQuiz() {
-  location.reload();
-}
 </script>
 
 <style>
