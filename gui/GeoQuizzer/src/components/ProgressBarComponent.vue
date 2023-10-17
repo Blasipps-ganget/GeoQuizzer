@@ -18,7 +18,8 @@ onMounted(() => {
       watch(() => props.amountAnswered, (newVal, oldVal) => {
         if (newVal)
           elProgress.style.width = ((newVal / props.totalQuestions)*100) + '%';
-
+        if(props.amountAnswered === 0)
+          elProgress.style.width = '0%';
       })
 
     }
@@ -37,7 +38,7 @@ onMounted(() => {
 p { color: red; }
 
 .progress {
-  margin: 50px auto;
+  margin: 20px auto;
   padding: 2px;
   width: 100%;
   max-width: 500px;
