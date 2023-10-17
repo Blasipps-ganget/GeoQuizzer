@@ -1,7 +1,6 @@
 <script setup>
 
 import {ref} from "vue";
-import LoginRegistrationModal from "@/components/LoginRegistrationModal.vue";
 
 const regions = ["Europe", "Asia", "America", "Oceania", "Africa"];
 const selectedQuiz = ref("");
@@ -45,7 +44,7 @@ const five = 5;
 </script>
 
 <template>
-<!--  <main class="main">
+ <main class="main">
     <section>
       <div id="map"></div>
     </section>
@@ -88,8 +87,7 @@ const five = 5;
       </v-col>
     </div>
 
-  </main>-->
-  <LoginRegistrationModal></LoginRegistrationModal>
+  </main>
 </template>
 
 <style scoped>
