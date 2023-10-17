@@ -253,7 +253,7 @@ const showModal = () => {
   transition: width 1s;
   overflow: hidden;
   z-index: 99;
-  box-shadow: 4px 7px 10px rgba(0,0,0,.4);
+  /* box-shadow: 4px 7px 10px rgba(0,0,0,.4);*/
 
 }
 
