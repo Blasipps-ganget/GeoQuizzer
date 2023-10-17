@@ -13,15 +13,12 @@ const emit = defineEmits(['countryClicked', 'regionClicked']);
 const nameToIdMap = ref(new Map());
 const mouseover = ref("mouseover");
 
-
-
 let europe;
 let asia;
 let africa;
 let oceania;
 let southAmerica;
 let northAmerica;
-
 
 onMounted(async () => {
 
@@ -200,7 +197,7 @@ onMounted(async () => {
   <div>
     <svg id="my_dataviz" width="885" height="650"></svg>
   </div>
-  <div>{{mouseover}}</div>
+<!--  <div>{{mouseover}}</div>-->
 
 </template>
 
