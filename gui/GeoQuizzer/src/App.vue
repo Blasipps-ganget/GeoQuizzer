@@ -35,7 +35,7 @@ const showModal = () => {
 
     <div class="menuitem">
       <img class="nav__images"  height="50" src="./assets/images/icons/capitals.png" alt="Capitals">
-      <RouterLink class="navLink" to="/quiz" @click="selectQuiz('capitals')">Capitals</RouterLink>
+      <RouterLink class="navLink" to="/quiz" @click="selectQxuiz('capitals')">Capitals</RouterLink>
     </div>
 
     <div class="menuitem">
@@ -253,7 +253,7 @@ const showModal = () => {
   transition: width 1s;
   overflow: hidden;
   z-index: 99;
-  box-shadow: 4px 7px 10px rgba(0,0,0,.4);
+  /* box-shadow: 4px 7px 10px rgba(0,0,0,.4);*/
 
 }
 

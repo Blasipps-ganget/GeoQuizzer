@@ -1,6 +1,7 @@
 const express=require('express')
 const router=express.Router()
 const cors = require('cors');
+
 const app=express();
 const PORT=8080
 
@@ -12,7 +13,8 @@ const userRoute = require('./routes/User')
 
 
 app.listen(PORT, () => console.log(serverStartUpMessage));
-app.use(cors())
+app.use(cors());
+app.use(express.json());
 app.use("/capitalquiz", capitalQuizRoute);
 app.use("/flagquiz", flagQuizRoute);
 app.use("/countryquiz", countryQuizRoute);
