@@ -9,7 +9,7 @@
 
       <div class="content" id="question-area">
         <div id="question-text"> Which country does the flag belong to? </div>
-        <div class="options">
+        <div id="answer-btns" class="btn-grid">
           <button class="btn btn-option" @click="checkAnswer(answerOne)">{{ answerOne }}</button>
           <button class="btn btn-option" @click="checkAnswer(answerTwo)">{{ answerTwo }}</button>
           <button class="btn btn-option" @click="checkAnswer(answerThree)">{{ answerThree }}</button>
@@ -23,7 +23,7 @@
         </div>
         <button class="btn btn-option" @click="nextQuestion" v-if="showMessage && questionsAnswered < 10">Next Question</button>
         </div>
-        <button class="btn btn-option" @click="TryAgain" v-if="questionsAnswered > 9"> Try again</button>
+        <button class="btn btn-option" @click="resetQuiz" v-if="questionsAnswered > 9"> Try again</button>
       </div>
   </body>
 </template>
@@ -41,8 +41,8 @@ const data = ref({
 const correctAnswer = ref(false); 
 const questionsAnswered = ref(0);
 const totalScore = ref(0);
-let correctCountry = ref('')
 const showMessage = ref(false); 
+let correctCountry = ref('');
 let message = ref ('');
 let questionNumber = ref(0);
 
@@ -56,12 +56,14 @@ const generateRandomAnswers = async () => {
 
     shuffleArray(data.value.wrongAnswers);
     correctCountry.value = response;
+    const answers = [data.value.country, ...data.value.wrongAnswers];
+    shuffleArray(answers);
 
 
-    answerOne.value = data.value.country;
-    answerTwo.value = data.value.wrongAnswers[0];
-    answerThree.value = data.value.wrongAnswers[1];
-    answerFour.value = data.value.wrongAnswers[2];
+    answerOne.value = answers[0];
+    answerTwo.value = answers[1];
+    answerThree.value =  answers[2];
+    answerFour.value = answers[3];
     console.log("flaggUrl: " + data.value.flagUrl)
     console.log("Fel länder : " + data.value.wrongAnswers)
     console.log("Korrekt land : " + data.value.country)
@@ -93,7 +95,16 @@ const nextQuestion = async () => {
   }
 };
 
+const resetQuiz = async () => {
+  showMessage.value = false;
+  questionsAnswered.value = 0;
+  totalScore.value = 0;
+  questionNumber.value = 1;
+  await generateRandomAnswers;
+}
 
+
+// Validering av svar
 const checkAnswer =  async (selectedAnswer) => {
   showMessage.value = true;
   if (selectedAnswer === correctCountry.value.land) {
@@ -112,6 +123,7 @@ const checkAnswer =  async (selectedAnswer) => {
     showMessage.value = true;
   } 
 };
+
 </script>
 
 <style scoped>
@@ -124,7 +136,7 @@ const checkAnswer =  async (selectedAnswer) => {
     }
     body {
       height: 100vh;
-      width: 200vh;
+      width: 100wh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -150,25 +162,31 @@ const checkAnswer =  async (selectedAnswer) => {
     }
 
  
-.btn {
-  font-size: 20px;
-  font-weight: 700;
+
+  .btn-grid {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  grid-gap: 40px;
+  }
+
+  .btn {
+  font-size: 18px;
   color: #fff;
-  text-decoration: none;
+  font-family: sans-serif;
   background-color: #176B87;
-  height: 60px;
+  height: 65px;
   line-height: 60px;
   text-align: center;
-  width: 200px;
-  padding: 0;
+  width: 210px;
   position: relative;
-  margin: 5%;
+  z-index: 1;
   overflow: hidden;
   border-radius: 10px;
   margin-top: 20px;
- 
-}
-      .btn::after, button::before{
+  
+  }
+
+      .btn::after, .btn::before{
         content: '';
         background-color: #03d31f;
         height: 50%;
