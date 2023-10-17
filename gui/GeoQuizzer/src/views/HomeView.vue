@@ -17,25 +17,25 @@ function selectQuiz(selection) {
 
     <div class="quizBox">
       <div class="headerBackground">
-        <RouterLink to="/quiz" @click="selectQuiz('countries')"><h2>Place the<br>country</h2></RouterLink>
+        <RouterLink to="/quiz" @click="selectQuiz('Countries')"><h2>Place the<br>country</h2></RouterLink>
       </div>
-      <RouterLink to="/quiz" @click="selectQuiz('countries')"><img class="selectionImage" src="../assets/images/countries.png" alt=""></RouterLink>
+      <RouterLink to="/quiz" @click="selectQuiz('Countries')"><img class="selectionImage" src="../assets/images/countries.png" alt=""></RouterLink>
     </div>
 
     <div class="quizBox">
       <div class="headerBackground">
-      <RouterLink to="/quiz" @click="selectQuiz('flags')"><h2>Learn the flags<br>of the world</h2></RouterLink>
+      <RouterLink to="/quiz" @click="selectQuiz('Flags')"><h2>Learn the flags<br>of the world</h2></RouterLink>
       </div>
-      <RouterLink to="/quiz" @click="selectQuiz('flags')"><img class="selectionImage" src="../assets/images/flags.jpg" alt=""></RouterLink>
+      <RouterLink to="/quiz" @click="selectQuiz('Flags')"><img class="selectionImage" src="../assets/images/flags.jpg" alt=""></RouterLink>
 
     </div>
       <div class="capitalsdiv">
       <div class="quizBox">
         <div class="headerBackground">
-          <RouterLink to="/quiz" @click="selectQuiz('capitals')"><h2>Learn the capitals<br>of the world</h2></RouterLink>
+          <RouterLink to="/quiz" @click="selectQuiz('Capitals')"><h2>Learn the capitals<br>of the world</h2></RouterLink>
 
         </div>
-        <RouterLink to="/quiz" @click="selectQuiz('capitals')">  <img  class="selectionImage"  src="../assets/images/capitals.png" alt=""></RouterLink>
+        <RouterLink to="/quiz" @click="selectQuiz('Capitals')">  <img  class="selectionImage"  src="../assets/images/capitals.png" alt=""></RouterLink>
       </div>
 
       </div>
