@@ -15,10 +15,12 @@ export const login = (userLog) => {
 
 }
 
-export const signUp = (userReg) => {
+export const signUpRest = (userReg) => {
     axios.post(userEndpoint + 'signup', {
         username: userReg.username,
-        password: userReg.password
+        email: userReg.email,
+        firstPass: userReg.firstPass,
+        secondPass: userReg.secondPass
     }).then(function (response) {
         console.log(response);
     }).catch(function (error) {

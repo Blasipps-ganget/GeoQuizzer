@@ -50,6 +50,8 @@ function createTables() {
 
     db.run('CREATE TABLE countries (id INTEGER PRIMARY KEY, name TEXT, region TEXT)');
     db.run('CREATE TABLE regions (id INTEGER PRIMARY KEY, name TEXT, country_id INTEGER, FOREIGN KEY (country_id) REFERENCES countries (id))');
+    db.run('CREATE TABLE users (id INTEGER PRIM, name TEXT, email TEXT, password TEXT, classRoom TEXT)');
+    db.run('CREATE TABLE flagquiz (id INTEGER PRIM, user_id INTEGER, attemptNr INTEGER, points, INTEGER)');
 }
 
 
@@ -133,10 +135,24 @@ fetchFlags('Europe');
 
 function dropTable () {
 
-
-
    db.run('DROP TABLE countries')
   db.run('DROP TABLE regions')
+}
+
+const loginUser = (username) =>{
+    console.log("FROM LOGIN IN DB")
+    console.log(username)
+}
+
+const registerUser = () =>{
+
+}
+const checkIfUserExists = () =>{
+  //  const query = 'SELECT user.name FROM users JOIN regions ON countries.id = regions.country_id WHERE regions.name = ?';
+
+
+
+
 }
 
 
@@ -146,5 +162,4 @@ function dropTable () {
 //
 //
 // });
-
-    module.exports = router;
+module.exports = {loginUser, checkIfUserExists, registerUser, router}
