@@ -25,17 +25,17 @@ const showModal = () => {
 
     <div class="menuitem">
       <img class="nav__images" height="50" src="./assets/images/icons/flag.png" alt="Flags">
-      <RouterLink class="navLink" to="/quiz" @click="selectQuiz('flags')">Flags</RouterLink>
+      <RouterLink class="navLink" to="/flag" @click="selectQuiz('flags')">Flags</RouterLink>
     </div>
 
     <div class="menuitem">
       <img class="nav__images"  height="50" src="./assets/images/icons/planet-earth.png" alt="Countries">
-        <RouterLink class="navLink" to="/quiz" @click="selectQuiz('countries')">Countries</RouterLink>
+        <RouterLink class="navLink" to="/map" @click="selectQuiz('countries')">Countries</RouterLink>
     </div>
 
     <div class="menuitem">
       <img class="nav__images"  height="50" src="./assets/images/icons/capitals.png" alt="Capitals">
-      <RouterLink class="navLink" to="/quiz" @click="selectQuiz('capitals')">Capitals</RouterLink>
+      <RouterLink class="navLink" to="/quiz" @click="selectQxuiz('capitals')">Capitals</RouterLink>
     </div>
 
     <div class="menuitem">
@@ -78,8 +78,9 @@ const showModal = () => {
 
 
     </div>
-      <v-btn class="custom-btn" density="default" rounded="xl" @click="showModal()">Login</v-btn>
       <div class="buttonsTopRight">
+      <v-btn class="custom-btn" density="default" rounded="xl" @click="showModal()">Login</v-btn>
+
 
 
       <v-btn class="custom-btn" density="default" rounded="xl" @click="showModal()">Register</v-btn>
@@ -232,9 +233,12 @@ const showModal = () => {
 .custom-btn {
 
   background-color: #053B50;
+  display: flex;
   color: #EEEEEE;
   font-weight: bolder;
+  width: 85px;
   padding: 20px;
+  margin: 10px;
   border-radius: 15px;
   box-shadow: 1px 3px 5px 0px rgba(0,0,0,0.75);
 
@@ -244,19 +248,21 @@ const showModal = () => {
 
   position: fixed;
   height: 100%;
-  width:65px;
+  width:170px;
   background: #176B87;
   transition: width 1s;
   overflow: hidden;
   z-index: 99;
-  box-shadow: 4px 7px 10px rgba(0,0,0,.4);
+  /* box-shadow: 4px 7px 10px rgba(0,0,0,.4);*/
 
 }
 
+/*
 .menu:hover {
 
   width:200px
 }
+ */
 
 .menuitem a {
 

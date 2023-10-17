@@ -28,6 +28,11 @@ const router = createRouter({
       path: '/quiz',
       name: 'quiz',
       component: () => import('../views/QuizStartupScreen.vue')
+    },
+    {
+      path: '/testProgressBar',
+      name: 'testprogressbar',
+      component: () => import('../views/ProgressBarTest.vue')
     }
   ]
 })
