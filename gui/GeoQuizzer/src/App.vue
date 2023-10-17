@@ -35,7 +35,7 @@ const showModal = () => {
 
     <div class="menuitem">
       <img class="nav__images"  height="50" src="./assets/images/icons/capitals.png" alt="Capitals">
-      <RouterLink class="navLink" to="/quiz" @click="selectQuiz('capitals')">Capitals</RouterLink>
+      <RouterLink class="navLink" to="/quiz" @click="selectQxuiz('capitals')">Capitals</RouterLink>
     </div>
 
     <div class="menuitem">

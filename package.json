@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.5.1",
     "cors": "^2.8.5",
     "sqlite3": "^5.1.6",
     "vuetify": "^3.3.20"
