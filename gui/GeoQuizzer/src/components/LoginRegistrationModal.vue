@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from "vue";
-import {login} from "@/js/userApi";
+import {login, signUpRest} from "@/js/userApi";
 
 const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -41,7 +41,7 @@ const signUp = async () => {
     firstPass: password,
     secondPass: password2
   }
-  const t = await signUp(regUser);
+  const t = await signUpRest(regUser);
   console.log(t);
 
 }
@@ -97,8 +97,15 @@ const passwordRules = [
     return 'invalid password'
   },
   () => {
+    if(password.value) {
+      if(password.value === password2.value) return true;
+      return "Passwords must match.";
+    }
+    },
+  () => {
     validPassword.value = true;
-  }]
+  }
+  ]
 </script>
 
 <template>
