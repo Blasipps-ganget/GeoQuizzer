@@ -1,12 +1,11 @@
 <template>
   <body>
     <div class="container">
-      <div class="question-number" id="question-number-area"> Fråga {{ questionNumber }}</div>
+      <div class="questionText" id="question-text"> Which country does the flag belong to? </div>
       <div class="flag">
         <img :src="data.flagUrl" alt="Flag" />
       </div>
       <div class="content" id="question-area">
-        <div id="question-text"> Which country does the flag belong to? </div>
         <div id="answer-btns" class="btn-grid">
           <button class="btn btn-option" @click="checkAnswer(answerOne)">{{ answerOne }}</button>
           <button class="btn btn-option" @click="checkAnswer(answerTwo)">{{ answerTwo }}</button>
@@ -43,11 +42,9 @@ const totalScore = ref(0);
 const showMessage = ref(false); 
 let correctCountry = ref('');
 let message = ref ('');
-let questionNumber = ref(0);
 
 const generateRandomAnswers = async () => {
   showMessage.value = true;
-  questionNumber.value += 1;
   try {
     const response = await fetchCountryFlag(data.value.country);
     data.value.flagUrl = response.flagurl;
@@ -92,7 +89,6 @@ const resetQuiz = async () => {
   showMessage.value = false;
   questionsAnswered.value = 0;
   totalScore.value = 0;
-  questionNumber.value = 1;
   await generateRandomAnswers;
 }
 
@@ -167,10 +163,8 @@ const checkAnswer =  async (selectedAnswer) => {
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      padding: 5px;
+      padding: 40px;
     }
-
- 
 
   .btn-grid {
   display: grid;
@@ -228,17 +222,11 @@ const checkAnswer =  async (selectedAnswer) => {
         right: 0;
         left: auto;
       }
-
-
-
-    .hide {
-      display: none;
-    }
-    .question-number {
-      font-size: 24px;
-    }
-    .question-text {
-      font-size: 24px;
+    .questionText {
+      color: white;
+      font-weight: bold;
+      font-size: 30px;
+      margin: 2%;
     }
    
   
