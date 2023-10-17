@@ -1,7 +1,6 @@
 <script setup>
 import {ref} from "vue";
 import {login, signUpRest} from "@/js/userApi";
-
 import {useGeneralStore} from '../stores/general.js';
 
 const generalStore = useGeneralStore()
@@ -93,14 +92,15 @@ const passwordRules = [
     return 'invalid password'
   },
   () => {
-    if(password.value) {
-      if(password.value === password2.value) return true;
+    if (password.value) {
+      if (password.value === password2.value) return true;
       return "Passwords must match.";
     }
   },
   () => {
     validPassword.value = true;
-  }]
+  }
+]
 </script>
 
 <template>
@@ -108,7 +108,8 @@ const passwordRules = [
     <div class="modal-wrapper">
       <div class="modal-content">
 
-        <button @click="generalStore.showLoginModal = false"><img class="x-icon" src="../assets/images/icons/x-icon.png"></button>
+        <button @click="generalStore.showLoginModal = false"><img class="x-icon"
+                                                                  src="../assets/images/icons/x-icon.png"></button>
         <div v-if="generalStore.loginOption" class="loginForm">
           <v-form @submit.prevent>
             <p class="loginText">Please log in before quizzing</p>

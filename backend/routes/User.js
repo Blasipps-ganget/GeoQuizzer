@@ -108,6 +108,7 @@ function authenticateToken(req, res, next) {
     } else {
         tryLogin(res, req)
     }
+
 }
 
 const tryLogin = (res, req) => {
