@@ -1,12 +1,10 @@
-
 <template>
   <body>
     <div class="container">
       <div class="question-number" id="question-number-area"> Fråga {{ questionNumber }}</div>
       <div class="flag">
-        <img :src="data.flagUrl" alt="Flag" style="width: 300px; height: 200px;" />
+        <img :src="data.flagUrl" alt="Flag" />
       </div>
-
       <div class="content" id="question-area">
         <div id="question-text"> Which country does the flag belong to? </div>
         <div id="answer-btns" class="btn-grid">
@@ -21,7 +19,6 @@
             <p>Quiz completed! Your final score is: {{ totalScore }}</p>
           </div>
         </div>
-        <button class="btn btn-option" @click="nextQuestion" v-if="showMessage && questionsAnswered < 10">Next Question</button>
         </div>
         <button class="btn btn-option" @click="resetQuiz" v-if="questionsAnswered > 9"> Try again</button>
       </div>
@@ -32,11 +29,13 @@
 import { onMounted, ref } from 'vue';
 import { fetchCountryFlag } from '../js/flagApi';
 
+
 const data = ref({
   country: '',
   flagUrl: '',
   wrongAnswers: [''],
 });
+
 
 const correctAnswer = ref(false); 
 const questionsAnswered = ref(0);
@@ -47,6 +46,7 @@ let message = ref ('');
 let questionNumber = ref(0);
 
 const generateRandomAnswers = async () => {
+  showMessage.value = true;
   questionNumber.value += 1;
   try {
     const response = await fetchCountryFlag(data.value.country);
@@ -88,13 +88,6 @@ const shuffleArray = (array) => {
   }
 };
 
-const nextQuestion = async () => {
-  showMessage.value = false;
-  if(questionsAnswered.value < 10){
-  await generateRandomAnswers();
-  }
-};
-
 const resetQuiz = async () => {
   showMessage.value = false;
   questionsAnswered.value = 0;
@@ -109,25 +102,40 @@ const checkAnswer =  async (selectedAnswer) => {
   showMessage.value = true;
   if (selectedAnswer === correctCountry.value.land) {
     correctAnswer.value = true; 
-    message.value = 'Rätt svar'
+    message.value = 'Correct'
     if (questionsAnswered.value < 10) {
       totalScore.value += 1;
     }
     console.log('Correct!');
   } else {
-    message.value = `FEL, rätt svar är: ${correctCountry.value.land}`;
+    message.value = `Incorrect, the correct answer is: ${correctCountry.value.land}`;
     console.log('Incorrect!');
   }
   questionsAnswered.value += 1;
   if (questionsAnswered.value >= 10) {
     showMessage.value = true;
   } 
+
+  await generateRandomAnswers();
 };
 
 </script>
 
 <style scoped>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+    .flag {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1.5px solid black;
+  }
+
+
+  .flag img {
+    width: 300px;
+    height: 100%;
+    object-fit: cover;
+  }
 
     * {
       margin: 0;
@@ -142,10 +150,11 @@ const checkAnswer =  async (selectedAnswer) => {
       justify-content: center;
     }
     .container {
+      background-color: #176B87;
       width: 800px;
       max-width: 80%;
       height: 90vh;
-      box-shadow: 0 0 5px 4px;
+      box-shadow: 0 0 2px 2px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -173,7 +182,7 @@ const checkAnswer =  async (selectedAnswer) => {
   font-size: 18px;
   color: #fff;
   font-family: sans-serif;
-  background-color: #176B87;
+  background-color: #053B50;
   height: 65px;
   line-height: 60px;
   text-align: center;
@@ -188,7 +197,7 @@ const checkAnswer =  async (selectedAnswer) => {
 
       .btn::after, .btn::before{
         content: '';
-        background-color: #03d31f;
+        background-color: #64CCC5 ;
         height: 50%;
         width: 0;
         position: absolute;
