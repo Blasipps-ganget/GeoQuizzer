@@ -11,7 +11,6 @@ const props = defineProps({
   width: { type: Number, default: 885},
   height: { type: Number, default: 650},
   markRegion: { type: Boolean, default: false}
-
 });
 
 const emit = defineEmits(['countryClicked', 'regionClicked']);
@@ -26,8 +25,6 @@ let southAmerica;
 let northAmerica;
 let regionMap = {};
 const countriesMarked = ref([]);
-
-
 
 onMounted(async () => {
 
@@ -44,7 +41,6 @@ onMounted(async () => {
   // svg.call(zoom); // delete this line to disable free zooming
 
   const geoData = await d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson");
-
   await populateRegions();
 
   geoData.features.forEach(feature => nameToIdMap.value.set(feature.properties.name, feature.id));
@@ -94,25 +90,21 @@ onMounted(async () => {
   }
 
   function mouseOverCountry() {
-    d3.selectAll(".Country").transition()
-        .style("opacity", .9).attr("fill", getCountryColor);
+
+    d3.selectAll(".Country")
+        .transition()
+        .attr("fill", getCountryColor); // When hovering over a none green/red country prevents it to become darkblue
 
     d3.select(this).transition()
-        .style("opacity", 1).attr("fill", "#053B50");
+        .attr("fill", "#053B50");
 
     if (getCountryColor(d3.select(this).datum()) !== "lightgrey")
       d3.select(this).transition()
-          .style("opacity", 1).attr("fill", getCountryColor);
+          .attr("fill", getCountryColor);
   }
 
   function findRegionForCountry(countryName) {
-    if (europe.includes(countryName)) return "europe";
-    if (asia.includes(countryName)) return "asia";
-    if (oceania.includes(countryName)) return "oceania";
-    if (africa.includes(countryName)) return "africa";
-    if (southAmerica.includes(countryName)) return "southAmerica";
-    if (northAmerica.includes(countryName)) return "northAmerica";
-    return null;
+    return Object.keys(regionMap).find(key => regionMap[key].includes(countryName));
   }
 
   function mouseOverRegions() {
