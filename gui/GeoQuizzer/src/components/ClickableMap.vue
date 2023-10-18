@@ -24,6 +24,10 @@ let africa;
 let oceania;
 let southAmerica;
 let northAmerica;
+let regionMap = {};
+const countriesMarked = ref([]);
+
+
 
 onMounted(async () => {
 
@@ -40,7 +44,8 @@ onMounted(async () => {
   // svg.call(zoom); // delete this line to disable free zooming
 
   const geoData = await d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson");
-  await populateRegionMocks();
+
+  await populateRegions();
 
   geoData.features.forEach(feature => nameToIdMap.value.set(feature.properties.name, feature.id));
   appendCountryPaths(geoData);
@@ -72,14 +77,16 @@ onMounted(async () => {
   }
 
   function getCountryColor(d) {
-    if(!props.selectingRegions) {
-      let failedGuessesIds = props.failedGuesses.map(name => nameToIdMap.value.get(name));
-      let succeededGuessesIds = props.succeededGuesses.map(name => nameToIdMap.value.get(name));
-      if (failedGuessesIds.includes(d.id)) return "red";
-      if (succeededGuessesIds.includes(d.id)) return "green";
+    const getIdFromName = name => nameToIdMap.value.get(name);
+    if (!props.selectingRegions) {
+      if (props.failedGuesses.map(getIdFromName).includes(d.id)) return "red";
+      if (props.succeededGuesses.map(getIdFromName).includes(d.id)) return "green";
     }
+    else if (props.markRegion)
+      if (countriesMarked.value.map(getIdFromName).includes(d.id)) return "#053B50";
     return "lightgrey";
   }
+
 
   function mouseOver() {
     mouseover.value = d3.select(this).datum().properties.name;
@@ -87,7 +94,6 @@ onMounted(async () => {
   }
 
   function mouseOverCountry() {
-
     d3.selectAll(".Country").transition()
         .style("opacity", .9).attr("fill", getCountryColor);
 
@@ -97,8 +103,6 @@ onMounted(async () => {
     if (getCountryColor(d3.select(this).datum()) !== "lightgrey")
       d3.select(this).transition()
           .style("opacity", 1).attr("fill", getCountryColor);
-
-
   }
 
   function findRegionForCountry(countryName) {
@@ -114,17 +118,9 @@ onMounted(async () => {
   function mouseOverRegions() {
     const hoveredCountryName = d3.select(this).datum().properties.name;
     const region = findRegionForCountry(hoveredCountryName);
-    const regionMap = {
-      "europe": europe,
-      "asia": asia,
-      "oceania": oceania,
-      "africa": africa,
-      "southAmerica": southAmerica,
-      "northAmerica": northAmerica
-    };
-
     const regionArray = regionMap[region];
-    if(!regionArray) return;
+    if(!regionArray)
+      return;
 
     d3.selectAll(".Country")
         .filter(d => regionArray.includes(d.properties.name))
@@ -150,6 +146,12 @@ onMounted(async () => {
 
     let country = d3.select(this).datum().properties.name;
     let region = findRegionForCountry(country);
+
+    if (props.markRegion) {
+      countriesMarked.value = regionMap[region];
+      updateMap();
+      return
+    }
 
     if (props.selectingRegions) {
 
@@ -185,13 +187,21 @@ onMounted(async () => {
     svg.transition().duration(200).call(zoom.transform, d3.zoomIdentity);
   }
 
-  async function populateRegionMocks() {
+  async function populateRegions() {
     europe = await d3.json("http://localhost:8080/countries/europe");
     asia = await d3.json("http://localhost:8080/countries/asia");
     africa = await d3.json("http://localhost:8080/countries/africa");
     oceania = await d3.json("http://localhost:8080/countries/oceania");
     southAmerica = await d3.json("http://localhost:8080/countries/southAmerica");
     northAmerica = await d3.json("http://localhost:8080/countries/northAmerica");
+    regionMap = {
+      "europe": europe,
+      "asia": asia,
+      "oceania": oceania,
+      "africa": africa,
+      "southAmerica": southAmerica,
+      "northAmerica": northAmerica
+    };
   }
 });
 
