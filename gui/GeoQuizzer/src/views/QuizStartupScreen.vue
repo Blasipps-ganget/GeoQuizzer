@@ -93,6 +93,10 @@ const five = 5;
 
             <ClickableMap
                 @regionClicked="handleRegionClick"
+                :scale=112
+                :height=559
+                :width=700
+                :markRegion=true
             />
 
           </div>
