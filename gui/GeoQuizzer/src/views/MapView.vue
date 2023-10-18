@@ -1,9 +1,10 @@
 <script setup>
-import { ref } from 'vue';
+import {nextTick, ref} from 'vue';
 import ClickableMap from "@/components/ClickableMap.vue";
 import ProgressBarComponent from "@/components/ProgressBarComponent.vue";
 import * as d3 from "d3";
-
+import { useMapStore } from '@/stores/map';
+const mapStore = useMapStore();
 
 const failedGuesses = ref([]);
 const succeededGuesses = ref([]);
@@ -11,13 +12,9 @@ const includedCountries = ref([]);
 const question = ref();
 const answerArray = ref([]);
 const selectingRegions = ref(true);
-const mapResetTrigger = ref([]);
 const map = ref(null);
 let questionIndex = 0;
 let regionGlobal = null;
-
-
-
 
 async function handleCountryClick(answer) {
 
@@ -35,7 +32,7 @@ async function handleCountryClick(answer) {
 
     await sleep(500);
     await displayResults();
-    resetQuiz();
+    await resetQuiz();
   }
 }
 
@@ -63,13 +60,9 @@ async function handleRegionClick(region) {
   selectingRegions.value = false;
   includedCountries.value = await d3.json(`http://localhost:8080/countries/quiz/${region}`);
   question.value = includedCountries.value[0];
-
-  // alert(`You clicked ${region}!`);
 }
 
-
-
-function resetQuiz() {
+async function resetQuiz() {
   questionIndex = 0;
   selectingRegions.value = true;
   failedGuesses.value = [];
@@ -77,14 +70,14 @@ function resetQuiz() {
   includedCountries.value = [];
   answerArray.value = [];
   question.value = null;
-  mapResetTrigger.value.length === 0 ? mapResetTrigger.value.push(1) : mapResetTrigger.value.pop();
+
+  await nextTick(mapStore.updateMap).then(mapStore.resetZoom);
 }
 
 </script>
 
 <template>
   <div class="content">
-
     <div class="message" v-if="question">Where is: {{ question }}?</div>
     <div class="message" v-else>Select region to start quiz</div>
 
@@ -92,7 +85,6 @@ function resetQuiz() {
         :failedGuesses="failedGuesses"
         :succeededGuesses="succeededGuesses"
         :selectingRegions="selectingRegions"
-        :mapResetTrigger="mapResetTrigger"
         @countryClicked="handleCountryClick"
         @regionClicked="handleRegionClick"
         @resetQuiz="resetQuiz"
