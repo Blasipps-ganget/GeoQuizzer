@@ -1,12 +1,13 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue';
 import * as d3 from 'd3';
+import { ref, onMounted} from 'vue';
+import { useMapStore } from '@/stores/map';
 
+const mapStore = useMapStore();
 const props = defineProps({
   failedGuesses: Array,
   succeededGuesses: Array,
   selectingRegions: { type: Boolean, default: true },
-  mapResetTrigger: Array,
   scale: { type: Number, default: 140},
   width: { type: Number, default: 885},
   height: { type: Number, default: 650},
@@ -28,6 +29,9 @@ const countriesMarked = ref([]);
 
 onMounted(async () => {
 
+  mapStore.resetZoom = resetZoom;
+  mapStore.updateMap = updateMap;
+
   const svg = d3.select("#my_dataviz");
   const width = +svg.attr("width");
   const height = +svg.attr("height");
@@ -45,8 +49,6 @@ onMounted(async () => {
 
   geoData.features.forEach(feature => nameToIdMap.value.set(feature.properties.name, feature.id));
   appendCountryPaths(geoData);
-
-  watch([props.mapResetTrigger], () => {resetZoom();updateMap();});
 
   function appendCountryPaths(geoData) {
     svg.append("g")
@@ -70,6 +72,7 @@ onMounted(async () => {
     svg.selectAll("path.Country")
         .attr("d", d3.geoPath().projection(projection))
         .attr("fill", d => getCountryColor(d))
+
   }
 
   function getCountryColor(d) {
@@ -79,7 +82,7 @@ onMounted(async () => {
       if (props.succeededGuesses.map(getIdFromName).includes(d.id)) return "green";
     }
     else if (props.markRegion)
-      if (countriesMarked.value.map(getIdFromName).includes(d.id)) return "#053B50";
+      if (countriesMarked.value.map(getIdFromName).includes(d.id)) return "#022831";
     return "lightgrey";
   }
 
@@ -118,13 +121,13 @@ onMounted(async () => {
         .filter(d => regionArray.includes(d.properties.name))
         .transition()
         .duration(200)
-        .style("opacity", 1).attr("fill", "#053B50");
+        .attr("fill", "#053B50");
 
     d3.selectAll(".Country")
         .filter(d => !regionArray.includes(d.properties.name))
         .transition()
         .duration(200)
-        .style("opacity", .9).attr("fill", getCountryColor);
+        .attr("fill", getCountryColor);
   }
 
   function mouseLeave() {
