@@ -6,7 +6,12 @@ const props = defineProps({
   failedGuesses: Array,
   succeededGuesses: Array,
   selectingRegions: { type: Boolean, default: true },
-  mapResetTrigger: Array
+  mapResetTrigger: Array,
+  scale: { type: Number, default: 140},
+  width: { type: Number, default: 885},
+  height: { type: Number, default: 650},
+  markRegion: { type: Boolean, default: false}
+
 });
 
 const emit = defineEmits(['countryClicked', 'regionClicked']);
@@ -27,7 +32,7 @@ onMounted(async () => {
   const height = +svg.attr("height");
 
   const projection = d3.geoMercator()
-      .scale(140)
+      .scale(props.scale)
       .center([0, 20])
       .translate([width / 2, height / 2]);
 
@@ -195,7 +200,7 @@ onMounted(async () => {
 <template>
 
   <div>
-    <svg id="my_dataviz" width="885" height="650"></svg>
+    <svg id="my_dataviz" :width=props.width :height=props.height> </svg>
   </div>
 <!--  <div>{{mouseover}}</div>-->
 

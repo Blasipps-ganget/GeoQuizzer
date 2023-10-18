@@ -16,9 +16,7 @@ const map = ref(null);
 let questionIndex = 0;
 let regionGlobal = null;
 
-const width = 885;
-const height = 650;
-const scale = 140;
+
 
 
 async function handleCountryClick(answer) {
@@ -95,9 +93,6 @@ function resetQuiz() {
         :succeededGuesses="succeededGuesses"
         :selectingRegions="selectingRegions"
         :mapResetTrigger="mapResetTrigger"
-        :scale="scale"
-        :width="width"
-        :height="height"
         @countryClicked="handleCountryClick"
         @regionClicked="handleRegionClick"
         @resetQuiz="resetQuiz"
