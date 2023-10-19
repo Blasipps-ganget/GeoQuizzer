@@ -1,25 +1,28 @@
 <template>
   <body>
     <div class="container">
-      <div class="questionText" id="question-text"> Which country does the flag belong to? </div>
-      <div class="flag">
+      <div class="questionText" v-if="questionsAnswered <10" id="question-text"> Which country does the flag belong to? </div>
+      <div class="flag" v-if="questionsAnswered < 10">
         <img :src="data.flagUrl" alt="Flag" />
       </div>
       <div class="content" id="question-area">
         <div id="answer-btns" class="btn-grid">
-          <button class="btn btn-option" @click="checkAnswer(answerOne)">{{ answerOne }}</button>
-          <button class="btn btn-option" @click="checkAnswer(answerTwo)">{{ answerTwo }}</button>
-          <button class="btn btn-option" @click="checkAnswer(answerThree)">{{ answerThree }}</button>
-          <button class="btn btn-option" @click="checkAnswer(answerFour)">{{ answerFour }}</button>
+          <button class="btn btn-option" @click="checkAnswer(answerOne)" v-if="questionsAnswered < 10">{{ answerOne }}</button>
+          <button class="btn btn-option" @click="checkAnswer(answerTwo)" v-if="questionsAnswered < 10">{{ answerTwo }}</button>
+          <button class="btn btn-option" @click="checkAnswer(answerThree)" v-if="questionsAnswered < 10">{{ answerThree }}</button>
+          <button class="btn btn-option" @click="checkAnswer(answerFour)" v-if="questionsAnswered < 10">{{ answerFour }}</button>
         </div>
         <div v-if="showMessage">
           <p>{{ message }}</p>
-          <div v-if="questionsAnswered >= 10">
-            <p>Quiz completed! Your final score is: {{ totalScore }}</p>
+          <div class="resultText" v-if="questionsAnswered >= 10">
+            <p>Quiz completed! Your final score is: {{ totalScore }} </p>
           </div>
         </div>
         </div>
-        <button class="btn btn-option" @click="resetQuiz" v-if="questionsAnswered > 9"> Try again</button>
+        <button class="btn btn-reset" @click="resetQuiz" v-if="questionsAnswered > 9"> Try again</button>
+        <button class="btn btn-practice" @click="practiceQuiz" v-if="questionsAnswered > 9"> Go to Practice </button>
+        <button class="btn btn-home" @click="homeButton" v-if="questionsAnswered > 9"> Home </button>
+
       </div>
   </body>
 </template>
@@ -61,6 +64,7 @@ const generateRandomAnswers = async () => {
     answerTwo.value = answers[1];
     answerThree.value =  answers[2];
     answerFour.value = answers[3];
+
     console.log("flaggUrl: " + data.value.flagUrl)
     console.log("Fel länder : " + data.value.wrongAnswers)
     console.log("Korrekt land : " + data.value.country)
@@ -92,19 +96,23 @@ const resetQuiz = async () => {
   await generateRandomAnswers;
 }
 
+const homeButton = async () => {
+  window.location.href='/';
+}
+
 
 // Validering av svar
 const checkAnswer =  async (selectedAnswer) => {
   showMessage.value = true;
   if (selectedAnswer === correctCountry.value.land) {
     correctAnswer.value = true; 
-    message.value = 'Correct'
+   // message.value = 'Correct'
     if (questionsAnswered.value < 10) {
       totalScore.value += 1;
     }
     console.log('Correct!');
   } else {
-    message.value = `Incorrect, the correct answer is: ${correctCountry.value.land}`;
+   // message.value = `Incorrect, the correct answer is: ${correctCountry.value.land}`;
     console.log('Incorrect!');
   }
   questionsAnswered.value += 1;
@@ -126,10 +134,9 @@ const checkAnswer =  async (selectedAnswer) => {
     border: 1.5px solid black;
   }
 
-
   .flag img {
     width: 300px;
-    height: 100%;
+    height: 200px;
     object-fit: cover;
   }
 
@@ -138,6 +145,7 @@ const checkAnswer =  async (selectedAnswer) => {
       padding: 0;
       font-family: 'Poppins', sans-serif;
     }
+
     body {
       height: 100vh;
       width: 100wh;
@@ -145,6 +153,7 @@ const checkAnswer =  async (selectedAnswer) => {
       align-items: center;
       justify-content: center;
     }
+    
     .container {
       background-color: #176B87;
       width: 800px;
@@ -228,6 +237,10 @@ const checkAnswer =  async (selectedAnswer) => {
       font-size: 30px;
       margin: 2%;
     }
+    .resultText {
+      font-size: 30px;
+    }
+  
    
   
     </style>
