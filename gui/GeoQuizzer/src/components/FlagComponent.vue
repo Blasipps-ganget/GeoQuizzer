@@ -217,7 +217,7 @@ const checkAnswer = async (selectedAnswer) => {
 
 body {
   height: 100vh;
-  width: 100vh;
+  width: 100wh;
   display: flex;
   align-items: center;
   justify-content: center;
