@@ -93,6 +93,10 @@ const five = 5;
 
             <ClickableMap
                 @regionClicked="handleRegionClick"
+                :scale=112
+                :height=559
+                :width=700
+                :markRegion=true
             />
 
           </div>
@@ -185,9 +189,9 @@ const five = 5;
 }
 
 .noContentContainer {
-
-
   margin: auto;
+  width: 250px;
+
 }
 
 
@@ -201,6 +205,7 @@ const five = 5;
   height: 220px;
   width: 250px;
   margin-right: auto;
+  margin-left: auto;
   margin-top: 100px;
   background-color: #176B87;
 
@@ -214,6 +219,7 @@ const five = 5;
 
   color: #EEEEEE;
   margin-left: 20px;
+
 
 
 }

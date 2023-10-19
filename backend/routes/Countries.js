@@ -5,7 +5,6 @@ const router=express.Router()
 module.exports=router;
 express().use(express.json());
 
-let currentQuiz = [];
 const regions = {
     "europe": getEuropeCountries(),
     "asia": getAsianCountries(),
@@ -16,9 +15,9 @@ const regions = {
 };
 
 router.post("/result", express.json(),  (req, res) => {
-    console.log(req.body.answers)
-    const answers = req.body.answers;
-    compareResults(answers);
+
+    console.log(req.body);
+    compareResults(req.body);
     res.sendStatus(200);
 })
 
@@ -33,8 +32,7 @@ router.get("/quiz/:region", (req, res) => {
 });
 
 function getQuiz(region) {
-    currentQuiz = shuffle(regions[region]);
-    return currentQuiz;
+    return shuffle(regions[region]);
 }
 
 function shuffle(array) {
@@ -48,12 +46,22 @@ function shuffle(array) {
     return array;
 }
 
-function compareResults(answers) {
+function compareResults(results) {
+
+    let questions = results.questions;
+    let answers = results.answers;
+    let region = results.region;
+
+    if (regions[region].length !== answers.length) {
+        console.log("Cheat detected!");
+        return;
+    }
+
     let correctAnswers = 0;
     let wrongAnswers = 0;
     let wrongAnswersList = [];
     for (let i = 0; i < answers.length; i++) {
-        if (answers[i] === currentQuiz[i]) {
+        if (answers[i] === questions[i]) {
             correctAnswers++;
         }
         else {
@@ -64,7 +72,6 @@ function compareResults(answers) {
     console.log("Correct answers: " + correctAnswers);
     console.log("Wrong answers: " + wrongAnswers);
     console.log("Wrong answers list: " + wrongAnswersList);
-
 }
 
 function getSouthAmericaCountries() {
@@ -99,9 +106,10 @@ function getEuropeCountries() {
     return [
         "Albania", "Austria", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia",
         "Cyprus", "Czech Republic", "Denmark", "Estonia", "England", "Finland", "France", "Germany",
-        "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kosovo", "Latvia", "Lithuania",
+        "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kosovo", "Latvia", "Lithuania", "Russia",
         "Luxembourg", "Moldova", "Montenegro", "Netherlands", "Norway", "Poland", "Portugal", "Romania",
-        "Republic of Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Ukraine" ,"Macedonia"
+        "Republic of Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Ukraine" ,"Macedonia",
+        "Turkey"
     ];
 }
 
@@ -114,8 +122,8 @@ function getAsianCountries() {
         "Afghanistan", "Armenia", "Azerbaijan", "Bangladesh", "Bhutan", "Brunei", "Cambodia", "China",
         "Georgia", "India", "Indonesia", "Iran", "Iraq", "Israel", "Japan", "Jordan", "Kazakhstan", "Kuwait",
         "Kyrgyzstan", "Laos", "Lebanon", "Malaysia", "Mongolia", "Myanmar", "Nepal", "North Korea", "Oman",
-        "Pakistan", "Philippines", "Qatar", "Russia", "Saudi Arabia", "South Korea", "Sri Lanka", "Syria", "Taiwan",
-        "Tajikistan", "Thailand", "Turkey", "Turkmenistan", "United Arab Emirates", "Uzbekistan", "Vietnam", "Yemen"
+        "Pakistan", "Philippines", "Qatar", "Saudi Arabia", "South Korea", "Sri Lanka", "Syria", "Taiwan",
+        "Tajikistan", "Thailand",  "Turkmenistan", "United Arab Emirates", "Uzbekistan", "Vietnam", "Yemen"
     ];
 }
 

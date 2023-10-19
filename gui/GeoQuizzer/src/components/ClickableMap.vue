@@ -1,19 +1,22 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue';
 import * as d3 from 'd3';
+import { ref, onMounted} from 'vue';
+import { useMapStore } from '@/stores/map';
 
+const mapStore = useMapStore();
 const props = defineProps({
   failedGuesses: Array,
   succeededGuesses: Array,
   selectingRegions: { type: Boolean, default: true },
-  mapResetTrigger: Array
+  scale: { type: Number, default: 140},
+  width: { type: Number, default: 885},
+  height: { type: Number, default: 650},
+  markRegion: { type: Boolean, default: false}
 });
 
 const emit = defineEmits(['countryClicked', 'regionClicked']);
 const nameToIdMap = ref(new Map());
 const mouseover = ref("mouseover");
-
-
 
 let europe;
 let asia;
@@ -21,16 +24,20 @@ let africa;
 let oceania;
 let southAmerica;
 let northAmerica;
-
+let regionMap = {};
+const countriesMarked = ref([]);
 
 onMounted(async () => {
+
+  mapStore.resetZoom = resetZoom;
+  mapStore.updateMap = updateMap;
 
   const svg = d3.select("#my_dataviz");
   const width = +svg.attr("width");
   const height = +svg.attr("height");
 
   const projection = d3.geoMercator()
-      .scale(140)
+      .scale(props.scale)
       .center([0, 20])
       .translate([width / 2, height / 2]);
 
@@ -38,12 +45,10 @@ onMounted(async () => {
   // svg.call(zoom); // delete this line to disable free zooming
 
   const geoData = await d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson");
-  await populateRegionMocks();
+  await populateRegions();
 
   geoData.features.forEach(feature => nameToIdMap.value.set(feature.properties.name, feature.id));
   appendCountryPaths(geoData);
-
-  watch([props.mapResetTrigger], () => {resetZoom();updateMap();});
 
   function appendCountryPaths(geoData) {
     svg.append("g")
@@ -67,17 +72,20 @@ onMounted(async () => {
     svg.selectAll("path.Country")
         .attr("d", d3.geoPath().projection(projection))
         .attr("fill", d => getCountryColor(d))
+
   }
 
   function getCountryColor(d) {
-    if(!props.selectingRegions) {
-      let failedGuessesIds = props.failedGuesses.map(name => nameToIdMap.value.get(name));
-      let succeededGuessesIds = props.succeededGuesses.map(name => nameToIdMap.value.get(name));
-      if (failedGuessesIds.includes(d.id)) return "red";
-      if (succeededGuessesIds.includes(d.id)) return "green";
+    const getIdFromName = name => nameToIdMap.value.get(name);
+    if (!props.selectingRegions) {
+      if (props.failedGuesses.map(getIdFromName).includes(d.id)) return "red";
+      if (props.succeededGuesses.map(getIdFromName).includes(d.id)) return "green";
     }
+    else if (props.markRegion)
+      if (countriesMarked.value.map(getIdFromName).includes(d.id)) return "#022831";
     return "lightgrey";
   }
+
 
   function mouseOver() {
     mouseover.value = d3.select(this).datum().properties.name;
@@ -86,55 +94,40 @@ onMounted(async () => {
 
   function mouseOverCountry() {
 
-    d3.selectAll(".Country").transition()
-        .style("opacity", .9).attr("fill", getCountryColor);
+    d3.selectAll(".Country")
+        .transition()
+        .attr("fill", getCountryColor); // When hovering over a none green/red country prevents it to become darkblue
 
     d3.select(this).transition()
-        .style("opacity", 1).attr("fill", "#053B50");
+        .attr("fill", "#053B50");
 
     if (getCountryColor(d3.select(this).datum()) !== "lightgrey")
       d3.select(this).transition()
-          .style("opacity", 1).attr("fill", getCountryColor);
-
-
+          .attr("fill", getCountryColor);
   }
 
   function findRegionForCountry(countryName) {
-    if (europe.includes(countryName)) return "europe";
-    if (asia.includes(countryName)) return "asia";
-    if (oceania.includes(countryName)) return "oceania";
-    if (africa.includes(countryName)) return "africa";
-    if (southAmerica.includes(countryName)) return "southAmerica";
-    if (northAmerica.includes(countryName)) return "northAmerica";
-    return null;
+    return Object.keys(regionMap).find(key => regionMap[key].includes(countryName));
   }
 
   function mouseOverRegions() {
     const hoveredCountryName = d3.select(this).datum().properties.name;
     const region = findRegionForCountry(hoveredCountryName);
-    const regionMap = {
-      "europe": europe,
-      "asia": asia,
-      "oceania": oceania,
-      "africa": africa,
-      "southAmerica": southAmerica,
-      "northAmerica": northAmerica
-    };
-
     const regionArray = regionMap[region];
-    if(!regionArray) return;
+    if(!regionArray)
+      return;
 
     d3.selectAll(".Country")
         .filter(d => regionArray.includes(d.properties.name))
         .transition()
         .duration(200)
-        .style("opacity", 1).attr("fill", "#053B50");
+        .attr("fill", "#053B50");
 
     d3.selectAll(".Country")
         .filter(d => !regionArray.includes(d.properties.name))
         .transition()
         .duration(200)
-        .style("opacity", .9).attr("fill", getCountryColor);
+        .attr("fill", getCountryColor);
   }
 
   function mouseLeave() {
@@ -148,6 +141,12 @@ onMounted(async () => {
 
     let country = d3.select(this).datum().properties.name;
     let region = findRegionForCountry(country);
+
+    if (props.markRegion) {
+      countriesMarked.value = regionMap[region];
+      updateMap();
+      return
+    }
 
     if (props.selectingRegions) {
 
@@ -183,13 +182,21 @@ onMounted(async () => {
     svg.transition().duration(200).call(zoom.transform, d3.zoomIdentity);
   }
 
-  async function populateRegionMocks() {
+  async function populateRegions() {
     europe = await d3.json("http://localhost:8080/countries/europe");
     asia = await d3.json("http://localhost:8080/countries/asia");
     africa = await d3.json("http://localhost:8080/countries/africa");
     oceania = await d3.json("http://localhost:8080/countries/oceania");
     southAmerica = await d3.json("http://localhost:8080/countries/southAmerica");
     northAmerica = await d3.json("http://localhost:8080/countries/northAmerica");
+    regionMap = {
+      "europe": europe,
+      "asia": asia,
+      "oceania": oceania,
+      "africa": africa,
+      "southAmerica": southAmerica,
+      "northAmerica": northAmerica
+    };
   }
 });
 
@@ -198,9 +205,9 @@ onMounted(async () => {
 <template>
 
   <div>
-    <svg id="my_dataviz" width="885" height="650"></svg>
+    <svg id="my_dataviz" :width=props.width :height=props.height> </svg>
   </div>
-  <div>{{mouseover}}</div>
+<!--  <div>{{mouseover}}</div>-->
 
 </template>
 
