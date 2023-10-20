@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 const userEndpoint = "http://localhost:8080/user/"
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 export const login = (userLog) => {
@@ -8,17 +7,19 @@ export const login = (userLog) => {
         username: userLog.username,
         password: userLog.password
     }).then(function (response) {
+        console.log(response);
         return response;
     }).catch(function (error) {
        return error.message;
     });
-
 }
 
-export const signUp = (userReg) => {
+export const signUpRest = (userReg) => {
     axios.post(userEndpoint + 'signup', {
         username: userReg.username,
-        password: userReg.password
+        email: userReg.email,
+        firstPass: userReg.firstPass,
+        secondPass: userReg.secondPass
     }).then(function (response) {
         console.log(response);
     }).catch(function (error) {
@@ -26,17 +27,6 @@ export const signUp = (userReg) => {
     });
 }
 
-const validatePassword = (password) => {
-    return passwordRegex.test(password)
-}
-
-const checkIfUserExists = (email) => {
-    //check if email exists in database
-    return true;
-}
-const checkLogin = (email) => {
-    return true;
-}
 
 
 
