@@ -2,7 +2,6 @@
 const sqlite3 = require('sqlite3').verbose();
 const express = require("express");
 const router = express.Router();
-const axios = require("axios");
 const dbPath = './backend/database/geoquizzer.db'
 
 /* Establish a connection the database */
@@ -37,7 +36,7 @@ router.get("/createTables", async (req, res) => {
 });
 const fetchCountryFlag = async () => {
     try {
-        const response = await axios.get("https://restcountries.com/v3.1/name/Denmark");
+        const response = await fetch("https://restcountries.com/v3.1/name/Denmark");
         if (response.status === 200) {
             return response.data;
         }
