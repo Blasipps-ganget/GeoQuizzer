@@ -1,14 +1,14 @@
 <script setup>
 import {ref} from "vue";
-import {login} from "@/js/userApi";
+import {login, signUpRest} from "@/js/userApi";
 
 const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 const loginOption = ref(true)
-const name = ref('');
-const email = ref('');
-const password = ref('');
-const password2 = ref('');
+const name = ref('test');
+const email = ref('test@test.se');
+const password = ref('test123');
+const password2 = ref('test123');
 
 const loginName = ref('');
 const loginPassword = ref('');
@@ -26,10 +26,6 @@ const validate = async () => {
     username: loginName.value,
     password: loginPassword.value
   }
-  console.log("__validate")
-  console.log(user)
-  console.log("__validate")
-
 
   const response = await login(user)
   console.log(response);
@@ -41,7 +37,7 @@ const signUp = async () => {
     firstPass: password,
     secondPass: password2
   }
-  const t = await signUp(regUser);
+  const t = await signUpRest(regUser);
   console.log(t);
 
 }
@@ -97,8 +93,15 @@ const passwordRules = [
     return 'invalid password'
   },
   () => {
+    if(password.value) {
+      if(password.value === password2.value) return true;
+      return "Passwords must match.";
+    }
+    },
+  () => {
     validPassword.value = true;
-  }]
+  }
+  ]
 </script>
 
 <template>
