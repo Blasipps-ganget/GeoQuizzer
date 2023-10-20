@@ -38,7 +38,7 @@ async function handleCountryClick(answer) {
 
 async function displayResults() {
   alert(`Your score is ${succeededGuesses.value.length}/${succeededGuesses.value.length + failedGuesses.value.length}`);
-  await fetch(`http://localhost:8080/countries/result`, {
+  await fetch(`http://localhost:8080/countryquiz/result`, {
     headers: {'Content-Type': 'application/json'},
     method: 'POST',
     body: JSON.stringify({
@@ -58,7 +58,7 @@ async function handleRegionClick(region) {
 
   if (!region) return;
   selectingRegions.value = false;
-  includedCountries.value = await d3.json(`http://localhost:8080/countries/quiz/${region}`);
+  includedCountries.value = await d3.json(`http://localhost:8080/countryquiz/quiz/${region}`);
   question.value = includedCountries.value[0];
 }
 
