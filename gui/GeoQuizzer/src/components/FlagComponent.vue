@@ -1,29 +1,28 @@
-
 <template>
   <body>
     <div class="container">
-      <div class="question-number" id="question-number-area"> Fråga {{ questionNumber }}</div>
-      <div class="flag">
-        <img :src="data.flagUrl" alt="Flag" style="width: 300px; height: 200px;" />
+      <div class="questionText" v-if="questionsAnswered <10" id="question-text"> Which country does the flag belong to? </div>
+      <div class="flag" v-if="questionsAnswered < 10">
+        <img :src="data.flagUrl" alt="Flag" />
       </div>
-
       <div class="content" id="question-area">
-        <div id="question-text"> Which country does the flag belong to? </div>
         <div id="answer-btns" class="btn-grid">
-          <button class="btn btn-option" @click="checkAnswer(answerOne)">{{ answerOne }}</button>
-          <button class="btn btn-option" @click="checkAnswer(answerTwo)">{{ answerTwo }}</button>
-          <button class="btn btn-option" @click="checkAnswer(answerThree)">{{ answerThree }}</button>
-          <button class="btn btn-option" @click="checkAnswer(answerFour)">{{ answerFour }}</button>
+          <button class="btn btn-option" @click="checkAnswer(answerOne)" v-if="questionsAnswered < 10">{{ answerOne }}</button>
+          <button class="btn btn-option" @click="checkAnswer(answerTwo)" v-if="questionsAnswered < 10">{{ answerTwo }}</button>
+          <button class="btn btn-option" @click="checkAnswer(answerThree)" v-if="questionsAnswered < 10">{{ answerThree }}</button>
+          <button class="btn btn-option" @click="checkAnswer(answerFour)" v-if="questionsAnswered < 10">{{ answerFour }}</button>
         </div>
         <div v-if="showMessage">
           <p>{{ message }}</p>
-          <div v-if="questionsAnswered >= 10">
-            <p>Quiz completed! Your final score is: {{ totalScore }}</p>
+          <div class="resultText" v-if="questionsAnswered >= 10">
+            <p>Quiz completed! Your final score is: {{ totalScore }} </p>
           </div>
         </div>
-        <button class="btn btn-option" @click="nextQuestion" v-if="showMessage && questionsAnswered < 10">Next Question</button>
         </div>
-        <button class="btn btn-option" @click="resetQuiz" v-if="questionsAnswered > 9"> Try again</button>
+        <button class="btn btn-reset" @click="resetQuiz" v-if="questionsAnswered > 9"> Try again</button>
+        <button class="btn btn-practice" @click="practiceQuiz" v-if="questionsAnswered > 9"> Go to Practice </button>
+        <button class="btn btn-home" @click="homeButton" v-if="questionsAnswered > 9"> Home </button>
+
       </div>
   </body>
 </template>
@@ -32,11 +31,13 @@
 import { onMounted, ref } from 'vue';
 import { fetchCountryFlag } from '../js/flagApi';
 
+
 const data = ref({
   country: '',
   flagUrl: '',
   wrongAnswers: [''],
 });
+
 
 const correctAnswer = ref(false); 
 const questionsAnswered = ref(0);
@@ -44,10 +45,9 @@ const totalScore = ref(0);
 const showMessage = ref(false); 
 let correctCountry = ref('');
 let message = ref ('');
-let questionNumber = ref(0);
 
 const generateRandomAnswers = async () => {
-  questionNumber.value += 1;
+  showMessage.value = true;
   try {
     const response = await fetchCountryFlag(data.value.country);
     data.value.flagUrl = response.flagurl;
@@ -64,6 +64,7 @@ const generateRandomAnswers = async () => {
     answerTwo.value = answers[1];
     answerThree.value =  answers[2];
     answerFour.value = answers[3];
+
     console.log("flaggUrl: " + data.value.flagUrl)
     console.log("Fel länder : " + data.value.wrongAnswers)
     console.log("Korrekt land : " + data.value.country)
@@ -88,19 +89,15 @@ const shuffleArray = (array) => {
   }
 };
 
-const nextQuestion = async () => {
-  showMessage.value = false;
-  if(questionsAnswered.value < 10){
-  await generateRandomAnswers();
-  }
-};
-
 const resetQuiz = async () => {
   showMessage.value = false;
   questionsAnswered.value = 0;
   totalScore.value = 0;
-  questionNumber.value = 1;
   await generateRandomAnswers;
+}
+
+const homeButton = async () => {
+  window.location.href='/';
 }
 
 
@@ -109,31 +106,46 @@ const checkAnswer =  async (selectedAnswer) => {
   showMessage.value = true;
   if (selectedAnswer === correctCountry.value.land) {
     correctAnswer.value = true; 
-    message.value = 'Rätt svar'
+   // message.value = 'Correct'
     if (questionsAnswered.value < 10) {
       totalScore.value += 1;
     }
     console.log('Correct!');
   } else {
-    message.value = `FEL, rätt svar är: ${correctCountry.value.land}`;
+   // message.value = `Incorrect, the correct answer is: ${correctCountry.value.land}`;
     console.log('Incorrect!');
   }
   questionsAnswered.value += 1;
   if (questionsAnswered.value >= 10) {
     showMessage.value = true;
   } 
+
+  await generateRandomAnswers();
 };
 
 </script>
 
 <style scoped>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+    .flag {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1.5px solid black;
+  }
+
+  .flag img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+  }
 
     * {
       margin: 0;
       padding: 0;
       font-family: 'Poppins', sans-serif;
     }
+
     body {
       height: 100vh;
       width: 100wh;
@@ -141,11 +153,13 @@ const checkAnswer =  async (selectedAnswer) => {
       align-items: center;
       justify-content: center;
     }
+    
     .container {
+      background-color: #176B87;
       width: 800px;
       max-width: 80%;
       height: 90vh;
-      box-shadow: 0 0 5px 4px;
+      box-shadow: 0 0 2px 2px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -158,10 +172,8 @@ const checkAnswer =  async (selectedAnswer) => {
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      padding: 5px;
+      padding: 40px;
     }
-
- 
 
   .btn-grid {
   display: grid;
@@ -173,7 +185,7 @@ const checkAnswer =  async (selectedAnswer) => {
   font-size: 18px;
   color: #fff;
   font-family: sans-serif;
-  background-color: #176B87;
+  background-color: #053B50;
   height: 65px;
   line-height: 60px;
   text-align: center;
@@ -188,7 +200,7 @@ const checkAnswer =  async (selectedAnswer) => {
 
       .btn::after, .btn::before{
         content: '';
-        background-color: #03d31f;
+        background-color: #64CCC5 ;
         height: 50%;
         width: 0;
         position: absolute;
@@ -219,18 +231,16 @@ const checkAnswer =  async (selectedAnswer) => {
         right: 0;
         left: auto;
       }
-
-
-
-    .hide {
-      display: none;
+    .questionText {
+      color: white;
+      font-weight: bold;
+      font-size: 30px;
+      margin: 2%;
     }
-    .question-number {
-      font-size: 24px;
+    .resultText {
+      font-size: 30px;
     }
-    .question-text {
-      font-size: 24px;
-    }
+  
    
   
     </style>
