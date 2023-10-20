@@ -64,36 +64,32 @@ function compareResults(results) {
     }
 
     let correctAnswers = 0;
-    let wrongAnswers = 0;
-    let wrongAnswersList = [];
+    let wrongAnswers = "";
+
     for (let i = 0; i < answers.length; i++) {
-        if (answers[i] === questions[i]) {
+        if (answers[i] === questions[i])
             correctAnswers++;
-        }
-        else {
-            wrongAnswers++;
-            wrongAnswersList.push(answers[i]);
-        }
+        else
+            wrongAnswers += questions[i] + ", ";
     }
     console.log("Correct answers: " + correctAnswers);
-    console.log("Wrong answers: " + wrongAnswers);
-    console.log("Wrong answers list: " + wrongAnswersList);
+    console.log("Wrong answers list: " + wrongAnswers);
 
-    addToDb().catch(err => console.log(err.message));
-
+    addToDb(correctAnswers, wrongAnswers).catch(err => console.log(err.message));
 
 
-    // post to  TABLE countryquiz (
-    // id INTEGER PRIMARY KEY AUTOINCREMENT,
-    // user_id INTEGER, region_id INTEGER,
-    // attemptNr INTEGER, points INTEGER, wrongAnswers TEXT,
-    // FOREIGN KEY (user_id) REFERENCES users (id),
-    // FOREIGN KEY (region_id) REFERENCES regions(id))');
+
+
 }
 
-async function addToDb() {
+async function addToDb(correctAnswers, wrongAnswers) {
     const db = await connectToDatabase();
     console.log("HIHIHOHOHAHA");
+
+    const query = 'INSERT INTO countryquiz (user_id, region_id, attemptNr, points, wrongAnswers) VALUES (?, ?, ?, ?, ?)';
+    db.run(query, [1, 1, 1, correctAnswers, `${wrongAnswers}`],
+            err => console.error(err ? err.message : 'Row inserted'));
+
     closeDb(db);
 }
 
@@ -102,7 +98,7 @@ function closeDb(db) {
         if (err)
             return console.error(err.message);
     });
-    //TODO post to db
+
     console.log("Wooonderful database is closed");
 }
 
@@ -119,8 +115,6 @@ function connectToDatabase() {
         });
     });
 }
-
-
 
 function getSouthAmericaCountries() {
     return [
