@@ -102,6 +102,7 @@ function closeDb(db) {
         if (err)
             return console.error(err.message);
     });
+    //TODO post to db
     console.log("Wooonderful database is closed");
 }
 
