@@ -76,16 +76,17 @@ function compareResults(results) {
     console.log("Correct answers: " + correctAnswers);
     console.log("Wrong answers list: " + wrongAnswers);
 
-    addToDb(1, correctAnswers, wrongAnswers).catch(err => console.log(err.message));
+    addToDb(1, correctAnswers, wrongAnswers, region).catch(err => console.log(err.message));
 }
 
-async function addToDb(user_id, points, wrongAnswers) {
+async function addToDb(user_id, points, wrongAnswers, region) {
 
     const db = await connectToDatabase();
     const attemptNr = await getAttemptNumber(user_id, db);
+    const region_id = await getRegionId(db, region);
     const query = 'INSERT INTO countryquiz (user_id, region_id, attemptNr, points, wrongAnswers) VALUES (?, ?, ?, ?, ?)';
 
-    db.run(query, [user_id, 1, attemptNr, points, wrongAnswers], err => console.error(err ? err.message :'Inserted'));
+    db.run(query, [user_id, region_id, attemptNr, points, wrongAnswers], err => console.error(err ? err.message :'Inserted'));
     db.close();
 }
 
@@ -100,6 +101,13 @@ function connectToDatabase() {
     return new Promise((resolve, reject) => {
         const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE,
             err => err ? reject(err.message) : resolve(db));
+    });
+}
+
+async function getRegionId(db, region) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT id FROM regions WHERE name = ?';
+        db.get(query, [region], (err, row) => err ? reject(err.message) : resolve(row.id));
     });
 }
 
@@ -156,6 +164,8 @@ function getAsianCountries() {
     ];
 }
 
+
+// TODO Needs to be refactored because it crashes if there is no table created. Moving it to db.js will solve this.
 async function populateRegionDb() {
     const db = await connectToDatabase();
     const row = await new Promise((resolve, reject) =>
