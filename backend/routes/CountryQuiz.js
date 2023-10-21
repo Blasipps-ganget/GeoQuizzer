@@ -17,6 +17,8 @@ const regions = {
     "southAmerica": getSouthAmericaCountries()
 };
 
+(async () => await populateRegionDb())();
+
 router.post("/result", express.json(),  (req, res) => {
 
     console.log(req.body);
@@ -152,6 +154,20 @@ function getAsianCountries() {
         "Pakistan", "Philippines", "Qatar", "Saudi Arabia", "South Korea", "Sri Lanka", "Syria", "Taiwan",
         "Tajikistan", "Thailand",  "Turkmenistan", "United Arab Emirates", "Uzbekistan", "Vietnam", "Yemen"
     ];
+}
+
+async function populateRegionDb() {
+    const db = await connectToDatabase();
+    const row = await new Promise((resolve, reject) =>
+        db.get('SELECT * FROM regions LIMIT 1', (err, row) => err ? reject("Error: " + err.message) : resolve(row)));
+
+    if (row) {
+        db.close();
+        return;
+    }
+    console.log("Populating regions table...");
+
+
 }
 
 
