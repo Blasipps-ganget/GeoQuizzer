@@ -167,7 +167,12 @@ async function populateRegionDb() {
     }
     console.log("Populating regions table...");
 
+    for (let regionsKey in regions) {
+        const query = 'INSERT INTO regions (name) VALUES (?)';
+        db.run(query, [regionsKey]);
+    }
 
+    db.close();
 }
 
 
