@@ -52,7 +52,6 @@ function shuffle(array) {
 
 function compareResults(results) {
 
-
     let questions = results.questions;
     let answers = results.answers;
     let region = results.region;
@@ -75,44 +74,30 @@ function compareResults(results) {
     console.log("Correct answers: " + correctAnswers);
     console.log("Wrong answers list: " + wrongAnswers);
 
-    addToDb(correctAnswers, wrongAnswers).catch(err => console.log(err.message));
-
-
-
-
+    addToDb(1, correctAnswers, wrongAnswers).catch(err => console.log(err.message));
 }
 
-async function addToDb(correctAnswers, wrongAnswers) {
+async function addToDb(user_id, points, wrongAnswers) {
+
     const db = await connectToDatabase();
-    console.log("HIHIHOHOHAHA");
-
+    const attemptNr = await getAttemptNumber(user_id, db);
     const query = 'INSERT INTO countryquiz (user_id, region_id, attemptNr, points, wrongAnswers) VALUES (?, ?, ?, ?, ?)';
-    db.run(query, [1, 1, 1, correctAnswers, `${wrongAnswers}`],
-            err => console.error(err ? err.message : 'Row inserted'));
 
-    closeDb(db);
+    db.run(query, [user_id, 1, attemptNr, points, wrongAnswers], err => console.error(err ? err.message :'Inserted'));
+    db.close();
 }
 
-function closeDb(db) {
-    db.close((err) => {
-        if (err)
-            return console.error(err.message);
+async function getAttemptNumber(user_id, db) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT MAX(attemptNr) AS attemptNr FROM countryquiz WHERE user_id = ?'
+        db.get(query, [user_id], (err, row) => err ? reject(err.message) : resolve(row.attemptNr += 1));
     });
-
-    console.log("Wooonderful database is closed");
 }
 
 function connectToDatabase() {
     return new Promise((resolve, reject) => {
-        const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE, (err) => {
-            if (err) {
-                console.log("no work");
-                reject(err.message);
-            } else {
-                console.log('Connection Success', dbPath);
-                resolve(db);
-            }
-        });
+        const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE,
+            err => err ? reject(err.message) : resolve(db));
     });
 }
 
