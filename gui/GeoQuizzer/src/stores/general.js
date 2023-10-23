@@ -3,6 +3,8 @@ import { defineStore } from 'pinia'
 
 export const useGeneralStore = defineStore('generalstore', () => {
     const selectedQuiz = ref('')
-
-    return { selectedQuiz }
+    const showLoginModal = ref(false)
+    const loginOption = ref(true)
+    const showResultModal = ref(false)
+    return { selectedQuiz, showLoginModal, loginOption, showResultModal }
 })
