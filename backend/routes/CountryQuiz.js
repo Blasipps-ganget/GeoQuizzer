@@ -167,6 +167,7 @@ function getAsianCountries() {
 
 // TODO Needs to be refactored because it crashes if there is no table created. Moving it to db.js will solve this.
 async function populateRegionDb() {
+    // console.log("Checking if code is running...");
     const db = await connectToDatabase();
     const row = await new Promise((resolve, reject) =>
         db.get('SELECT * FROM regions LIMIT 1', (err, row) => err ? reject("Error: " + err.message) : resolve(row)));

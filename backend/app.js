@@ -11,6 +11,7 @@ const countriesRoute = require('./routes/Countries')
 const countryQuizRoute = require('./routes/CountryQuiz')
 const flagQuizRoute = require('./routes/FlagQuiz')
 const userRoute = require('./routes/User')
+require('./database/db');
 
 app.listen(PORT, () => console.log(serverStartUpMessage));
 app.use(cors());
@@ -21,6 +22,8 @@ app.use("/flagquiz", flagQuizRoute);
 app.use("/countryquiz", countryQuizRoute);
 app.use("/countries", countriesRoute);
 app.use("/user", userRoute);
+
+
 
 router.get("/", (req, res) => {
     res.send('Content-Type', 'application/json');
