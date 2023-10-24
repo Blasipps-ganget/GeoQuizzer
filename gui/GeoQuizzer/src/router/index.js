@@ -33,6 +33,11 @@ const router = createRouter({
       path: '/testProgressBar',
       name: 'testprogressbar',
       component: () => import('../views/ProgressBarTest.vue')
+    },
+    {
+      path: '/testResultModal',
+      name: 'testresultmodal',
+      component: () => import('../views/ResultModalTest.vue')
     }
   ]
 })
