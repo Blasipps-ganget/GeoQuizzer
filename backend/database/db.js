@@ -29,7 +29,7 @@ router.get("/insertDataFromApi", async (req, res) => {
 
 router.get("/createTables", async (req, res) => {
     try {
-        createTables()
+        await createTables();
         res.json({message: "Created tables successfully"});
     } catch (error) {
         console.log(error);
@@ -90,48 +90,11 @@ function fetchFlags(region) {
     });
 }
 
-(async function populateRegionDb() {
-
-    console.log("Checking if code is running...");
-    const db = await new Promise((resolve, reject) => {
-        const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE,
-            (err) => (err ? reject(err.message) : resolve(db))
-        );
-    });
-
-
-
-    const row = await new Promise((resolve, reject) =>
-        db.get('SELECT * FROM regions LIMIT 1', (err, row) =>
-            err ? reject("Error: " + err.message) : resolve(row)
-        )
-    );
-
-    if (row) {
-        console.log("Regions table already populated.");
-        db.close();
-        return;
-    }
-
-    console.log("Populating regions table...");
-
-    const query = "INSERT INTO regions (name) VALUES (?)";
-    db.run(query, ["europe"]);
-    db.run(query, ["asia"]);
-    db.run(query, ["oceania"]);
-    db.run(query, ["africa"]);
-    db.run(query, ["northAmerica"]);
-    db.run(query, ["southAmerica"]);
-
-    db.close();
-})();
-
-
 
 
 //1.
 //createTables();
-// dropTable()
+//dropTable();
 //2.
 //insertDataFromApi();
 
@@ -140,17 +103,25 @@ function fetchFlags(region) {
 
 //4.
 
-//dropTable();
+
+
+
 function createTables() {
 
-    db.run('CREATE TABLE regions (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)');
+db.run('CREATE TABLE regions (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)', () => {
+    db.run(`INSERT INTO regions (name) VALUES ('Europe'), ('Asia'), ('Oceania'), ('Africa'), ('North America'), ('South America')`);
+});
     db.run('CREATE TABLE countries (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, region_id INTEGER, FOREIGN KEY(region_id) REFERENCES regions (id))');
     db.run('CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, password TEXT, classRoom TEXT, teacher INTEGER)');
     db.run('CREATE TABLE classRoom (id INTEGER PRIMARY KEY AUTOINCREMENT, classRoomName TEXT, FOREIGN KEY(id) REFERENCES users (id))');
     db.run('CREATE TABLE flagquiz (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, region_id INTEGER, attemptNr INTEGER, points INTEGER, wrongAnswers TEXT, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (region_id) REFERENCES regions(id))');
     db.run('CREATE TABLE capitalquiz (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, region_id INTEGER, attemptNr INTEGER, points INTEGER, wrongAnswers TEXT, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (region_id) REFERENCES regions(id))');
     db.run('CREATE TABLE countryquiz (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, region_id INTEGER, attemptNr INTEGER, points INTEGER, wrongAnswers TEXT, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (region_id) REFERENCES regions(id))');
+
 }
+
+
+
 
 function dropTable() {
 
@@ -163,10 +134,18 @@ function dropTable() {
     db.run('DROP TABLE countryquiz')
 }
 
+
+
 db.close((err) => {
 
     if (err) return console.error(err.message);
 
 
 });
-module.exports = {router}
+module.exports = {router};
+
+
+
+
+
+

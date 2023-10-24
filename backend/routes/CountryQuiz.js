@@ -17,8 +17,6 @@ const regions = {
     "southAmerica": getSouthAmericaCountries()
 };
 
-(async () => await populateRegionDb())();
-
 router.post("/result", express.json(),  (req, res) => {
 
     console.log(req.body);
@@ -164,27 +162,6 @@ function getAsianCountries() {
     ];
 }
 
-
-// TODO Needs to be refactored because it crashes if there is no table created. Moving it to db.js will solve this.
-async function populateRegionDb() {
-    // console.log("Checking if code is running...");
-    const db = await connectToDatabase();
-    const row = await new Promise((resolve, reject) =>
-        db.get('SELECT * FROM regions LIMIT 1', (err, row) => err ? reject("Error: " + err.message) : resolve(row)));
-
-    if (row) {
-        db.close();
-        return;
-    }
-    console.log("Populating regions table...");
-
-    for (let regionsKey in regions) {
-        const query = 'INSERT INTO regions (name) VALUES (?)';
-        db.run(query, [regionsKey]);
-    }
-
-    db.close();
-}
 
 
 
