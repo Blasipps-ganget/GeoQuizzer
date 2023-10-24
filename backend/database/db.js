@@ -89,7 +89,7 @@ function fetchFlags(region) {
 }
 
 //1.
-//createTables();
+createTables();
 //dropTable()
 //2.
 //insertDataFromApi();
