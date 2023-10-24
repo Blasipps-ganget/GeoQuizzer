@@ -13,16 +13,16 @@ const generalStore = useGeneralStore();
           <div class="grid-item"><h1>The quiz is done!</h1></div>
         </div>
         <div class="center-content">
+          <div><img class="checkfailedimg" alt="passed" src="../assets/images/icons/pass.png">
+            <!--<img class="checkfailedimg" alt="failed" src="../assets/images/icons/fail.png">-->
+          </div>
 
-          <div><img alt="exclamation mark" src="../assets/images/icons/done.png"></div>
           <div><h2>RESULTS</h2></div>
           <div class="result-boxes">
             <div class="result-box"><h1>9 / 10</h1></div>
             <div class="result-box"><h1>90 %</h1></div>
           </div>
-          <div><img class="checkfailedimg" alt="passed" src="../assets/images/icons/pass.png">
-            <!--<img class="checkfailedimg" alt="failed" src="../assets/images/icons/fail.png">-->
-          </div>
+
           <div class="passed">
             <h4>YOU PASSED! CONGRATULATIONS</h4>
           </div>
@@ -59,7 +59,7 @@ a {
 }
 
 .checkfailedimg {
-  width: 40px;
+  width: 100px;
 }
 
 .result-boxes {
@@ -115,5 +115,32 @@ a {
 
 }
 
+@media screen and (max-width: 720px) {
+  .modal-content {
+    height: 500px;
+    width: 320px;
+  }
+
+  .modal-mask {
+    margin-left: 18px;
+  }
+
+  .header-grid {
+    display: grid;
+    margin-left: 5px;
+    grid-template-columns: 75px 250px;
+    grid-template-rows: 50px;
+  }
+
+  h1 {
+    font-size: 18px;
+  }
+
+  .result-box {
+    padding: 15px;
+    margin: 20px;
+  }
+
+}
 
 </style>
