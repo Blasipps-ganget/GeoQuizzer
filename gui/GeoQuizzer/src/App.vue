@@ -39,27 +39,27 @@ const registerLogoutText = () =>{
   <div class="menu">
 
     <div class="menuitem">
-      <img class="nav__images" height="50" src="./assets/images/icons/flag.png" alt="Flags">
+      <img class="nav__images" src="./assets/images/icons/flag.png" alt="Flags">
       <RouterLink class="navLink" to="/flag" @click="selectQuiz('flags')">Flags</RouterLink>
     </div>
 
     <div class="menuitem">
-      <img class="nav__images"  height="50" src="./assets/images/icons/planet-earth.png" alt="Countries">
+      <img class="nav__images" src="./assets/images/icons/planet-earth.png" alt="Countries">
       <RouterLink class="navLink" to="/map" @click="selectQuiz('countries')">Countries</RouterLink>
     </div>
 
     <div class="menuitem">
-      <img class="nav__images"  height="50" src="./assets/images/icons/capitals.png" alt="Capitals">
+      <img class="nav__images" src="./assets/images/icons/capitals.png" alt="Capitals">
       <RouterLink class="navLink" to="/quiz" @click="selectQxuiz('capitals')">Capitals</RouterLink>
     </div>
 
     <div class="menuitem">
-      <img class="nav__images"  height="50"  src="./assets/images/icons/classroom.png" alt="Classroom">
+      <img class="nav__images" src="./assets/images/icons/classroom.png" alt="Classroom">
       <RouterLink class="navLink" to="/classroom">Classroom</RouterLink>
     </div>
 
     <div class="menuitem">
-      <img class="nav__images" height="50"  src="./assets/images/icons/user.png" alt="Profile">
+      <img class="nav__images" src="./assets/images/icons/user.png" alt="Profile">
       <RouterLink class="navLink" to="/userProfile">Profile</RouterLink>
     </div>
 
@@ -74,12 +74,10 @@ const registerLogoutText = () =>{
 
 
 
-    <div class="profileContent">
+    <div>
 
-      <RouterLink to="/userProfile"><img class="userIconTopLeft" src="./assets/images/icons/user.png" alt=""></RouterLink>
+      <!-- <RouterLink to="/userProfile"><img class="userIconTopLeft" src="./assets/images/icons/user.png" alt=""></RouterLink> -->
 
-      <template>
-      </template>
     </div>
     <div class="logo">
 
@@ -267,12 +265,9 @@ const registerLogoutText = () =>{
 
 }
 
-/*
-.menu:hover {
 
-  width:200px
-}
- */
+
+
 
 .menuitem a {
 
@@ -299,6 +294,46 @@ const registerLogoutText = () =>{
   position: relative;
   padding: 10px;
   transition: border 0.5s, background 0.5s;
+
+}
+
+.nav__images {
+  height: 50px;
+}
+
+@media screen and (max-width: 720px) {
+  .menu {
+    width: 50px;
+  }
+
+  .headerContent {
+    margin-left: 20px;
+  }
+
+  .menu:hover {
+
+    width:170px
+  }
+
+  .logo img {
+
+    height: 50px;
+  }
+  .logo h1 {
+    font-size: 20px;
+  }
+
+  .footerContent {
+    margin-left: 20px;
+  }
+
+  .footerContent span {
+    font-size: 10px;
+  }
+
+  .nav__images {
+    height: 30px;
+  }
 
 }
 
