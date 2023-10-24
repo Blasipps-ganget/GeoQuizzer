@@ -12,7 +12,7 @@
           <v-btn v-bind:color="btn2color" class="btn btn-option" @click="checkAnswer(answerThree)" v-if="questionsAnswered < 10">{{ answerThree }}</v-btn>
           <v-btn v-bind:color="btn3color" class="btn btn-option" @click="checkAnswer(answerFour)" v-if="questionsAnswered < 10">{{ answerFour }}</v-btn>
         </div>
-        <button class="btn btn-option" @click="displayNext" v-if="questionsAnswered < 10" :disabled="!answerSubmitted" >Next</button>
+        <v-btn class="btn btn-option" @click="displayNext" v-if="questionsAnswered < 10" :disabled="!answerSubmitted" >Next</v-btn>
 
         <div v-if="showMessage">
           <p>{{ message }}</p>
@@ -34,6 +34,8 @@ import { onMounted, ref } from 'vue';
 import { fetchCountryFlag } from '../js/flagApi';
 
 const normalColor = "#053B50";
+const correctColor = "green";
+const wrongColor = "red";
 
 let btn0color = normalColor;
 let btn1color = normalColor;
@@ -69,6 +71,8 @@ const displayNext = () => {
     generateRandomAnswers();
     showMessage.value = true;
   }
+
+  
   btn0color = normalColor;
   btn1color = normalColor;
   btn2color = normalColor;
@@ -145,29 +149,36 @@ const checkAnswer = async (selectedAnswer) => {
     }
     console.log('Correct!');
     console.log(landlist);
-    // Set the button color to green for the correct answer
     if (selectedAnswer === answerOne.value) {
-      btn0color = 'green';
+      btn0color = correctColor;
     } else if (selectedAnswer === answerTwo.value) {
-      btn1color = 'green';
+      btn1color = correctColor;
     } else if (selectedAnswer === answerThree.value) {
-      btn2color = 'green';
+      btn2color = correctColor;
     } else if (selectedAnswer === answerFour.value) {
-      btn3color = 'green';
+      btn3color = correctColor;
     }
   } else {
     correctAnswer.value = false;
     message.value = `Incorrect, the correct answer is: ${correctCountry.value.land}`;
     console.log('Incorrect!');
-    // Set the button color to red for the incorrect answer
     if (selectedAnswer === answerOne.value) {
-      btn0color = 'red';
+      btn0color = wrongColor;
     } else if (selectedAnswer === answerTwo.value) {
-      btn1color = 'red';
+      btn1color = wrongColor;
     } else if (selectedAnswer === answerThree.value) {
-      btn2color = 'red';
+      btn2color = wrongColor;
     } else if (selectedAnswer === answerFour.value) {
-      btn3color = 'red';
+      btn3color = wrongColor;
+    }
+    if (correctCountry.value.land === answerOne.value) {
+      btn0color = correctColor;
+    } else if (correctCountry.value.land === answerTwo.value) {
+      btn1color = correctColor;
+    } else if (correctCountry.value.land === answerThree.value) {
+      btn2color = correctColor;
+    } else if (correctCountry.value.land === answerFour.value) {
+      btn3color = correctColor;
     }
   }
   questionsAnswered.value += 1;
@@ -233,8 +244,8 @@ const checkAnswer = async (selectedAnswer) => {
   grid-gap: 40px;
   }
 
-  .btn {
-  font-size: 18px;
+  .btn-option {
+  font-size: 15px;
   color: #fff;
   font-family: sans-serif;
   background-color: #053B50;
