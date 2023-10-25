@@ -170,13 +170,6 @@ function dropTable() {
     db.run('DROP TABLE countryquiz')
 }
 
-
-
-
-
-
-
-
 db.close((err) => {
 
     if (err) return console.error(err.message);
