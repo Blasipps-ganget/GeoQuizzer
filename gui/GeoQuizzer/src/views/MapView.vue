@@ -58,7 +58,7 @@ async function handleRegionClick(region) {
 
   if (!region) return;
   selectingRegions.value = false;
-  includedCountries.value = await d3.json(`http://localhost:8080/countryquiz/quiz/${region}`);
+  includedCountries.value = await d3.json(`http://localhost:8080/countryquiz/${region}?shuffle=true`);
   question.value = includedCountries.value[0];
 }
 

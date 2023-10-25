@@ -11,25 +11,17 @@ router.post("/result", express.json(), (req, res) => {
     console.log(req.body);
     compareResults(req.body)
         .then(r => console.log(r))
-        .catch(err => console.log(err.message));
+        .catch(err => res.status(500).send({err}));
     res.sendStatus(200);
 });
 
 router.get("/:region", (req, res) => {
     const region = req.params.region;
+    const shouldShuffle = req.query.shuffle === 'true';
     getCountries(region)
-        .then(countries => res.send(countries))
+        .then(countries => res.send(shouldShuffle ? shuffle(countries) : countries))
         .catch(err => res.status(500).send({err}));
 });
-
-router.get("/quiz/:region", (req, res) => {
-    const region = req.params.region;
-    getCountries(region)
-        .then(countries => res.send(shuffle(countries)))
-        .catch(err => res.status(500).send({err}));
-});
-
-
 
 function shuffle(array) {
     let currentIndex = array.length,  randomIndex;
@@ -61,9 +53,6 @@ async function compareResults(results) {
         else
             wrongAnswers += results.questions[i] + ", ";
     }
-    console.log("Correct answers: " + correctAnswers);
-    console.log("Wrong answers list: " + wrongAnswers);
-
     addToDb(1, correctAnswers, wrongAnswers, results.region).catch(err => console.log(err.message));
 }
 
@@ -91,7 +80,6 @@ async function connectToDatabase() {
         if (err) console.error(err.message);
     });
 }
-
 
 async function getRegionId(db, region) {
     return new Promise((resolve, reject) => {
