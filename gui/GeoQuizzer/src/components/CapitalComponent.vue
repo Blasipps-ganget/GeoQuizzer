@@ -1,7 +1,7 @@
 <template>
     <body>
       <div class="container">
-        <div class="questionText" v-if="questionsAnswered <10" id="question-text"> Whats the capital of {{ capitalName }}? </div>
+        <div class="questionText" v-if="questionsAnswered <10" id="question-text"> {{ capitalName }}  </div>
         <div class="capital" v-if="questionsAnswered < 10">
         <img :src="data.capitalUrl" alt="Capital" />
         </div>
@@ -33,6 +33,7 @@
   
   
   const data = ref({
+    capital: '',
     country: '',
     flagUrl: '',
     wrongAnswers: [''],
@@ -43,7 +44,6 @@
   const questionsAnswered = ref(0);
   const totalScore = ref(0);
   const showMessage = ref(false); 
-  let capitalName = ref('');
   let correctCountry = ref('');
   let message = ref ('');
   
@@ -51,10 +51,11 @@
     showMessage.value = true;
     try {
       const response = await fetchCapital();
+      data.value.capital = response.capital[0];
       data.value.country = response.land;
       data.value.wrongAnswers = response.felsvar;
       data.value.capitalUrl = response.capitalUrl;
-      data.value.capitalName = response.capitalName;
+
   
       shuffleArray(data.value.wrongAnswers);
       correctCountry.value = response;
@@ -66,8 +67,10 @@
       answerTwo.value = answers[1];
       answerThree.value =  answers[2];
       answerFour.value = answers[3];
-  
-      console.log("CapitalUrl: " + data.value.capitalUrl)
+      capitalName.value = data.value.capital;
+
+      console.log("Capital: " + data.value.capital)
+      console.log("CapitalUrl: " + data.value.flagUrl)
       console.log("Fel länder : " + data.value.wrongAnswers)
       console.log("Korrekt land : " + data.value.country)
     } catch (error) {
@@ -83,6 +86,7 @@
   const answerTwo = ref('');
   const answerThree = ref('');
   const answerFour = ref('');
+  const capitalName = ref('');
   
   const shuffleArray = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
