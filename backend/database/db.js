@@ -119,7 +119,7 @@ function createTables() {
 
 }
 function populateRegions() {
-    db.run(`INSERT INTO regions (name) VALUES ('Europe'), ('Asia'), ('Oceania'), ('Africa'), ('North America'), ('South America')`);
+    db.run(`INSERT INTO regions (name) VALUES ('europe'), ('asia'), ('oceania'), ('africa'), ('northAmerica'), ('southAmerica')`);
 }
 
 function populateCountries() {
@@ -159,10 +159,6 @@ function populateCountries() {
   `);
 }
 
-
-
-
-
 function dropTable() {
 
     db.run('DROP TABLE regions')
@@ -173,6 +169,11 @@ function dropTable() {
     // db.run('DROP TABLE capitalquiz')
     // db.run('DROP TABLE countryquiz')
 }
+
+
+
+
+
 
 
 
