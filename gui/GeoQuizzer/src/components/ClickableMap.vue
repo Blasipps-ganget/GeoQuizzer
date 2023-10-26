@@ -183,12 +183,12 @@ onMounted(async () => {
   }
 
   async function populateRegions() {
-    europe = await d3.json("http://localhost:8080/countries/europe");
-    asia = await d3.json("http://localhost:8080/countries/asia");
-    africa = await d3.json("http://localhost:8080/countries/africa");
-    oceania = await d3.json("http://localhost:8080/countries/oceania");
-    southAmerica = await d3.json("http://localhost:8080/countries/southAmerica");
-    northAmerica = await d3.json("http://localhost:8080/countries/northAmerica");
+    europe = await d3.json("http://localhost:8080/countryquiz/europe");
+    asia = await d3.json("http://localhost:8080/countryquiz/asia");
+    africa = await d3.json("http://localhost:8080/countryquiz/africa");
+    oceania = await d3.json("http://localhost:8080/countryquiz/oceania");
+    southAmerica = await d3.json("http://localhost:8080/countryquiz/southAmerica");
+    northAmerica = await d3.json("http://localhost:8080/countryquiz/northAmerica");
     regionMap = {
       "europe": europe,
       "asia": asia,
