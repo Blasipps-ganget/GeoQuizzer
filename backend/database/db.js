@@ -1,4 +1,3 @@
-
 const sqlite3 = require('sqlite3').verbose();
 const express = require("express");
 const router = express.Router();
@@ -49,6 +48,7 @@ const fetchCountryFlag = async () => {
 };
 
 async function insertDataFromApi() {
+
     try {
         const apiData = await fetchCountryFlag();
         if (!apiData) return;
@@ -88,6 +88,7 @@ function fetchFlags(region) {
             console.log(row.name);
         })
     });
+
 }
 
 
@@ -102,9 +103,6 @@ function fetchFlags(region) {
 //fetchFlags('Europe');
 
 //4.
-
-
-
 
 function createTables() {
 

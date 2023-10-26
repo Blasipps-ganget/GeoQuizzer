@@ -174,8 +174,7 @@ const checkIfUserExists = (username, callback) => {
         } else if (user) {
             return callback(null, true)
         } else{
-
-        return callback(null, false)
+            return callback(null, false)
         }
     });
 }

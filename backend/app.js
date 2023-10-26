@@ -1,10 +1,10 @@
-const express = require('express')
-const router = express.Router()
+const express=require('express')
+const router=express.Router()
 const cors = require('cors');
 const cookieparser = require('cookie-parser');
 
-const app = express();
-const PORT = 8080
+const app=express();
+const PORT=8080
 
 const capitalQuizRoute = require('./routes/CapitalQuiz')
 const countriesRoute = require('./routes/Countries')
