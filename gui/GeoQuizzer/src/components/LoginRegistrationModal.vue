@@ -106,7 +106,6 @@ const passwordRules = [
   <div class="modal-mask">
     <div class="modal-wrapper">
       <div class="modal-content">
-
         <button @click="generalStore.showLoginModal = false"><img class="x-icon"
                                                                   src="../assets/images/icons/x-icon.png"></button>
         <div v-if="generalStore.loginOption" class="loginForm">
@@ -229,11 +228,7 @@ const passwordRules = [
 }
 
 .modal-content {
-<<<<<<< HEAD
   height: 500px;
-=======
-  height: 450px;
->>>>>>> 90babc3 (add register option)
   width: 350px;
   margin: auto;
   padding: 20px 20px;
@@ -275,10 +270,7 @@ const passwordRules = [
   display: grid;
   justify-self: center;
   color: #053B50;
-<<<<<<< HEAD
   border-radius: 15px;
-=======
->>>>>>> 90babc3 (add register option)
 }
 
 .signupbtn {
