@@ -2,7 +2,6 @@
 import {ref} from "vue";
 import {login, signUpRest} from "@/js/userApi";
 import {useGeneralStore} from '../stores/general.js';
-
 const generalStore = useGeneralStore()
 
 const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
