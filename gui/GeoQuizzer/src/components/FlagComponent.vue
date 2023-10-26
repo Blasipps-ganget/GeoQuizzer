@@ -48,6 +48,10 @@ let message = ref ('');
 
 const generateRandomAnswers = async () => {
   showMessage.value = true;
+<<<<<<< HEAD
+=======
+  questionNumber.value += 1;
+>>>>>>> f158230 (new layout, changed functionallity)
   try {
     const response = await fetchCountryFlag(data.value.country);
     data.value.flagUrl = response.flagurl;
@@ -106,13 +110,21 @@ const checkAnswer =  async (selectedAnswer) => {
   showMessage.value = true;
   if (selectedAnswer === correctCountry.value.land) {
     correctAnswer.value = true; 
+<<<<<<< HEAD
    // message.value = 'Correct'
+=======
+    message.value = 'Correct'
+>>>>>>> f158230 (new layout, changed functionallity)
     if (questionsAnswered.value < 10) {
       totalScore.value += 1;
     }
     console.log('Correct!');
   } else {
+<<<<<<< HEAD
    // message.value = `Incorrect, the correct answer is: ${correctCountry.value.land}`;
+=======
+    message.value = `Incorrect, the correct answer is: ${correctCountry.value.land}`;
+>>>>>>> f158230 (new layout, changed functionallity)
     console.log('Incorrect!');
   }
   questionsAnswered.value += 1;
@@ -134,9 +146,16 @@ const checkAnswer =  async (selectedAnswer) => {
     border: 1.5px solid black;
   }
 
+<<<<<<< HEAD
   .flag img {
     width: 300px;
     height: 200px;
+=======
+
+  .flag img {
+    width: 300px;
+    height: 100%;
+>>>>>>> f158230 (new layout, changed functionallity)
     object-fit: cover;
   }
 
