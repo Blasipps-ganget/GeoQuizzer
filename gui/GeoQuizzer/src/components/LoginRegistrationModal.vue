@@ -2,7 +2,8 @@
 import {ref} from "vue";
 import {login, signUpRest} from "@/js/userApi";
 
-import { useGeneralStore } from '../stores/general.js';
+import {useGeneralStore} from '../stores/general.js';
+
 const generalStore = useGeneralStore()
 
 const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
@@ -29,9 +30,7 @@ const validate = async () => {
     username: loginName.value,
     password: loginPassword.value
   }
-
-  const response = await login(user)
-  console.log(response);
+  generalStore.loggedInUser = await login(user)
 }
 const signUp = async () => {
   const regUser = {
@@ -40,9 +39,7 @@ const signUp = async () => {
     firstPass: password,
     secondPass: password2
   }
-  const t = await signUpRest(regUser);
-  console.log(t);
-
+  generalStore.loggedInUser = await signUpRest(regUser)
 }
 
 const nameRules = [
