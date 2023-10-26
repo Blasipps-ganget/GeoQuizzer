@@ -1,11 +1,11 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import {ref} from "vue";
+import {RouterLink, RouterView} from 'vue-router'
 
 import LoginRegistrationModal from "@/components/LoginRegistrationModal.vue";
 // const showLoginModal = ref(false);
+import {useGeneralStore} from './stores/general.js';
+import {isLoggedIn} from "@/js/userApi";
 
-import { useGeneralStore } from './stores/general.js';
 const generalStore = useGeneralStore()
 
 function selectQuiz(selection) {
@@ -22,7 +22,13 @@ const showModalRegister = () => {
   generalStore.loginOption = false
   generalStore.showLoginModal = !generalStore.showLoginModal;
 }
-
+const loginText = () => {
+  generalStore.loggedInUser = isLoggedIn()
+  return generalStore.loggedInUser === '' ? "login" : generalStore.loggedInUser
+}
+const registerLogoutText = () =>{
+  return generalStore.loggedInUser === 'login' ? 'Register' : 'Logout'
+}
 
 
 </script>
@@ -86,13 +92,8 @@ const showModalRegister = () => {
 
       </div>
       <div class="buttonsTopRight">
-        <v-btn class="custom-btn" density="default" rounded="xl" @click="showModalLogin()">Login</v-btn>
-
-
-
-        <v-btn class="custom-btn" density="default" rounded="xl" @click="showModalRegister()">Register</v-btn>
-
-
+        <v-btn class="custom-btn" density="default" rounded="xl" @click="showModalLogin()">{{ loginText()}}</v-btn>
+        <v-btn class="custom-btn" density="default" rounded="xl" @click="showModalRegister()">{{ registerLogoutText() }}</v-btn>
       </div>
 
     </div>

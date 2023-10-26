@@ -1,12 +1,11 @@
-
 const sqlite3 = require('sqlite3').verbose();
 const express = require("express");
 const router = express.Router();
-const axios = require("axios");
 const dbPath = './backend/database/geoquizzer.db'
 
 /* Establish a connection the database */
 const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE, (err) => {
+
     if (err) {
         console.log("no work")
         return console.error(err.message);
@@ -18,6 +17,7 @@ const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READW
 router.get("/insertDataFromApi", async (req, res) => {
     try {
 
+
         await insertDataFromApi();
         res.json({message: "Data inserted successfully"});
     } catch (error) {
@@ -28,7 +28,7 @@ router.get("/insertDataFromApi", async (req, res) => {
 
 router.get("/createTables", async (req, res) => {
     try {
-        createTables()
+        await createTables();
         res.json({message: "Created tables successfully"});
     } catch (error) {
         console.log(error);
@@ -91,9 +91,11 @@ function fetchFlags(region) {
 
 }
 
+
+
 //1.
 //createTables();
-//dropTable()
+//dropTable();
 //2.
 //insertDataFromApi();
 
@@ -171,4 +173,10 @@ db.close((err) => {
 
 
 });
-module.exports = {router}
+module.exports = {router};
+
+
+
+
+
+

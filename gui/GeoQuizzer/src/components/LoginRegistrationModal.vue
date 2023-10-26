@@ -1,8 +1,7 @@
 <script setup>
 import {ref} from "vue";
 import {login, signUpRest} from "@/js/userApi";
-
-import { useGeneralStore } from '../stores/general.js';
+import {useGeneralStore} from '../stores/general.js';
 const generalStore = useGeneralStore()
 
 const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
@@ -29,9 +28,7 @@ const validate = async () => {
     username: loginName.value,
     password: loginPassword.value
   }
-
-  const response = await login(user)
-  console.log(response);
+  generalStore.loggedInUser = await login(user)
 }
 const signUp = async () => {
   const regUser = {
@@ -40,9 +37,7 @@ const signUp = async () => {
     firstPass: password,
     secondPass: password2
   }
-  const t = await signUpRest(regUser);
-  console.log(t);
-
+  generalStore.loggedInUser = await signUpRest(regUser)
 }
 
 const nameRules = [
@@ -96,22 +91,23 @@ const passwordRules = [
     return 'invalid password'
   },
   () => {
-    if(password.value) {
-      if(password.value === password2.value) return true;
+    if (password.value) {
+      if (password.value === password2.value) return true;
       return "Passwords must match.";
     }
   },
   () => {
     validPassword.value = true;
-  }]
+  }
+]
 </script>
 
 <template>
   <div class="modal-mask">
     <div class="modal-wrapper">
       <div class="modal-content">
-
-        <button @click="generalStore.showLoginModal = false"><img class="x-icon" src="../assets/images/icons/x-icon.png"></button>
+        <button @click="generalStore.showLoginModal = false"><img class="x-icon"
+                                                                  src="../assets/images/icons/x-icon.png"></button>
         <div v-if="generalStore.loginOption" class="loginForm">
           <v-form @submit.prevent>
             <p class="loginText">Please log in before quizzing</p>

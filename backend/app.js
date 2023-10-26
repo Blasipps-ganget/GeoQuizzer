@@ -1,6 +1,7 @@
 const express=require('express')
 const router=express.Router()
 const cors = require('cors');
+const cookieparser = require('cookie-parser');
 
 const app=express();
 const PORT=8080
@@ -15,11 +16,14 @@ require('./database/db');
 app.listen(PORT, () => console.log(serverStartUpMessage));
 app.use(cors());
 app.use(express.json());
+app.use(cookieparser());
 app.use("/capitalquiz", capitalQuizRoute);
 app.use("/flagquiz", flagQuizRoute);
 app.use("/countryquiz", countryQuizRoute);
 app.use("/countries", countriesRoute);
 app.use("/user", userRoute);
+
+
 
 router.get("/", (req, res) => {
     res.send('Content-Type', 'application/json');
