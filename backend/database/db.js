@@ -7,7 +7,6 @@ const dbPath = './backend/database/geoquizzer.db'
 
 /* Establish a connection the database */
 const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE, (err) => {
-
     if (err) {
         console.log("no work")
         return console.error(err.message);
@@ -19,7 +18,6 @@ const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READW
 router.get("/insertDataFromApi", async (req, res) => {
     try {
 
-
         await insertDataFromApi();
         res.json({message: "Data inserted successfully"});
     } catch (error) {
@@ -30,7 +28,7 @@ router.get("/insertDataFromApi", async (req, res) => {
 
 router.get("/createTables", async (req, res) => {
     try {
-        await createTables();
+        createTables()
         res.json({message: "Created tables successfully"});
     } catch (error) {
         console.log(error);
@@ -39,7 +37,7 @@ router.get("/createTables", async (req, res) => {
 });
 const fetchCountryFlag = async () => {
     try {
-        const response = await axios.get("https://restcountries.com/v3.1/name/Denmark");
+        const response = await fetch("https://restcountries.com/v3.1/name/Denmark");
         if (response.status === 200) {
             return response.data;
         }
@@ -50,6 +48,7 @@ const fetchCountryFlag = async () => {
 };
 
 async function insertDataFromApi() {
+
     try {
         const apiData = await fetchCountryFlag();
         if (!apiData) return;
@@ -89,13 +88,12 @@ function fetchFlags(region) {
             console.log(row.name);
         })
     });
+
 }
-
-
 
 //1.
 //createTables();
-//dropTable();
+//dropTable()
 //2.
 //insertDataFromApi();
 
@@ -103,9 +101,6 @@ function fetchFlags(region) {
 //fetchFlags('Europe');
 
 //4.
-
-
-
 
 function createTables() {
 
@@ -176,10 +171,4 @@ db.close((err) => {
 
 
 });
-module.exports = {router};
-
-
-
-
-
-
+module.exports = {router}

@@ -137,7 +137,7 @@ border-radius: 15px;
     gap: 50px;
     grid-template-columns: 267px;
     grid-template-rows: 250px 250px 250px;
-
+    margin-left: 20px;
     padding-bottom: 180px;
   }
 }

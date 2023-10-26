@@ -2,13 +2,16 @@
 import {ref} from "vue";
 import {login, signUpRest} from "@/js/userApi";
 
+import { useGeneralStore } from '../stores/general.js';
+const generalStore = useGeneralStore()
+
 const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-const loginOption = ref(true)
-const name = ref('test');
-const email = ref('test@test.se');
-const password = ref('test123');
-const password2 = ref('test123');
+// const loginOption = ref(true)
+const name = ref('');
+const email = ref('');
+const password = ref('');
+const password2 = ref('');
 
 const loginName = ref('');
 const loginPassword = ref('');
@@ -97,18 +100,19 @@ const passwordRules = [
       if(password.value === password2.value) return true;
       return "Passwords must match.";
     }
-    },
+  },
   () => {
     validPassword.value = true;
-  }
-  ]
+  }]
 </script>
 
 <template>
   <div class="modal-mask">
     <div class="modal-wrapper">
       <div class="modal-content">
-        <div v-if="loginOption" class="loginForm">
+
+        <button @click="generalStore.showLoginModal = false"><img class="x-icon" src="../assets/images/icons/x-icon.png"></button>
+        <div v-if="generalStore.loginOption" class="loginForm">
           <v-form @submit.prevent>
             <p class="loginText">Please log in before quizzing</p>
             <v-text-field
@@ -190,12 +194,13 @@ const passwordRules = [
           </v-btn>
 
         </div>
-        <v-card-text
-            class="showRegister"
-            @click="loginOption = !loginOption">
-          Don't have an account?
-          no worries king
-          sign up here
+        <v-card-text v-if="generalStore.loginOption"
+                     class="showRegister"
+                     @click="generalStore.loginOption = !generalStore.loginOption">
+          Don't have an account? Sign up here
+        </v-card-text>
+        <v-card-text v-else class="showRegister" @click="generalStore.loginOption = !generalStore.loginOption">
+          Already have an account? Click here to login
         </v-card-text>
       </div>
     </div>
@@ -203,6 +208,11 @@ const passwordRules = [
 </template>
 
 <style scoped>
+
+.x-icon {
+  width: 20px;
+}
+
 .modal-mask {
   position: fixed;
   z-index: 1;
@@ -222,7 +232,7 @@ const passwordRules = [
 }
 
 .modal-content {
-  height: 450px;
+  height: 500px;
   width: 350px;
   margin: auto;
   padding: 20px 20px;
@@ -257,11 +267,17 @@ const passwordRules = [
 
 .loginBtn {
   width: 100px;
+
 }
 
 .loginBtn {
   display: grid;
   justify-self: center;
   color: #053B50;
+  border-radius: 15px;
+}
+
+.signupbtn {
+  border-radius: 15px;
 }
 </style>

@@ -1,8 +1,9 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import {ref} from "vue";
+
 import LoginRegistrationModal from "@/components/LoginRegistrationModal.vue";
-const showLoginModal = ref(false);
+// const showLoginModal = ref(false);
 
 import { useGeneralStore } from './stores/general.js';
 const generalStore = useGeneralStore()
@@ -12,9 +13,17 @@ function selectQuiz(selection) {
 
 }
 
-const showModal = () => {
-  showLoginModal.value = !showLoginModal.value;
+const showModalLogin = () => {
+  generalStore.loginOption = true
+  generalStore.showLoginModal = !generalStore.showLoginModal;
 }
+
+const showModalRegister = () => {
+  generalStore.loginOption = false
+  generalStore.showLoginModal = !generalStore.showLoginModal;
+}
+
+
 
 </script>
 
@@ -24,47 +33,45 @@ const showModal = () => {
   <div class="menu">
 
     <div class="menuitem">
-      <img class="nav__images" height="50" src="./assets/images/icons/flag.png" alt="Flags">
+      <img class="nav__images" src="./assets/images/icons/flag.png" alt="Flags">
       <RouterLink class="navLink" to="/flag" @click="selectQuiz('flags')">Flags</RouterLink>
     </div>
 
     <div class="menuitem">
-      <img class="nav__images"  height="50" src="./assets/images/icons/planet-earth.png" alt="Countries">
-        <RouterLink class="navLink" to="/map" @click="selectQuiz('countries')">Countries</RouterLink>
+      <img class="nav__images" src="./assets/images/icons/planet-earth.png" alt="Countries">
+      <RouterLink class="navLink" to="/map" @click="selectQuiz('countries')">Countries</RouterLink>
     </div>
 
     <div class="menuitem">
-      <img class="nav__images"  height="50" src="./assets/images/icons/capitals.png" alt="Capitals">
+      <img class="nav__images" src="./assets/images/icons/capitals.png" alt="Capitals">
       <RouterLink class="navLink" to="/quiz" @click="selectQxuiz('capitals')">Capitals</RouterLink>
     </div>
 
     <div class="menuitem">
-      <img class="nav__images"  height="50"  src="./assets/images/icons/classroom.png" alt="Classroom">
-        <RouterLink class="navLink" to="/classroom">Classroom</RouterLink>
+      <img class="nav__images" src="./assets/images/icons/classroom.png" alt="Classroom">
+      <RouterLink class="navLink" to="/classroom">Classroom</RouterLink>
     </div>
 
     <div class="menuitem">
-      <img class="nav__images" height="50"  src="./assets/images/icons/user.png" alt="Profile">
-        <RouterLink class="navLink" to="/userProfile">Profile</RouterLink>
+      <img class="nav__images" src="./assets/images/icons/user.png" alt="Profile">
+      <RouterLink class="navLink" to="/userProfile">Profile</RouterLink>
     </div>
 
 
 
 
   </div>
-  <LoginRegistrationModal v-show="showLoginModal"></LoginRegistrationModal>
+  <LoginRegistrationModal v-show="generalStore.showLoginModal"></LoginRegistrationModal>
 
 
   <div class="headerContent">
 
 
 
-    <div class="profileContent">
+    <div>
 
-      <RouterLink to="/userProfile"><img class="userIconTopLeft" src="./assets/images/icons/user.png" alt=""></RouterLink>
+      <!-- <RouterLink to="/userProfile"><img class="userIconTopLeft" src="./assets/images/icons/user.png" alt=""></RouterLink> -->
 
-      <template>
-      </template>
     </div>
     <div class="logo">
 
@@ -74,16 +81,16 @@ const showModal = () => {
     </div>
 
     <div class="login">
-    <div class="buttonsTopRight">
-
-
-    </div>
       <div class="buttonsTopRight">
-      <v-btn class="custom-btn" density="default" rounded="xl" @click="showModal()">Login</v-btn>
+
+
+      </div>
+      <div class="buttonsTopRight">
+        <v-btn class="custom-btn" density="default" rounded="xl" @click="showModalLogin()">Login</v-btn>
 
 
 
-      <v-btn class="custom-btn" density="default" rounded="xl" @click="showModal()">Register</v-btn>
+        <v-btn class="custom-btn" density="default" rounded="xl" @click="showModalRegister()">Register</v-btn>
 
 
       </div>
@@ -95,11 +102,11 @@ const showModal = () => {
   <div><RouterView/></div>
 
   <div class="centerLinks">
-  <div><RouterLink to="/">Home</RouterLink></div>
-  <div><RouterLink to="/register">Register</RouterLink></div>
-  <div><RouterLink to="/map">Map</RouterLink></div>
-  <div><RouterLink to="/flag">FlagQuiz</RouterLink></div>
-  <div><RouterLink to="/quiz">ChooseQuiz</RouterLink></div>
+    <div><RouterLink to="/">Home</RouterLink></div>
+    <div><RouterLink to="/register">Register</RouterLink></div>
+    <div><RouterLink to="/map">Map</RouterLink></div>
+    <div><RouterLink to="/flag">FlagQuiz</RouterLink></div>
+    <div><RouterLink to="/quiz">ChooseQuiz</RouterLink></div>
   </div>
   <!--  WHEN ADDING A NEW LINK ADD HERE AND IN ROUTER -->
 
@@ -143,7 +150,7 @@ const showModal = () => {
 
   gap: 20px;
   padding: 20px;
-  //box-shadow: -1px 5px 5px 0px rgba(0,0,0,0.75);
+//box-shadow: -1px 5px 5px 0px rgba(0,0,0,0.75);
   box-shadow: 4px 7px 10px rgba(0,0,0,.4);
 
 
@@ -198,7 +205,7 @@ const showModal = () => {
 
 .login {
 
- //margin-left: auto;
+//margin-left: auto;
 
 }
 
@@ -257,12 +264,9 @@ const showModal = () => {
 
 }
 
-/*
-.menu:hover {
 
-  width:200px
-}
- */
+
+
 
 .menuitem a {
 
@@ -292,13 +296,47 @@ const showModal = () => {
 
 }
 
+.nav__images {
+  height: 50px;
+}
 
+@media screen and (max-width: 720px) {
+  .menu {
+    width: 50px;
+  }
 
+  .headerContent {
+    margin-left: 20px;
+  }
 
+  .menu:hover {
 
+    width:170px
+  }
 
+  .logo img {
 
+    height: 50px;
+  }
+  .logo h1 {
+    font-size: 20px;
+  }
+
+  .footerContent {
+    margin-left: 20px;
+  }
+
+  .footerContent span {
+    font-size: 10px;
+  }
+
+  .nav__images {
+    height: 30px;
+  }
+
+}
 
 
 
 </style>
+

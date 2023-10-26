@@ -1,9 +1,9 @@
-const express = require('express')
-const router = express.Router()
+const express=require('express')
+const router=express.Router()
 const cors = require('cors');
 
-const app = express();
-const PORT = 8080
+const app=express();
+const PORT=8080
 
 const capitalQuizRoute = require('./routes/CapitalQuiz')
 const countriesRoute = require('./routes/Countries')
@@ -20,8 +20,6 @@ app.use("/flagquiz", flagQuizRoute);
 app.use("/countryquiz", countryQuizRoute);
 app.use("/countries", countriesRoute);
 app.use("/user", userRoute);
-
-
 
 router.get("/", (req, res) => {
     res.send('Content-Type', 'application/json');
