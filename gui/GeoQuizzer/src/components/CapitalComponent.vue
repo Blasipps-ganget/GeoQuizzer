@@ -1,9 +1,9 @@
 <template>
     <body>
       <div class="container">
-        <div class="questionText" v-if="questionsAnswered <10" id="question-text"> {{ capitalName }}  </div>
+        <div class="questionText" v-if="questionsAnswered <10" id="question-text"> Which country does this capital belong to? <br> <br> {{ capitalName }}  </div>
         <div class="capital" v-if="questionsAnswered < 10">
-        <img :src="data.capitalUrl" alt="Capital" />
+        <img :src="data.flagUrl" alt="Capital" />
         </div>
         <div class="content" id="question-area">
           <div id="answer-btns" class="btn-grid">
@@ -54,7 +54,7 @@
       data.value.capital = response.capital[0];
       data.value.country = response.land;
       data.value.wrongAnswers = response.felsvar;
-      data.value.capitalUrl = response.capitalUrl;
+      data.value.flagUrl = response.flagurl;
 
   
       shuffleArray(data.value.wrongAnswers);
@@ -137,13 +137,11 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      border: 1.5px solid black;
     }
   
     .capital img {
       width: 300px;
       height: 200px;
-      object-fit: cover;
     }
   
       * {
