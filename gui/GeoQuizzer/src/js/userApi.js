@@ -20,12 +20,11 @@ export const login = async (userLog) => {
         let {token, refreshToken} = await response.json();
         document.cookie = `accessToken=${token}; path=/;`;
         document.cookie = `refreshToken=${refreshToken}; path=/;`;
-       return response.status === 200 ? parseJwt(token).name : 'login'
+        return response.status === 200 ? parseJwt(token).name : 'login'
     }).catch((error) => {
         console.log(error)
         return false;
     })
-
 }
 
 export const signUpRest = (userReg) => {
@@ -111,4 +110,3 @@ fetch(userEndpoint + 'signup', {
         headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${token2}`},
         body: JSON.stringify(userReg)
  */
-
