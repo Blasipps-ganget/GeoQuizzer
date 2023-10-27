@@ -11,7 +11,7 @@ const generalStore = useGeneralStore();
   <div class="buttonView">
     <button @click="generalStore.showResultModal = !generalStore.showResultModal">Toggle modal</button>
   </div>
-  <ResultModalComponent correctGuesses="5" noQuestions="10" v-if="generalStore.showResultModal"></ResultModalComponent>
+  <ResultModalComponent correctGuesses="6" noQuestions="10" v-if="generalStore.showResultModal"></ResultModalComponent>
 </template>
 
 
