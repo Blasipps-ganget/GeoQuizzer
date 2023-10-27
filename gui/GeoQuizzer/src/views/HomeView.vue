@@ -17,16 +17,16 @@ function selectQuiz(selection) {
 
     <div class="quizBox">
       <div class="headerBackground">
-        <RouterLink to="/map" @click="selectQuiz('countries')"><h2>Place the<br>country</h2></RouterLink>
+        <RouterLink to="/quiz" @click="selectQuiz('countries')"><h2>Place the<br>country</h2></RouterLink>
       </div>
-      <RouterLink to="/map" @click="selectQuiz('countries')"><img class="selectionImage" src="../assets/images/countries.png" alt=""></RouterLink>
+      <RouterLink to="/quiz" @click="selectQuiz('countries')"><img class="selectionImage" src="../assets/images/countries.png" alt=""></RouterLink>
     </div>
 
     <div class="quizBox">
       <div class="headerBackground">
-      <RouterLink to="/flag" @click="selectQuiz('flags')"><h2>Learn the flags<br>of the world</h2></RouterLink>
+      <RouterLink to="/quiz" @click="selectQuiz('flags')"><h2>Learn the flags<br>of the world</h2></RouterLink>
       </div>
-      <RouterLink to="/flag" @click="selectQuiz('flags')"><img class="selectionImage" src="../assets/images/flags.jpg" alt=""></RouterLink>
+      <RouterLink to="/quiz" @click="selectQuiz('flags')"><img class="selectionImage" src="../assets/images/flags.jpg" alt=""></RouterLink>
 
     </div>
       <div class="capitalsdiv">
@@ -51,6 +51,8 @@ function selectQuiz(selection) {
 </template>
 <style scoped>
 
+
+
 .centerContent {
 
   margin-top: 40px;
@@ -69,11 +71,6 @@ function selectQuiz(selection) {
   grid-template-rows: 250px;
 
   padding-bottom: 180px;
-
-
-
-
-
 
 }
 
@@ -131,6 +128,8 @@ border-radius: 15px;
 }
 
 @media screen and (max-width: 720px) {
+
+
   .mainContent {
 
     display: grid;
