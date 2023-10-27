@@ -2,6 +2,9 @@
 import { useGeneralStore } from '../stores/general.js';
 const generalStore = useGeneralStore();
 
+
+
+
 </script>
 
 <template>
