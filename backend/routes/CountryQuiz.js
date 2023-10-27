@@ -1,13 +1,17 @@
+// import {getNameFromToken, authenticateToken} from '../routes/User'
+
 const sqlite3 = require('sqlite3');
 const express=require('express')
 const router=express.Router()
 const dbPath = './backend/database/geoquizzer.db'
 
+
 module.exports=router;
 express().use(express.json());
 
 router.post("/result", express.json(), (req, res) => {
-    compareResults(req.body)
+ //   let userName = getNameFromToken(req);
+    compareResults(req.body, "antom")
         .then(() => res.sendStatus(200))
         .catch(err => res.status(500).send({err}));
 });
@@ -37,8 +41,9 @@ function connectToDatabase() {
     });
 }
 
-async function compareResults(results) {
+async function compareResults(results, userName) {
     let countriesFromDb = await getCountries(results.region);
+
     let amountOfQuestions = countriesFromDb.length;
 
     if (amountOfQuestions !== results.answers.length) {
@@ -52,8 +57,23 @@ async function compareResults(results) {
     for (let i = 0; i < results.answers.length; i++) {
         results.answers[i] === results.questions[i] ? correctAnswers++ : wrongAnswers += results.questions[i] + ", ";
     }
-    addToDb(1, correctAnswers, wrongAnswers, results.region).catch(err => console.log(err.message));
+    let user_id = await getIdFromName(userName);
+
+    if (user_id === null) {
+        console.log("User not found!");
+        return;
+    }
+    addToDb(user_id, correctAnswers, wrongAnswers, results.region).catch(err => console.log(err.message));
 }
+
+async function getIdFromName(name) {
+    const db = await connectToDatabase();
+    const query = 'SELECT users.id FROM  users WHERE users.name = ?';
+    const row = await new Promise((resolve, reject) => db.get(query, [name], (err, row) => err ? reject(err) : resolve(row)));
+    db.close();
+    return row ? row.id : null;
+}
+
 
 async function addToDb(user_id, points, wrongAnswers, region) {
     const db = await connectToDatabase();
