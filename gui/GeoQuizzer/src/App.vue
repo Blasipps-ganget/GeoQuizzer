@@ -36,7 +36,7 @@ const registerLogoutText = () =>{
 <template>
 
 
-  <div class="menu">
+  <div class="bigMenu">
 
     <div class="menuitem">
       <img class="nav__images" src="./assets/images/icons/flag.png" alt="Flags">
@@ -252,7 +252,7 @@ const registerLogoutText = () =>{
 
 }
 
-.menu {
+.bigMenu {
 
   position: fixed;
   height: 100%;
@@ -281,7 +281,7 @@ const registerLogoutText = () =>{
 
 }
 
-.menu:hover .menuitem a {
+.bigMenu:hover .menuitem a {
 
   color: #EEEEEE;
 }
@@ -302,7 +302,7 @@ const registerLogoutText = () =>{
 }
 
 @media screen and (max-width: 720px) {
-  .menu {
+  .bigMenu {
     width: 50px;
   }
 
@@ -310,7 +310,7 @@ const registerLogoutText = () =>{
     margin-left: 20px;
   }
 
-  .menu:hover {
+  .bigMenu:hover {
 
     width:170px
   }
