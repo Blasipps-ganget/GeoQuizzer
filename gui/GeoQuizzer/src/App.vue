@@ -36,21 +36,21 @@ const registerLogoutText = () =>{
 <template>
 
 
-  <div class="menu">
+  <div class="bigMenu">
 
     <div class="menuitem">
       <img class="nav__images" src="./assets/images/icons/flag.png" alt="Flags">
-      <RouterLink class="navLink" to="/flag" @click="selectQuiz('flags')">Flags</RouterLink>
+      <RouterLink class="navLink" to="/quiz" @click="selectQuiz('flags')">Flags</RouterLink>
     </div>
 
     <div class="menuitem">
       <img class="nav__images" src="./assets/images/icons/planet-earth.png" alt="Countries">
-      <RouterLink class="navLink" to="/map" @click="selectQuiz('countries')">Countries</RouterLink>
+        <RouterLink class="navLink" to="/quiz" @click="selectQuiz('countries')">Countries</RouterLink>
     </div>
 
     <div class="menuitem">
       <img class="nav__images" src="./assets/images/icons/capitals.png" alt="Capitals">
-      <RouterLink class="navLink" to="/quiz" @click="selectQxuiz('capitals')">Capitals</RouterLink>
+      <RouterLink class="navLink" to="/quiz" @click="selectQuiz('capitals')">Capitals</RouterLink>
     </div>
 
     <div class="menuitem">
@@ -74,9 +74,19 @@ const registerLogoutText = () =>{
 
 
 
-    <div>
+    <div class="hamburgerMenu">
 
-      <!-- <RouterLink to="/userProfile"><img class="userIconTopLeft" src="./assets/images/icons/user.png" alt=""></RouterLink> -->
+      <input id="menu-toggle" type="checkbox" />
+      <label class='menu-button-container' for="menu-toggle">
+        <div class='menu-button'></div>
+      </label>
+      <ul class="menu">
+        <li><RouterLink class="navLink" to="/quiz" @click="selectQuiz('flags')">Flags</RouterLink></li>
+        <li><RouterLink class="navLink" to="/quiz" @click="selectQuiz('countries')">Countries</RouterLink></li>
+        <li><RouterLink class="navLink" to="/quiz" @click="selectQuiz('capitals')">Capitals</RouterLink></li>
+        <li><RouterLink class="navLink" to="/classroom">Classroom</RouterLink></li>
+        <li><RouterLink class="navLink" to="/userProfile">Profile</RouterLink></li>
+      </ul>
 
     </div>
     <div class="logo">
@@ -107,6 +117,7 @@ const registerLogoutText = () =>{
     <div><RouterLink to="/register">Register</RouterLink></div>
     <div><RouterLink to="/map">Map</RouterLink></div>
     <div><RouterLink to="/flag">FlagQuiz</RouterLink></div>
+    <div><RouterLink to="/capitals">Capitals quiz</RouterLink></div>
     <div><RouterLink to="/quiz">ChooseQuiz</RouterLink></div>
   </div>
   <!--  WHEN ADDING A NEW LINK ADD HERE AND IN ROUTER -->
@@ -122,8 +133,86 @@ const registerLogoutText = () =>{
 
 <style scoped>
 
+/* CSS FOR HAMBURGER MENU */
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+
+}
+
+.menu > li {
+  margin: 0 1rem;
+  overflow: hidden;
+}
+
+.menu-button-container {
+  display: none;
+  height: 100%;
+  width: 30px;
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#menu-toggle {
+  display: none;
+}
+
+.menu-button,
+.menu-button::before,
+.menu-button::after {
+  display: block;
+  background-color: #fff;
+  position: absolute;
+  height: 4px;
+  width: 30px;
+  transition: transform 400ms cubic-bezier(0.23, 1, 0.32, 1);
+  border-radius: 2px;
+}
+
+.menu-button::before {
+  content: '';
+  margin-top: -8px;
+}
+
+.menu-button::after {
+  content: '';
+  margin-top: 8px;
+}
+
+#menu-toggle:checked + .menu-button-container .menu-button::before {
+  margin-top: 0px;
+  transform: rotate(405deg);
+}
+
+#menu-toggle:checked + .menu-button-container .menu-button {
+  background: rgba(255, 255, 255, 0);
+}
+
+#menu-toggle:checked + .menu-button-container .menu-button::after {
+  margin-top: 0px;
+  transform: rotate(-405deg);
+}
+
+
+/* --------------------- */
+
 .navLink:hover {
   text-decoration: underline;
+}
+
+.hamburgerMenu {
+  display: none;
+}
+
+.hamburgerMenu a {
+  text-decoration: none;
+  color: white;
 }
 
 
@@ -185,24 +274,7 @@ const registerLogoutText = () =>{
 }
 
 
-.userIconTopLeft {
 
-  height: 40px;
-
-
-
-
-}
-
-.profileContent  {
-
-  border: 2px solid white;
-  border-radius: 15px;
-  height: 50px;
-  margin-left: 50px;
-  padding: 5px;
-
-}
 
 .login {
 
@@ -252,7 +324,7 @@ const registerLogoutText = () =>{
 
 }
 
-.menu {
+.bigMenu {
 
   position: fixed;
   height: 100%;
@@ -281,7 +353,7 @@ const registerLogoutText = () =>{
 
 }
 
-.menu:hover .menuitem a {
+.bigMenu:hover .menuitem a {
 
   color: #EEEEEE;
 }
@@ -302,17 +374,62 @@ const registerLogoutText = () =>{
 }
 
 @media screen and (max-width: 720px) {
+
+  /* HAMBURGER MENU CSS */
+
+  .menu-button-container {
+    display: flex;
+  }
   .menu {
-    width: 50px;
+    position: absolute;
+    top: 0;
+    margin-top: 150px;
+    left: 0;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+  #menu-toggle ~ .menu li {
+    height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    transition: height 400ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  #menu-toggle:checked ~ .menu li {
+    border: 1px solid #333;
+    height: 2.5em;
+    padding: 0.5em;
+    transition: height 400ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .menu > li {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0.5em 0;
+    width: 100%;
+    color: white;
+    background-color: #176B87;
+  }
+  .menu > li:not(:last-child) {
+    border-bottom: 1px solid #444;
+  }
+
+
+  /* ------------------ */
+
+
+  .bigMenu {
+    display: none;
   }
 
   .headerContent {
-    margin-left: 20px;
+    padding-left: 20px;
   }
 
-  .menu:hover {
-
-    width:170px
+  .hamburgerMenu {
+    display: block;
   }
 
   .logo img {
@@ -321,10 +438,6 @@ const registerLogoutText = () =>{
   }
   .logo h1 {
     font-size: 20px;
-  }
-
-  .footerContent {
-    margin-left: 20px;
   }
 
   .footerContent span {
