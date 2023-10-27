@@ -1,8 +1,25 @@
 <script setup>
 import { useGeneralStore } from '../stores/general.js';
 const generalStore = useGeneralStore();
+import { computed } from 'vue';
 
+const props = defineProps(['correctGuesses', 'noQuestions'])
 
+const correctGuesses = props.correctGuesses;
+const noQuestions = props.noQuestions;
+
+const passed = computed(() => {
+  return correctGuesses/parseFloat(noQuestions) >= 0.6;
+})
+
+const percentage = computed(() => {
+  return Math.trunc(correctGuesses/parseFloat(noQuestions) * 100);
+})
+
+console.log(passed.value)
+console.log(percentage.value)
+console.log(correctGuesses);
+console.log(noQuestions);
 
 
 </script>
@@ -16,18 +33,22 @@ const generalStore = useGeneralStore();
           <div class="grid-item"><h1>The quiz is done!</h1></div>
         </div>
         <div class="center-content">
-          <div><img class="checkfailedimg" alt="passed" src="../assets/images/icons/pass.png">
-            <!--<img class="checkfailedimg" alt="failed" src="../assets/images/icons/fail.png">-->
+          <div><img v-if="passed" class="checkfailedimg" alt="passed" src="../assets/images/icons/pass.png">
+            <img v-else class="checkfailedimg" alt="failed" src="../assets/images/icons/fail.png">
           </div>
 
           <div><h2>RESULTS</h2></div>
           <div class="result-boxes">
-            <div class="result-box"><h1>9 / 10</h1></div>
-            <div class="result-box"><h1>90 %</h1></div>
+            <div class="result-box"><h1>{{ correctGuesses }} / {{ noQuestions }}</h1></div>
+            <div class="result-box"><h1>{{ percentage}}%</h1></div>
           </div>
 
-          <div class="passed">
+          <div v-if="passed" class="passed">
             <h4>YOU PASSED! CONGRATULATIONS</h4>
+          </div>
+          <div v-else class="failed">
+            <h4>YOU FAILED</h4>
+            The limit was {{ 0.6 * noQuestions }}
           </div>
           <div>
             <RouterLink to="/quiz" class="retryButton">Retry the quiz</RouterLink>
@@ -43,6 +64,9 @@ const generalStore = useGeneralStore();
 <style scoped>
 .passed {
   height: 40px;
+}
+.failed {
+  height: 65px;
 }
 .retryButton {
   background: #053B50;

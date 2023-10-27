@@ -117,7 +117,7 @@ const registerLogoutText = () =>{
     <div><RouterLink to="/register">Register</RouterLink></div>
     <div><RouterLink to="/map">Map</RouterLink></div>
     <div><RouterLink to="/flag">FlagQuiz</RouterLink></div>
-    <div><RouterLink to="/capitals">Capitals quiz</RouterLink></div>
+    <div><RouterLink to="/capital">Capitals quiz</RouterLink></div>
     <div><RouterLink to="/quiz">ChooseQuiz</RouterLink></div>
   </div>
   <!--  WHEN ADDING A NEW LINK ADD HERE AND IN ROUTER -->
