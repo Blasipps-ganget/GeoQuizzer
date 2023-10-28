@@ -4,8 +4,10 @@ import ClickableMap from "@/components/ClickableMap.vue";
 import ProgressBarComponent from "@/components/ProgressBarComponent.vue";
 import * as d3 from "d3";
 import { useMapStore } from '@/stores/map';
+import ResultModalComponent from "@/components/ResultModalComponent.vue";
+import { useGeneralStore } from '@/stores/general';
+const generalStore = useGeneralStore();
 const mapStore = useMapStore();
-
 const failedGuesses = ref([]);
 const succeededGuesses = ref([]);
 const includedCountries = ref([]);
@@ -37,7 +39,7 @@ async function handleCountryClick(answer) {
 }
 
 async function displayResults() {
-  alert(`Your score is ${succeededGuesses.value.length}/${succeededGuesses.value.length + failedGuesses.value.length}`);
+  generalStore.showResultModal = !generalStore.showResultModal
   await fetch(`http://localhost:8080/countryquiz/result`, {
     headers: {'Content-Type': 'application/json'},
     method: 'POST',
@@ -90,6 +92,11 @@ async function resetQuiz() {
         @resetQuiz="resetQuiz"
         ref="map"
     />
+    <ResultModalComponent
+        :correctGuesses="succeededGuesses.length"
+        :noQuestions="succeededGuesses.length + failedGuesses.length"
+        :mapView="true"
+        v-if="generalStore.showResultModal"></ResultModalComponent>
 
     <ProgressBarComponent v-if="!selectingRegions"
         :amountAnswered="failedGuesses.length + succeededGuesses.length"
