@@ -2,7 +2,11 @@
 import { useGeneralStore } from '../stores/general.js';
 const generalStore = useGeneralStore();
 import { computed } from 'vue';
-const props = defineProps(['correctGuesses', 'noQuestions', 'mapView']);
+const props = defineProps({
+  correctGuesses: Number,
+  noQuestions: Number,
+  mapView: {type: Boolean, default: false}
+});
 
 const correctGuesses = props.correctGuesses;
 const noQuestions = props.noQuestions;

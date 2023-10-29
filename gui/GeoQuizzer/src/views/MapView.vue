@@ -6,6 +6,7 @@ import * as d3 from "d3";
 import { useMapStore } from '@/stores/map';
 import ResultModalComponent from "@/components/ResultModalComponent.vue";
 import { useGeneralStore } from '@/stores/general';
+//import { handleToken } from ?????????
 const generalStore = useGeneralStore();
 const mapStore = useMapStore();
 const failedGuesses = ref([]);
@@ -15,6 +16,7 @@ const question = ref();
 const answerArray = ref([]);
 const selectingRegions = ref(true);
 const map = ref(null);
+
 let questionIndex = 0;
 let regionGlobal = null;
 
@@ -39,9 +41,14 @@ async function handleCountryClick(answer) {
 }
 
 async function displayResults() {
+
   generalStore.showResultModal = !generalStore.showResultModal
+  // const accessToken = handleToken();
   await fetch(`http://localhost:8080/countryquiz/result`, {
-    headers: {'Content-Type': 'application/json'},
+    headers: {
+      'Content-Type': 'application/json'
+     // ,'Authorization': `Bearer ${accessToken}`
+    },
     method: 'POST',
     body: JSON.stringify({
       questions: includedCountries.value,
@@ -62,6 +69,7 @@ async function handleRegionClick(region) {
   selectingRegions.value = false;
   includedCountries.value = await d3.json(`http://localhost:8080/countryquiz/${region}?shuffle=true`);
   question.value = includedCountries.value[0];
+
 }
 
 async function resetQuiz() {
@@ -75,6 +83,11 @@ async function resetQuiz() {
 
   await nextTick(mapStore.updateMap).then(mapStore.resetZoom);
 }
+
+
+
+
+
 
 </script>
 
