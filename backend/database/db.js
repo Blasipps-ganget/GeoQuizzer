@@ -114,6 +114,7 @@ function createTables() {
     db.run('CREATE TABLE IF NOT EXISTS capitalquiz (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, region_id INTEGER, attemptNr INTEGER, points INTEGER, wrongAnswers TEXT, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (region_id) REFERENCES regions(id))');
     db.run('CREATE TABLE IF NOT EXISTS countryquiz (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, region_id INTEGER, attemptNr INTEGER, points INTEGER, wrongAnswers TEXT, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (region_id) REFERENCES regions(id))');
 
+
 }
 function populateRegions() {
     db.get('SELECT COUNT(*) as count FROM regions', (err, row) => {
@@ -122,6 +123,12 @@ function populateRegions() {
             db.run(`INSERT INTO regions (name) VALUES 
                 ('europe'), ('asia'), ('oceania'), ('africa'), ('northAmerica'), ('southAmerica')`);
     });
+
+
+
+   //db.run('DROP TABLE countries')
+  //db.run('DROP TABLE regions')
+
 }
 
 
