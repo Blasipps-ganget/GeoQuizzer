@@ -11,10 +11,50 @@ function connectToDatabase() {
   });
 }
 
-const db = connectToDatabase();
 
+
+async function getIdFromName(name) {
+  const db = await connectToDatabase();
+  const query = 'SELECT users.id FROM  users WHERE users.name = ?';
+  const row = await new Promise((resolve, reject) => db.get(query, [name], (err, row) => err ? reject(err) : resolve(row)));
+  db.close()
+  return row ? row.id : null;
+}
+
+async function getNoCountries(region) {
+  const db = await connectToDatabase();
+  const query = 'SELECT COUNT(countries.name)' +
+      ' FROM countries JOIN regions ON countries.region_id = regions.id WHERE regions.name = ?';
+  const count = await new Promise((resolve, reject) => db.get(query, [region], (err, count) => err ? reject(err) : resolve(count)))
+  db.close()
+  return count ? count : 0;
+
+}
+
+async function getRegions() {
+  const db = await connectToDatabase();
+  const query = 'SELECT regions.name FROM regions';
+  const rows = await new Promise((resolve, reject) =>
+      db.all(query, (err, rows) => (err ? reject(err) : resolve(rows)))
+  );
+
+  db.close()
+
+  return rows.map(temp => temp.name)
+
+}
+
+
+async function doRegions() {
+  const regions = await getRegions();
+  console.log(regions);
+}
+
+doRegions();
 
 /*
+//   let userName = getNameFromToken(req);
+
 SELECT COUNT(countries.name)
 FROM countries
 JOIN regions ON countries.region_id = regions.id
@@ -26,15 +66,7 @@ SELECT MAX(points) AS highest_score
 FROM countryquiz
 WHERE user_id = 5;
 
-async function getIdFromName(name) {
-    const db = await connectToDatabase();
-    const query = 'SELECT users.id FROM  users WHERE users.name = ?';
-    const row = await new Promise((resolve, reject) => db.get(query, [name], (err, row) => err ? reject(err) : resolve(row)));
-    db.close();
-    return row ? row.id : null;
 
-
-}
 
 }
 
@@ -69,3 +101,4 @@ router.get("/", (req, res) => {
 )
 
 });
+
