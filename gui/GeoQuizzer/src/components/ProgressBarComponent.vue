@@ -15,7 +15,7 @@ const props = defineProps({
 onMounted(() => {
       const elProgress = document.querySelector("#progressAmount")
 
-      watch(() => props.amountAnswered, (newVal, oldVal) => {
+      watch(() => props.amountAnswered, (newVal) => {
         if (newVal)
           elProgress.style.width = ((newVal / props.totalQuestions)*100) + '%';
         if(props.amountAnswered === 0)
@@ -50,7 +50,9 @@ p { color: red; }
   height: 100%;
   width: 0;
   background-color: #176B87;
-  /*animation: fill-bar 3s infinite;*/
+
+
+    /*animation: fill-bar 3s infinite;*/
 }
 
 /*@keyframes fill-bar {

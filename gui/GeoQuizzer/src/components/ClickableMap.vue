@@ -25,12 +25,14 @@ let oceania;
 let southAmerica;
 let northAmerica;
 let regionMap = {};
+let isZoomEnabled = false;
 const countriesMarked = ref([]);
 
 onMounted(async () => {
 
   mapStore.resetZoom = resetZoom;
   mapStore.updateMap = updateMap;
+  mapStore.toggleZoom = toggleZoom;
 
   const svg = d3.select("#my_dataviz");
   const width = +svg.attr("width");
@@ -42,10 +44,10 @@ onMounted(async () => {
       .translate([width / 2, height / 2]);
 
   const zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoomed);
-  // svg.call(zoom); // delete this line to disable free zooming
 
   const geoData = await d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson");
   await populateRegions();
+
 
   geoData.features.forEach(feature => nameToIdMap.value.set(feature.properties.name, feature.id));
   appendCountryPaths(geoData);
@@ -181,6 +183,16 @@ onMounted(async () => {
   function resetZoom() {
     svg.transition().duration(200).call(zoom.transform, d3.zoomIdentity);
   }
+
+  function toggleZoom() {
+
+    isZoomEnabled = !isZoomEnabled;
+    svg.call(zoom); // delete this line to disable free zooming
+    if (isZoomEnabled) svg.call(zoom);
+    else svg.on('.zoom', null)
+
+  }
+
 
   async function populateRegions() {
     europe = await d3.json("http://localhost:8080/countryquiz/europe");

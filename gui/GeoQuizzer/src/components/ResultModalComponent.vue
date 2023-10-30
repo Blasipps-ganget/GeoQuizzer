@@ -2,8 +2,11 @@
 import { useGeneralStore } from '../stores/general.js';
 const generalStore = useGeneralStore();
 import { computed } from 'vue';
-
-const props = defineProps(['correctGuesses', 'noQuestions'])
+const props = defineProps({
+  correctGuesses: Number,
+  noQuestions: Number,
+  mapView: {type: Boolean, default: false}
+});
 
 const correctGuesses = props.correctGuesses;
 const noQuestions = props.noQuestions;
@@ -48,10 +51,11 @@ console.log(noQuestions);
           </div>
           <div v-else class="failed">
             <h4>YOU FAILED</h4>
-            The limit was {{ 0.6 * noQuestions }}
+            The limit was {{ Math.trunc(0.6 * noQuestions) }}
           </div>
           <div>
-            <RouterLink to="/quiz" class="retryButton">Retry the quiz</RouterLink>
+            <button v-if="mapView" class="retryButton" @click="generalStore.showResultModal = false">Select region</button>
+            <RouterLink v-else to="/quiz" class="retryButton">Retry the quiz</RouterLink>
             <RouterLink to="/" class="retryButton">Return home</RouterLink>
           </div>
         </div>
@@ -72,7 +76,7 @@ console.log(noQuestions);
   background: #053B50;
   border-radius: 15px;
   padding: 10px;
-  width: 40px;
+  width: 120px;
   margin: 10px;
   color: white;
 }

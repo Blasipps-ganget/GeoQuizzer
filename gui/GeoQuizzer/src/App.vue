@@ -373,6 +373,7 @@ const registerLogoutText = () =>{
   height: 50px;
 }
 
+
 @media screen and (max-width: 720px) {
 
   /* HAMBURGER MENU CSS */

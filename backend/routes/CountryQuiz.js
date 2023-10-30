@@ -46,7 +46,7 @@ async function compareResults(results, userName) {
 
     let amountOfQuestions = countriesFromDb.length;
 
-    if (amountOfQuestions !== results.answers.length) {
+    if (amountOfQuestions < results.answers.length) {
         console.log("Cheat detected!");
         return;
     }
