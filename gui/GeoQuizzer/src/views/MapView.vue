@@ -105,7 +105,6 @@ function toggleSetToExamOrPractise() {
   <div class="content">
     <div class="message" v-if="question">Where is: {{ question }}?</div>
     <div class="message" v-else>Select region to start quiz</div>
-
     <ClickableMap
         :failedGuesses="failedGuesses"
         :succeededGuesses="succeededGuesses"
@@ -168,6 +167,7 @@ function toggleSetToExamOrPractise() {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  max-width: 100vw;
 }
 
 

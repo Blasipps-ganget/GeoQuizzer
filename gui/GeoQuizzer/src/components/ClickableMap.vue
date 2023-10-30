@@ -35,8 +35,8 @@ onMounted(async () => {
   mapStore.toggleZoom = toggleZoom;
 
   const svg = d3.select("#my_dataviz");
-  const width = +svg.attr("width");
-  const height = +svg.attr("height");
+  const width = props.width;
+  const height = props.height;
 
   const projection = d3.geoMercator()
       .scale(props.scale)
@@ -215,17 +215,24 @@ onMounted(async () => {
 </script>
 
 <template>
-
   <div>
-    <svg id="my_dataviz" :width=props.width :height=props.height> </svg>
+    <svg id="my_dataviz" :style="`width: ${width}px; height: auto;`" :viewBox="`0 0 ${width} ${height}`"></svg>
   </div>
-<!--  <div>{{mouseover}}</div>-->
-
 </template>
 
 <style scoped>
 #my_dataviz {
   background-color: #176B87;
   border: 1px solid black;
+  max-width: 100vw;
+  max-height: 100vh;
+
+}
+
+@media (max-width: 800px) {
+  #my_dataviz {
+    width: 500px; /* Set the width to 500px when the screen is less than 800px */
+    height: auto; /* Maintain the aspect ratio */
+  }
 }
 </style>
