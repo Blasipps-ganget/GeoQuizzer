@@ -9,9 +9,75 @@ const {resolve} = require("path");
 dotenv.config({path: resolve(__dirname, '../.env')})
 const jwtsecretkey = process.env.JWT_SECRET_KEY;
 const refreshKey = process.env.REFRESH_TOKEN_SECRET;
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
 
-router.post("/login", authenticateToken, (req, res) => {
-    console.log("logged in")
+    console.log("trying to auth")
+    if (token == null) return res.sendStatus(401)
+
+    jwt.verify(token, jwtsecretkey, (err, user) => {
+        console.log(err)
+        if (err){
+            console.log("error", err)
+            return res.sendStatus(403)
+        }
+        console.log('user', user)
+        next()
+    });
+
+}
+router.post("/login" ,(req, res) => {
+    const db = createDbConnection(dbPath);
+    const query = 'SELECT password FROM users WHERE name = ?';
+    console.log(req.body)
+    const loginAttempt = {
+        username: req.body.username,
+        password: req.body.password
+    };
+    try {
+        return checkIfUserExists(loginAttempt.username, (checkErr, userExists) => {
+            if (checkErr) {
+                console.log(checkErr.message)
+                res.status(500).send("Internal Server Error");
+            } else {
+                if (userExists) {
+                    db.get(query, loginAttempt.username, (err, storedPassword) => {
+                        if (err) {
+                            console.log(err.message)
+                            res.status(500).send("Internal Server Error");
+                        } else {
+                            bcrypt.compare(loginAttempt.password, storedPassword.password, (error, result) => {
+                                if (error) {
+                                    console.log('err',error.message)
+                                    res.status(500).send("Internal Server Error");
+                                }
+                                if (result) {
+                                    const token = createToken(loginAttempt.username)
+                                    const refreshToken = createRefreshToken(loginAttempt.username);
+                                    res.cookie('jwt', refreshToken, {
+                                        httpOnly: true,
+                                        sameSite: 'None',
+                                        secure: true,
+                                        maxAge: 24 * 60 * 60 * 1000
+                                    });
+                                    res.status(200).json({token, refreshToken});
+                                } else {
+                                    console.log("Invalid Credentials")
+                                    res.status(401).send("Invalid credentials");
+                                }
+                            })
+                        }
+                    })
+                    return null;
+                } else {
+                    res.status(404).send("No user")
+                }
+            }
+        });
+    } catch (err) {
+        res.send(err.message)
+    }
 })
 
 router.post("/signup", (req, res) => {
@@ -61,7 +127,6 @@ router.post('/checkValidity', (req, res) => {
     const token = authHeader && authHeader.split(' ')[1]
     jwt.verify(token, jwtsecretkey, (err, decoded) => {
         if (err) {
-            console.log(err.message)
             res.sendStatus(401)
         } else if (decoded) {
             res.sendStatus(200)
@@ -73,10 +138,10 @@ router.post('/refresh', (req, res) => {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
     if (token) {
-        console.log(token)
         jwt.verify(token, refreshKey,
             (err, decoded) => {
                 if (err) {
+                    console.log("err ref", err.message)
                     return res.status(406).json({message: 'Unauthorized'});
                 } else {
                     console.log(decoded.name)
@@ -93,87 +158,24 @@ router.post('/refresh', (req, res) => {
     }
 })
 
-function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
-    if (!token == null) {
-        jwt.verify(token, jwtsecretkey, (err, user) => {
-            if (err) {
-                console.log(err.message)
-                return res.sendStatus(403)
-            } else {
-                return res.sendStatus(200)
-            }
-        })
-    } else {
-        tryLogin(res, req)
-    }
-}
+
+
+
 
 const tryLogin = (res, req) => {
-    const db = createDbConnection(dbPath);
-    const query = 'SELECT password FROM users WHERE name = ?';
-    const loginAttempt = {
-        username: req.body.username,
-        password: req.body.password
-    };
-    try {
-        return checkIfUserExists(loginAttempt.username, (checkErr, userExists) => {
-            if (checkErr) {
-                console.log(checkErr.message)
-                res.status(500).send("Internal Server Error");
-            } else {
-                if (userExists) {
-                    db.get(query, loginAttempt.username, (err, storedPassword) => {
-                        if (err) {
-                            console.log(err.message)
-                            res.status(500).send("Internal Server Error");
-                        } else {
-                            bcrypt.compare(loginAttempt.password, storedPassword.password, (error, result) => {
-                                if (error) {
-                                    console.log(error.message)
-                                    res.status(500).send("Internal Server Error");
-                                }
-                                if (result) {
-                                    console.log("Correct, ", loginAttempt.username)
-                                    const token = createToken(loginAttempt.username)
-                                    const refreshToken = createRefreshToken(loginAttempt.username);
-                                    res.cookie('jwt', refreshToken, {
-                                        httpOnly: true,
-                                        sameSite: 'None',
-                                        secure: true,
-                                        maxAge: 24 * 60 * 60 * 1000
-                                    });
-                                    res.status(200).json({token, refreshToken});
-                                } else {
-                                    console.log("Invalid Credentials")
-                                    res.status(401).send("Invalid credentials");
-                                }
-                            })
-                        }
-                    })
-                    return null;
-                } else {
-                    res.status(404).send("Invalid Credentials")
-                }
-            }
-        });
-    } catch (err) {
-        return res.send(err.message)
-    }
+
 }
 
 const checkIfUserExists = (username, callback) => {
     const db = createDbConnection();
     const query = 'SELECT * FROM users WHERE name = ?'
     return db.get(query, username, (err, user) => {
-        console.log(user)
         if (err) {
             console.log(err.message);
             return callback(null, true)
         } else if (user) {
             return callback(null, true)
-        } else{
+        } else {
             return callback(null, false)
         }
     });
@@ -182,13 +184,13 @@ const checkIfUserExists = (username, callback) => {
 const insertIntoDatabase = (user, callback) => {
     const saltRounds = 10;
     const db = createDbConnection();
-    const registerQuery = 'INSERT INTO users (name,email,password,teacher) VALUES (?,?,?,?)';
+    const registerQuery = 'INSERT INTO users (name,email,password,teacher, classRoom) VALUES (?,?,?,?,)';
 
     bcrypt.hash(user.firstPass, saltRounds, (err, result) => {
         if (err) {
             return err.message;
         } else {
-            db.run(registerQuery, [user.username, user.email, result, 0], function (err) {
+            db.run(registerQuery, [user.username, user.email, result, 0, user.username], function (err) {
                 if (err) {
                     console.log(err.message);
                 }
@@ -219,5 +221,12 @@ const createRefreshToken = (name) => {
     }
     return jwt.sign(payload, refreshKey, {expiresIn: 50000});
 }
+const getNameFromToken = (req) => {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+    const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    return payload.name;
+}
 
 module.exports = router;
+
