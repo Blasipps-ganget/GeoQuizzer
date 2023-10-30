@@ -40,6 +40,26 @@ const headers = [
   {title: 'Percentage', align: 'end', key: 'percentage'}
 
 ]
+
+const region = getRegion();
+
+async function getRegion() {
+  // const accessToken = handleToken();
+  const region = await fetch('http://localhost:8080/highscores', {
+  /* headers: {
+
+    // 'Authorization': Bearer ${accessToken}
+  },*/
+  method: 'GET',
+      body: JSON.stringify({
+    questions: includedCountries.value,
+    answers: answerArray.value,
+    region: regionGlobal
+  }),
+});
+}
+
+/*
 const region = [
   {
     region: 'Europe',
@@ -61,9 +81,7 @@ const region = [
     percentage: '45%'
   },
 
-
-
-]
+]*/
 const five = 5;
 
 
