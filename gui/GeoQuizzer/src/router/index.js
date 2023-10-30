@@ -40,10 +40,24 @@ const router = createRouter({
       component: () => import('../views/ProgressBarTest.vue')
     },
     {
+
       path: '/testResultModal',
       name: 'testresultmodal',
       component: () => import('../views/ResultModalTest.vue')
-    }
+    },
+    {
+
+      path: '/classroom',
+      name: 'classroom',
+      component: () => import('../views/ClassroomView.vue')
+
+     },
+     {
+       path: '/join/:id',
+       name: 'joinclassroom',
+       component: () => import('../components/JoinClassroom.vue')
+
+     }
   ]
 })
 

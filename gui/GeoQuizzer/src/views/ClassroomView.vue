@@ -1,9 +1,16 @@
 <script setup>
 
+import ClassroomComponent from "@/components/ClassroomComponent.vue";
+
+
+
 </script>
 
 <template>
-  $END$
+<div>
+  <ClassroomComponent/>
+
+</div>
 </template>
 
 <style scoped>
