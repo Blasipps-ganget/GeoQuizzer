@@ -51,7 +51,7 @@ console.log(noQuestions);
           </div>
           <div v-else class="failed">
             <h4>YOU FAILED</h4>
-            The limit was {{ 0.6 * noQuestions }}
+            The limit was {{ Math.trunc(0.6 * noQuestions) }}
           </div>
           <div>
             <button v-if="mapView" class="retryButton" @click="generalStore.showResultModal = false">Select region</button>
