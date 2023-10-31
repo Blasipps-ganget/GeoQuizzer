@@ -43,7 +43,53 @@ async function getRegions() {
 
 }
 
+async function getPercentage(selectedQuiz, region, userId) {
+  let regionId = 0;
+  switch (region) {
+    case 'europe':
+      regionId = 1;
+      break;
+    case 'asia':
+      regionId = 2;
+      break;
+    case 'oceania':
+      regionId = 3;
+      break;
+    case 'africa':
+      regionId = 4;
+      break;
+    case 'northAmerica':
+      regionId = 5;
+      break;
+    case 'southAmerica':
+      regionId = 6;
+      break;
+  }
 
+  const db = await connectToDatabase();
+  if (selectedQuiz === 'countries') {
+
+    const query = 'SELECT MAX(percent) FROM countryquiz WHERE user_id = ? AND region_id = ?';
+    const row = await new Promise((resolve, reject) => db.get(query, [userId, regionId], (err, row) => err ? reject(err) : resolve(row)));
+
+    return row ? row['MAX(percent)'] : null;
+
+  } else if (selectedQuiz === 'flags') {
+
+      const query = 'SELECT MAX(percent) FROM flagquiz WHERE user_id = ? AND region_id = ?';
+      const row = await new Promise((resolve, reject) => db.get(query, [userId, regionId], (err, row) => err ? reject(err) : resolve(row)));
+
+      return row ? row['MAX(percent)'] : null;
+
+
+  } else if (selectedQuiz === 'capitals') {
+      const query = 'SELECT MAX(percent) FROM capitalquiz WHERE user_id = ? AND region_id = ?';
+      const row = await new Promise((resolve, reject) => db.get(query, [userId, regionId], (err, row) => err ? reject(err) : resolve(row)));
+
+      return row ? row['MAX(percent)'] : null;
+  }
+  db.close()
+}
 
 
 async function performOperations(selectedQuiz) {
@@ -51,18 +97,23 @@ async function performOperations(selectedQuiz) {
   console.log(regions);
 
   // get username
+  //   let userName = getNameFromToken(req);
   let username = 'antom'
   let jsonResult = '';
 
 
-  const id = await getIdFromName(username);
+  const userId = await getIdFromName(username);
   let array = []
-  console.log('id =' + id);
+  console.log('id =' + userId);
 
-  if (id !== null) {
+  if (userId !== null) {
 
     for (i = 0; i < regions.length; i++) {
-      const percentageResult = 50; // await getPercentage(selectedQuiz, region);
+
+      const percentageResult2 = await getPercentage(selectedQuiz, regions[i], userId)
+      console.log('percentage result2')
+      console.log(percentageResult2);
+      // const percentageResult = 50;
       let regionStylized = '';
       switch (regions[i]) {
         case 'europe':
@@ -85,13 +136,13 @@ async function performOperations(selectedQuiz) {
           break;
       }
 
-      array.push({region: regionStylized, percentage: percentageResult });
+      array.push({region: regionStylized, percentage: percentageResult2 });
 
 
     }
 
     const resultObject = { highscores: array }
-    jsonResult = JSON.stringify(resultObject)
+    jsonResult = JSON.stringify(resultObject);
 
   }
 
@@ -103,7 +154,7 @@ async function performOperations(selectedQuiz) {
 
 
 /*
-//   let userName = getNameFromToken(req);
+
 
 SELECT COUNT(countries.name)
 FROM countries
@@ -127,37 +178,12 @@ router.get("/", (req, res) => {
   const selectedQuiz = req.query.quiz;
   console.log(selectedQuiz);
 
-  const result = performOperations(selectedQuiz);
-  console.log(result);
-  let resultString = ''
-  result.then((value) => { console.log('Inside then(): ' + value); resultString = value; } );
 
-  console.log('Result: ' + resultString);
+  performOperations(selectedQuiz).then((result) => {
+    console.log('---------' + result);
+    return res.json(result);
+  });
 
-  return res.json(
-  { "highscores":
-    [
-  {
-    "region": "Europe",
-    "percentage": "35%"
-  },
-  {
-    "region": "Africa",
-    "percentage": "30%"
-  },
-  {
-    "region": "America",
-    "percentage": "2%"
-  },
-  {
-    "region": "Asia",
-    "percentage": "15%"
-  },
-  {
-    "region": "Oceania",
-    "percentage": "45%"
-  }] }
-)
 
-});
 
+})

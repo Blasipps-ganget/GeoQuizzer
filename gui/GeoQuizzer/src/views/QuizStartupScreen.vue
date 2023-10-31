@@ -53,9 +53,11 @@ async function getResults() {
     .catch(error => console.error('There has been a problem with your fetch operation:', error));
 }
 
-const results = await getResults();
+let results = '';
+await getResults().then((res) => { results = res });
 console.log(results)
-const resultsAsObject = JSON.parse(JSON.stringify(results));
+
+const resultsAsObject = JSON.parse(results);
 console.log(resultsAsObject)
 const region = resultsAsObject.highscores;
 console.log(region)
@@ -181,7 +183,7 @@ const five = 5;
           <!--            class="elevation-1"-->
           <!--        ></v-data-table>-->
           <div class="listRegions" v-for="(item,index) in region" :key="index">
-            {{item.region}} : {{item.percentage}}
+            {{item.region}} : {{item.percentage}}%
           </div>
         </section>
       </div>
