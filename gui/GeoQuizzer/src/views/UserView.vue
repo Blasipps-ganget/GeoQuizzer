@@ -1,9 +1,13 @@
 <script setup>
 
+
+import UserPage from "@/components/UserPage.vue";
 </script>
 
 <template>
-  $END$
+
+<UserPage/>
+
 </template>
 
 <style scoped>

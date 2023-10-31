@@ -57,7 +57,13 @@ const router = createRouter({
        name: 'joinclassroom',
        component: () => import('../components/JoinClassroom.vue')
 
-     }
+     },
+
+    {
+    path: '/userProfile',
+    name: 'userPage',
+    component: () => import('../components/UserPage.vue')
+}
   ]
 })
 
