@@ -184,7 +184,7 @@ const checkIfUserExists = (username, callback) => {
 const insertIntoDatabase = (user, callback) => {
     const saltRounds = 10;
     const db = createDbConnection();
-    const registerQuery = 'INSERT INTO users (name,email,password,teacher, classRoom) VALUES (?,?,?,?,)';
+    const registerQuery = 'INSERT INTO users (name,email,password,teacher, classRoom) VALUES (?,?,?,?,?)';
 
     bcrypt.hash(user.firstPass, saltRounds, (err, result) => {
         if (err) {

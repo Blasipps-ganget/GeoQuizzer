@@ -11,8 +11,8 @@ const countriesRoute = require('./routes/Countries')
 const countryQuizRoute = require('./routes/CountryQuiz')
 const flagQuizRoute = require('./routes/FlagQuiz')
 const userRoute = require('./routes/User')
-require('./database/db');
 const classroomRoute = require('./routes/Classroom')
+require('./database/db');
 
 
 app.listen(PORT, () => console.log(serverStartUpMessage));
