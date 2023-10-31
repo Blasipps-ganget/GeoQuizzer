@@ -43,7 +43,7 @@ const headers = [
 
 async function getResults() {
   // const accessToken = handleToken();
-  return fetch('http://localhost:8080/highscores', {
+  return fetch(`http://localhost:8080/highscores/?quiz=${generalStore.selectedQuiz}`, {
     headers: {
     // 'Authorization': Bearer ${accessToken}
     },
