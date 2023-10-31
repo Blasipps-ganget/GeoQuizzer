@@ -2,7 +2,10 @@
 const express = require("express");
 const router = express.Router();
 router.get("/getFlag", async (req, res) => {
+  const db = new Db();
   try {
+    const quizData = [];
+    const query = ('SELECT name from regions WHERE name = ? LIMIT 10')
     const worldCountries = await fetchCountryFlag();
     res.send(worldCountries);
   } catch (error) {
