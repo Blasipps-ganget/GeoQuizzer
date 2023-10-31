@@ -63,7 +63,10 @@ async function compareResults(results, userName) {
         console.log("User not found!");
         return;
     }
-    addToDb(user_id, correctAnswers, wrongAnswers, results.region).catch(err => console.log(err.message));
+    let percent = Math.round(correctAnswers / results.answers.length * 100);
+    console.log(percent);
+
+    addToDb(user_id, correctAnswers, wrongAnswers, results.answers.length, results.region).catch(err => console.log(err.message));
 }
 
 async function getIdFromName(name) {
@@ -75,12 +78,12 @@ async function getIdFromName(name) {
 }
 
 
-async function addToDb(user_id, points, wrongAnswers, region) {
+async function addToDb(user_id, points, wrongAnswers, maxPoints, region) {
     const db = await connectToDatabase();
     const attemptNr = await getAttemptNumber(user_id, db);
     const region_id = await getRegionId(db, region);
-    const query = 'INSERT INTO countryquiz (user_id, region_id, attemptNr, points, wrongAnswers) VALUES (?, ?, ?, ?, ?)';
-    db.run(query, [user_id, region_id, attemptNr, points, wrongAnswers], err => err ? console.log(err.message) : console.log("Successfully added to db"));
+    const query = 'INSERT INTO countryquiz (user_id, region_id, attemptNr, points, max_points, percent, wrongAnswers) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    db.run(query, [user_id, region_id, attemptNr, points, maxPoints, wrongAnswers], err => err ? console.log(err.message) : console.log("Successfully added to db"));
     db.close();
 }
 
