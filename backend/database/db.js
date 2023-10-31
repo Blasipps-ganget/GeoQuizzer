@@ -110,9 +110,9 @@ function createTables() {
     db.run('CREATE TABLE IF NOT EXISTS countries (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, region_id INTEGER, FOREIGN KEY(region_id) REFERENCES regions (id))', () => populateCountries(db));
     db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, password TEXT, classRoom TEXT, teacher INTEGER)');
     db.run('CREATE TABLE IF NOT EXISTS classRoom (id INTEGER PRIMARY KEY AUTOINCREMENT, classRoomName TEXT, FOREIGN KEY(id) REFERENCES users (id))');
-    db.run('CREATE TABLE IF NOT EXISTS flagquiz (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, region_id INTEGER, attemptNr INTEGER, points INTEGER, wrongAnswers TEXT, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (region_id) REFERENCES regions(id))');
-    db.run('CREATE TABLE IF NOT EXISTS capitalquiz (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, region_id INTEGER, attemptNr INTEGER, points INTEGER, wrongAnswers TEXT, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (region_id) REFERENCES regions(id))');
-    db.run('CREATE TABLE IF NOT EXISTS countryquiz (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, region_id INTEGER, attemptNr INTEGER, points INTEGER, wrongAnswers TEXT, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (region_id) REFERENCES regions(id))');
+    db.run('CREATE TABLE IF NOT EXISTS flagquiz (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, region_id INTEGER, attemptNr INTEGER, points INTEGER, max_points INTEGER, percent INTEGER, wrongAnswers TEXT, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (region_id) REFERENCES regions(id))');
+    db.run('CREATE TABLE IF NOT EXISTS capitalquiz (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, region_id INTEGER, attemptNr INTEGER, points INTEGER, max_points INTEGER, percent INTEGER, wrongAnswers TEXT, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (region_id) REFERENCES regions(id))');
+    db.run('CREATE TABLE IF NOT EXISTS countryquiz (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, region_id INTEGER, attemptNr INTEGER, points INTEGER, max_points INTEGER, percent INTEGER, wrongAnswers TEXT, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (region_id) REFERENCES regions(id))');
 
 
 }
@@ -123,12 +123,6 @@ function populateRegions() {
             db.run(`INSERT INTO regions (name) VALUES 
                 ('europe'), ('asia'), ('oceania'), ('africa'), ('northAmerica'), ('southAmerica')`);
     });
-
-
-
-   //db.run('DROP TABLE countries')
-  //db.run('DROP TABLE regions')
-
 }
 
 
