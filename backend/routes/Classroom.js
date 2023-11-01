@@ -1,124 +1,159 @@
 const express = require("express");
 const router = express.Router();
-//const db = require('../database/geoquizzer.db');
-
-
-
-
-
-
-// få information om ett specifikt klassrum för att displaya relevant information
-router.get("/getClassroom", async (req, res) => {
-    const name = ''//getNameFromToken(req);
-
-    const classroomData = [];
-
-
-
-    try {
-
-        const query = 'SELECT classroomName FROM users WHERE name = ? ';
-        db.get(query,name, (err,row) => {
-
-            if(err) {
-
-                console.error("Error with query", err)
-            }
-            if(!row){
-
-                console.error("Classroom not found")
-
+const sqlite3 = require('sqlite3').verbose();
+const dbPath = './backend/database/geoquizzer.db'
+router.get("/getStudentsInClassRoom/:name", (req, res) =>{
+    const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE);
+    const {name} = req.params;
+    const query = 'SELECT classroom FROM users WHERE name = ?'
+    db.get(query, name, (err, result) => {
+        if(err) res.status(500).send("Internal Server Error")
+        if(result) {
+        const query2 = 'SELECT name FROM users WHERE classroom = ?'
+        db.all(query2, result.classRoom, (err, result2) => {
+            res.status(200).send({owner: result.classRoom, students: result2})
+        })
         }
-            const classRoomName = '';
+    })
+})
 
+router.get("/getClassroom/:name", async (req, res) => {
+    const name = req.params.name
+    const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE);
 
-            const query2 = 'SELECT * from classRoom WHERE name = ?'
-            db.all(query2, classRoomName, (err, res) =>  {
-                if (err) {
-                    console.error("Error with query",err)
-                }
+    const countryquiz = 'SELECT regions.name AS regionName, COUNT(countries.id) AS countryCount, MAX(IFNULL(countryquiz.points, 0)) AS highestPoints\n' +
+        'FROM regions\n' +
+        'LEFT JOIN countries ON regions.id = countries.region_id\n' +
+        'LEFT JOIN countryquiz ON regions.id = countryquiz.region_id AND countryquiz.user_id = (SELECT id FROM users WHERE name = ?)\n' +
+        'GROUP BY regions.name;\n'
+    const flagquizQuery = 'SELECT regions.name AS regionName, COUNT(countries.id) AS countryCount, MAX(IFNULL(flagquiz.points,0)) AS highestPoints\n' +
+        'FROM regions\n' +
+        'LEFT JOIN countries ON regions.id = countries.region_id\n' +
+        'LEFT JOIN flagquiz ON regions.id = flagquiz.region_id AND flagquiz.user_id = (SELECT id FROM users WHERE name = ?)\n' +
+        'GROUP BY regions.name;\n'
+    const capitalquizQuery = 'SELECT regions.name AS regionName, COUNT(countries.id) AS countryCount, MAX(capitalquiz.points) AS highestPoints\n' +
+        'FROM regions\n' +
+        'LEFT JOIN countries ON regions.id = countries.region_id\n' +
+        'LEFT JOIN capitalquiz ON regions.id = capitalquiz.region_id AND capitalquiz.user_id = (SELECT id FROM users WHERE name = ?)\n' +
+        'GROUP BY regions.name;\n'
 
-                res.send(classroomData);
-            });
-
-            });
-
-    } catch (err) {
-
-        console.error("Error",err);
+    let result = {
+        username: name,
+        totalCountry: 0,
+        totalFlag: 0,
+        totalCapital: 0,
     }
+    Promise.all([
+        fetchCountryQuizData(db, countryquiz, name),
+        fetchFlagCapitalQuizData(db, flagquizQuery, name),
+        fetchFlagCapitalQuizData(db, capitalquizQuery, name)
+    ]).then(([countryQuizData, flagData, capitalData]) => {
+            const { userPoints: userPointsCountry, totalPoints: totalPointsCountry } = countryQuizData;
+            const { userPoints: userPointsFlag, totalPoints: totalPointsFlag } = flagData;
+            const { userPoints: userPointsCapital, totalPoints: totalPointsCapital } = capitalData;
 
+            result.totalCountry = Math.trunc((userPointsCountry/totalPointsCountry)*100);
+            result.totalFlag = Math.trunc((userPointsFlag/totalPointsFlag)*100);
+            result.totalCapital = Math.trunc((userPointsCapital/totalPointsCapital)*100);
+            res.send(result);
+        })
+        .catch(error => {
+            res.status(500).send("Internal Server Error");
+        });
 
-    //HÄMTA KLASSRUMS NAMN FRÅN USERS
-    //     HÄMTA ALLA SOM HAR KLASSRUM NAMN I CLASSROOM databas
 });
+function fetchCountryQuizData(db, countryQuery, name) {
+    return new Promise((resolve, reject) => {
+        db.all(countryQuery, name, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                let userPoints = 0;
+                let totalPoints = 0;
+                result.forEach((res) => {
+                    if (res.highestPoints) {
+                        userPoints += res.highestPoints;
+                    }
+                    totalPoints += res.countryCount;
+                });
+                resolve({userPoints, totalPoints});
+            }
+        });
+    });
+}
 
+function fetchFlagCapitalQuizData(db, query, name) {
+    return new Promise((resolve, reject) => {
+        db.all(query, name, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                let userPoints = 0;
+                let totalPoints = 0;
+                result.forEach((res) => {
+                    if (res.highestPoints) {
+                        userPoints += res.highestPoints;
+                    }
+                    if (res.countryCount <= 30) {
+                        totalPoints += res.countryCount;
+                    } else {
+                        totalPoints += 30;
+                    }
+                });
+                resolve({userPoints, totalPoints});
+            }
+        })
+    })
+}
 
-// få klassrumsnamnet som tillhör den user och sedan konstruera en invitelink där vi använder det klassrumsnamnet.
 router.get("/getClassroomInvite", (req, res) => {
-
-
-    const userName = 'Anton'//getNameFromToken
-
-    let inviteLink = `http://localhost:5173/join/`;
-
-    // const query = 'SELECT classRoomName FROM users WHERE name = ?'
-    //
-    // db.get(query,userName, (err, name) => {
-    //
-    //     if (err) {
-    //
-    //         console.error("Error with query", err)
-    //     } else {
-    //
-    //         inviteLink += name;
-    //         res.send(inviteLink);
-    //     }
-    //
-    //
-    // })
-
-const classroomName = 'TestClassroom'
-    inviteLink += classroomName;
-res.send(inviteLink);
-
-
-
+    const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE);
+    let inviteLink = `http://localhost:8080/classroom/join/`;
+    const name = 'test' //getName();
+    const query = 'SELECT classRoom FROM users WHERE name = ?'
+    db.get(query, name, (err, result) => {
+        if (err) {
+            res.status(500).send("Internal Server Error");
+        }
+        if (result) {
+            inviteLink += result.classRoom;
+            res.status(200).send(inviteLink);
+        }
+    })
 });
 
 
-
-router.post("/joinClassroomInvite", (req,res) => {
-
-
-
-    //logik för att verifiera koden eller klassrumsinformationen och sen lägga till eleven i det klassrummet om allting stämmer
-
-  const  { userName, classRoomName} = req.body;
-
-  const query = 'UPDATE classRoom SET userId = (SELECT id FROM users WHERE name = ?) WHERE classRoomName = ? '
-
-   db.run(query, [userName,classRoomName], (err) => {
-
-       if(err) {
-
-           console.error("Error joining classroom", err)
-           res.status(500).send("Error joining the classroom")
-       } else  {
-
-           res.send("King bro, you have joined the classroom")
-       }
-
-   });
+router.post("/join/:link", (req, res) => {
+    const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE);
+    const {link} = req.params;
+    const name = 'test2' //getName()
+    const query2 = 'UPDATE users SET classRoom = ? WHERE name = ?'
+    db.run(query2, link, name, (err) => {
+        if (err) {
+            console.error("Error joining classroom", err)
+            res.status(500).send("Error joining the classroom")
+        } else {
+            res.status(200).send("King bro, you have joined the classroom")
+        }
+    });
 });
 
+router.post("/removeStudent", (req, res) => {
+    const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE);
+    const name = req.body.userName;
+    const query = ('UPDATE users SET classRoom = ? WHERE name = ?')
 
-
-
-
-
-
-
-
+    db.run(query, name, name, (err, result) => {
+        if (err) {
+            console.log(err);
+            res.status(500).send("server error");
+        }
+        if (result) {
+            console.log(result)
+            console.log("successfully updated")
+            res.status(200).send("done")
+        }
+    })
+})
 
 module.exports = router;
