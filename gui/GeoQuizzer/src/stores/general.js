@@ -7,5 +7,7 @@ export const useGeneralStore = defineStore('generalstore', () => {
     const loginOption = ref(true)
     const showResultModal = ref(false)
     const loggedInUser = ref('')
-    return { selectedQuiz, showLoginModal, loginOption, showResultModal, loggedInUser}
+    const practiceOrExam = ref('')
+    const noQuestions = ref(0)
+    return { selectedQuiz, showLoginModal, loginOption, showResultModal, loggedInUser, practiceOrExam, noQuestions}
 })

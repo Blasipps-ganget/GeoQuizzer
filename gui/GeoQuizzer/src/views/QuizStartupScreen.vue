@@ -5,12 +5,15 @@ import LoginRegistrationModal from "@/components/LoginRegistrationModal.vue";
 import ClickableMap from "@/components/ClickableMap.vue";
 import { useGeneralStore } from '../stores/general.js';
 import {handleToken} from "@/js/userApi";
+import router from "@/router";
 
 
 
 
+
+const selectAmountOfQuestions = ref(0);
 const regions = ["Europe", "Asia", "America", "Oceania", "Africa"];
-const selectedQuiz = ref("");
+const selectPracticeOrExam = ref("");
 const buttonColor = ref('black');
 const generalStore = useGeneralStore();
 const showSelectBox = ref(false);
@@ -23,17 +26,34 @@ const message = computed(() => {
   }
 })
 
+function change() {
+
+  console.log(selectAmountOfQuestions.value);
+  console.log('change');
+}
+
 const toggleSelectBox = () => {
 
   showSelectBox.value = !showSelectBox.value;
 
 };
 
+function startQuiz() {
 
+  generalStore.practiceOrExam = selectPracticeOrExam.value;
+  // generalStore.noQuestions =
+  generalStore.noQuestions = selectAmountOfQuestions.value;
+
+
+  if (generalStore.selectedQuiz === 'flags')
+    router.push({path: '/flag'});
+  else if (generalStore.selectedQuiz === 'capitals')
+    router.push({path: '/capital'})
+}
 
 const setSelectedQuiz = (quizToDo) => {
-  selectedQuiz.value !== quizToDo ? selectedQuiz.value = quizToDo : selectedQuiz.value = "";
-  console.log(selectedQuiz.value);
+  selectPracticeOrExam.value !== quizToDo ? selectPracticeOrExam.value = quizToDo : selectPracticeOrExam.value = "";
+  console.log(selectPracticeOrExam.value);
 }
 const getTabs = (region) => {
   const regionLength = region.length;
@@ -72,37 +92,7 @@ console.log(resultsAsObject)
 const region = resultsAsObject.highscores;
 console.log(region)
 
-/*
-const region = [
-  {
-    region: 'Europe',
-    percentage: '20%'
-  }, {
-    region: 'Africa',
-    percentage: '30%'
-  },
-  {
-    region: 'America',
-    percentage: '2%'
-  },
-  {
-    region: 'Asia',
-    percentage: '15%'
-  },
-  {
-    region: 'Oceania',
-    percentage: '45%'
-  },
 
-]*/
-
-
-
-
-
-// function handleRegionClick(region) {
-//   alert(`You clicked ${region}!`);
-// }
 
 
 </script>
@@ -163,17 +153,19 @@ const region = [
             </v-btn-toggle>
 
             <div class="buttonContent">
-              <v-btn class="buttonStart" density="default" rounded="l" @click=""><b>Start Quiz</b>
+              <v-btn class="buttonStart" density="default" rounded="l" @click="startQuiz()"><b>Start Quiz</b>
 
               </v-btn>
             </div>
 
-
+            <!-- @update:modelValue="change()" -->
             <v-select class="selectBox"
 
+                      v-model="selectAmountOfQuestions"
                       v-if="showSelectBox"
                       label="Amount of questions"
                       :items="['5','10','15','20','30']"
+
                       variant="solo-filled"
             ></v-select>
           </v-col>
