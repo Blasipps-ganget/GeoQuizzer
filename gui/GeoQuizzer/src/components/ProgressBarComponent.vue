@@ -42,14 +42,14 @@ p { color: red; }
   padding: 2px;
   width: 100%;
   max-width: 500px;
-  border: 3px solid #176B87;
+  border: 3px solid #053B50;
   height: 30px;
 }
 
 .progress .progress__bar {
   height: 100%;
   width: 0;
-  background-color: #176B87;
+  background-color: #053B50;
 
 
     /*animation: fill-bar 3s infinite;*/

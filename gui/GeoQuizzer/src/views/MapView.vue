@@ -117,9 +117,7 @@ function setToPractise() {
 
 async function setToExam() {
 
-  //TODO check if logged in if not prompt to login or register and then return else continue
   const isLoggedInTemp = await isLoggedIn();
-
   if (!isLoggedInTemp) {
     alert("You need to be logged in to take an exam");
     return;
