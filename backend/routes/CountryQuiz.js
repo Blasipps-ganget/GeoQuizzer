@@ -10,8 +10,8 @@ module.exports=router;
 express().use(express.json());
 
 router.post("/result", express.json(), (req, res) => {
- //   let userName = getNameFromToken(req);
-    compareResults(req.body, "antom")
+    let userName = getNameFromToken(req);
+    compareResults(req.body, userName)
         .then(() => res.sendStatus(200))
         .catch(err => res.status(500).send({err}));
 });
@@ -118,5 +118,11 @@ async function getCountries(region) {
     const rows = await new Promise((resolve, reject) => db.all(query, [region], (err, rows) => err ? reject(err) : resolve(rows)));
     db.close();
     return rows.map(row => row.name);
+}
+const getNameFromToken = (req) => {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+    const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    return payload.name;
 }
 

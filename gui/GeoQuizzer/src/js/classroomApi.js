@@ -2,7 +2,7 @@ import {getName} from "@/js/userApi";
 const classroomEndpoint = "http://localhost:8080/classroom/";
 
 export const getClassroomData = async () => {
-    const name = getName()
+    const name = await getName()
     return fetch(classroomEndpoint + "getStudentsInClassRoom/" + name)
         .then(response => {
             if (!response.ok) {

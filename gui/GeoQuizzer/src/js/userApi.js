@@ -41,7 +41,7 @@ export const signUpRest = (userReg) => {
 }
 
 
-const getToken = () => {
+export const getToken = () => {
     const cookies = document.cookie;
     const cookieArray = cookies.split('; ');
 
@@ -98,10 +98,14 @@ export const isLoggedIn = async () => {
         return await refreshToken()
     }
 }
-export const getName = () => {
+export const getName =  () => {
     const {accessToken} = getToken();
-    const payload = parseJwt(accessToken)
-    return payload.name;
+    if (accessToken) {
+        const payload = parseJwt(accessToken)
+        return payload.name;
+    } else {
+        return "";
+    }
 }
 
 export const handleToken = async () => {
@@ -123,6 +127,9 @@ const parseJwt = (token) => {
     }
 };
 
+export const logout = () =>{
+
+}
 /*
 fetch(userEndpoint + 'signup', {
         method: 'POST',
