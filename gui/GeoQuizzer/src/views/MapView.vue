@@ -1,13 +1,13 @@
 <script setup>
-import {nextTick, ref} from 'vue';
+import {nextTick, ref, onMounted, onUnmounted} from 'vue';
 import ClickableMap from "@/components/ClickableMap.vue";
 import ProgressBarComponent from "@/components/ProgressBarComponent.vue";
-import * as d3 from "d3";
-import { useMapStore } from '@/stores/map';
 import ResultModalComponent from "@/components/ResultModalComponent.vue";
-import { useGeneralStore } from '@/stores/general';
-import { onMounted, onUnmounted } from 'vue';
-import {handleToken} from '@/js/userApi'
+import * as d3 from "d3";
+import {useMapStore} from '@/stores/map';
+import {useGeneralStore} from '@/stores/general';
+import {handleToken, isLoggedIn} from "@/js/userApi";
+
 const generalStore = useGeneralStore();
 const mapStore = useMapStore();
 const failedGuesses = ref([]);
@@ -114,12 +114,16 @@ function setToPractise() {
   quiz.value = "practise";
 }
 
-function setToExam() {
-  //TODO FIND isLoggedIn and check if true if not prompt to login or register and then return else continue
 
+async function setToExam() {
 
+  //TODO check if logged in if not prompt to login or register and then return else continue
+  const isLoggedInTemp = await isLoggedIn();
 
-
+  if (!isLoggedInTemp) {
+    alert("You need to be logged in to take an exam");
+    return;
+  }
 
   isSetToExam.value = !isSetToExam.value;
   quiz.value = "exam";
@@ -147,9 +151,9 @@ function setToExam() {
     <div class="rightContainer">
       <div class="buttonContainer">
         <button :class="{ lightButton: isZoomEnabled, blueButton: !isZoomEnabled }" @click="toggleZoom">Enable zoom</button>
-        <button :class="{ lightButton: isSetToExam, blueButton: !isSetToExam }" v-if="selectingRegions" @click="setToExam">Exam</button>
         <button :class="{ lightButton: !isSetToExam, blueButton: isSetToExam }" v-if="selectingRegions" @click="setToPractise">Practise</button>
-        <button class="blueButton" v-if="!selectingRegions" @click="resetQuiz">Reset Quiz</button>
+        <button :class="{ lightButton: isSetToExam, blueButton: !isSetToExam }" v-if="selectingRegions" @click="setToExam">Exam</button>
+        <button class="blueButton" v-if="!selectingRegions" @click="resetQuiz">Exit Quiz</button>
         <div class="progressBarContainer">
           <ProgressBarComponent v-if="!selectingRegions"
                                 :amountAnswered="failedGuesses.length + succeededGuesses.length"
