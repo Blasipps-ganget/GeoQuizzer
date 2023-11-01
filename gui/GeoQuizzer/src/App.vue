@@ -384,7 +384,7 @@ const logout = () =>{
   height: 50px;
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1200px) {
 
   /* HAMBURGER MENU CSS */
 

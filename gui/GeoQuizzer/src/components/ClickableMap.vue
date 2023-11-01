@@ -237,12 +237,3 @@ onMounted(async () => {
   }
 }
 </style>
-
-{
-"europe": 34
-"asia": 55,
-"oceania": 66,
-"africa": 33,
-"southAmerica": 77,
-"northAmerica": 57
-}

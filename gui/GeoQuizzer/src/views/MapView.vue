@@ -174,6 +174,7 @@ function setToExam() {
 .content {
   display: flex;
   flex-direction: row;
+
 }
 
 
@@ -239,25 +240,34 @@ function setToExam() {
   width: 200px;
   height: 200px;
   margin-right: auto;
-  margin-left: auto;
+  margin-left: 100px;
   margin-bottom: auto;
   padding: 15px;
   background: #176B87;
   box-shadow: 0 0 2px 2px;
   border-radius: 8px;
+}
 
+.leftContainer {
+  width: calc(50% - 500px);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .rightContainer {
-  width: 200px;
+  width: calc(50% - 500px);
   margin-right: auto;
   margin-left: auto;
   margin-top: 50px;
 }
 
-.leftContainer {
-  width: 200px;
+@media (max-width: 1800px) {
+  .buttonContainer{
+    margin-left: auto;
+  }
+
 }
+
 
 @media (max-width: 1405px) {
   .content {
@@ -265,6 +275,7 @@ function setToExam() {
   }
   .rightContainer {
     margin-top: 25px;
+    width: 100%;
   }
 }
 
