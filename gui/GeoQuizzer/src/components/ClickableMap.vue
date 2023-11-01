@@ -74,7 +74,6 @@ onMounted(async () => {
     svg.selectAll("path.Country")
         .attr("d", d3.geoPath().projection(projection))
         .attr("fill", d => getCountryColor(d))
-
   }
 
   function getCountryColor(d) {
@@ -226,7 +225,6 @@ onMounted(async () => {
   border: 1px solid black;
   max-width: 100vw;
   max-height: 100vh;
-
 }
 
 @media (max-width: 800px) {
