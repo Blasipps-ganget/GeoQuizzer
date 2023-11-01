@@ -11,8 +11,9 @@ const countriesRoute = require('./routes/Countries')
 const countryQuizRoute = require('./routes/CountryQuiz')
 const flagQuizRoute = require('./routes/FlagQuiz')
 const userRoute = require('./routes/User')
-const classroomRoute = require('./routes/Classroom')
+const highScoreRoute = require('./routes/HighScores')
 require('./database/db');
+const classroomRoute = require('./routes/Classroom')
 
 
 app.listen(PORT, () => console.log(serverStartUpMessage));
@@ -26,6 +27,7 @@ app.use("/countries", countriesRoute);
 app.use("/user", userRoute);
 app.use("/classroom", classroomRoute);
 
+app.use("/highscores", highScoreRoute);
 
 
 router.get("/", (req, res) => {

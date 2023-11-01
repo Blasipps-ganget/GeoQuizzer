@@ -41,23 +41,24 @@ const headers = [
 
 ]
 
-const region = getRegion();
-
-async function getRegion() {
+async function getResults() {
   // const accessToken = handleToken();
-  const region = await fetch('http://localhost:8080/highscores', {
-  /* headers: {
-
+  return fetch('http://localhost:8080/highscores', {
+    headers: {
     // 'Authorization': Bearer ${accessToken}
-  },*/
-  method: 'GET',
-      body: JSON.stringify({
-    questions: includedCountries.value,
-    answers: answerArray.value,
-    region: regionGlobal
-  }),
-});
+    },
+    method: 'GET',})
+    .then(response => response.json())
+    //.then(data => data)
+    .catch(error => console.error('There has been a problem with your fetch operation:', error));
 }
+
+const results = await getResults();
+console.log(results)
+const resultsAsObject = JSON.parse(JSON.stringify(results));
+console.log(resultsAsObject)
+const region = resultsAsObject.highscores;
+console.log(region)
 
 /*
 const region = [
