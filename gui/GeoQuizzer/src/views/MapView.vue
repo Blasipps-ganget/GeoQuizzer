@@ -105,6 +105,7 @@ async function resetQuiz() {
 
 function toggleZoom() {
   mapStore.toggleZoom();
+  console.log("toggleZoom");
   isZoomEnabled.value = !isZoomEnabled.value;
 }
 
