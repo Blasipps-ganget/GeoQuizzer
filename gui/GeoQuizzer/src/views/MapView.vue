@@ -6,6 +6,7 @@ import * as d3 from "d3";
 import { useMapStore } from '@/stores/map';
 import ResultModalComponent from "@/components/ResultModalComponent.vue";
 import { useGeneralStore } from '@/stores/general';
+import { onMounted, onUnmounted } from 'vue';
 import {handleToken} from '@/js/userApi'
 const generalStore = useGeneralStore();
 const mapStore = useMapStore();
@@ -16,12 +17,24 @@ const question = ref();
 const answerArray = ref([]);
 const selectingRegions = ref(true);
 //const map = ref(null);
-const isZoomEnabled = ref(false);
+const isZoomEnabled = ref(true);
 const isSetToExam = ref(true);
+const quiz = ref("exam");
 
 let questionIndex = 0;
 let regionGlobal = null;
 
+onMounted(() => {
+  function handleResize(){
+    if (window.innerWidth < 500) alert('Please use landscape mode');
+  }
+  handleResize();
+  window.addEventListener('resize', handleResize);
+
+  onUnmounted(() => {
+    window.removeEventListener('resize', handleResize);
+  });
+});
 
 async function handleCountryClick(answer) {
 
@@ -64,7 +77,6 @@ async function handleResults() {
   });
 }
 
-
 async function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -96,57 +108,85 @@ function toggleZoom() {
   isZoomEnabled.value = !isZoomEnabled.value;
 }
 
-function toggleSetToExamOrPractise() {
+function setToPractise() {
   isSetToExam.value = !isSetToExam.value;
+  quiz.value = "practise";
+}
+
+function setToExam() {
+  isSetToExam.value = !isSetToExam.value;
+  quiz.value = "exam";
 }
 
 </script>
 
 <template>
   <div class="content">
-    <div class="message" v-if="question">Where is: {{ question }}?</div>
-    <div class="message" v-else>Select region to start quiz</div>
-
-    <ClickableMap
-        :failedGuesses="failedGuesses"
-        :succeededGuesses="succeededGuesses"
-        :selectingRegions="selectingRegions"
-        @countryClicked="handleCountryClick"
-        @regionClicked="handleRegionClick"
-        @resetQuiz="resetQuiz"
-        ref="map"
-    />
-
-
-
-    <button class="blueButton" v-if="!selectingRegions" @click="resetQuiz">Reset Quiz</button>
-    <button class="blueButton" v-if="selectingRegions" @click="toggleSetToExamOrPractise">{{ isSetToExam ? 'Set to Exam' : 'Set to Practise' }}</button>
-    <div class="progressBarContainer">
-      <ProgressBarComponent v-if="!selectingRegions"
-                            :amountAnswered="failedGuesses.length + succeededGuesses.length"
-                            :totalQuestions="includedCountries.length"
+    <div class="leftContainer"></div>
+    <div class="centerContainer">
+      <div class="message" v-if="question">Where is: {{ question }}?</div>
+      <div class="message" v-else>Select region to start {{ quiz }}</div>
+      <ClickableMap
+          :failedGuesses="failedGuesses"
+          :succeededGuesses="succeededGuesses"
+          :selectingRegions="selectingRegions"
+          @countryClicked="handleCountryClick"
+          @regionClicked="handleRegionClick"
+          @resetQuiz="resetQuiz"
+          ref="map"
       />
+
     </div>
-    <button class="blueButton" @click="toggleZoom">{{ isZoomEnabled ? 'Disable Zoom' : 'Enable Zoom' }}</button>
+    <div class="rightContainer">
+      <div class="buttonContainer">
+        <button :class="{ lightButton: isZoomEnabled, blueButton: !isZoomEnabled }" @click="toggleZoom">Enable zoom</button>
+        <button :class="{ lightButton: isSetToExam, blueButton: !isSetToExam }" v-if="selectingRegions" @click="setToExam">Exam</button>
+        <button :class="{ lightButton: !isSetToExam, blueButton: isSetToExam }" v-if="selectingRegions" @click="setToPractise">Practise</button>
+        <button class="blueButton" v-if="!selectingRegions" @click="resetQuiz">Reset Quiz</button>
+        <div class="progressBarContainer">
+          <ProgressBarComponent v-if="!selectingRegions"
+                                :amountAnswered="failedGuesses.length + succeededGuesses.length"
+                                :totalQuestions="includedCountries.length"
+          />
+        </div>
+      </div>
+    </div>
+
+
+    <ResultModalComponent
+        :correctGuesses="succeededGuesses.length"
+        :noQuestions="succeededGuesses.length + failedGuesses.length"
+        :mapView="true"
+        v-if="generalStore.showResultModal">
+    </ResultModalComponent>
   </div>
-  <ResultModalComponent
-      :correctGuesses="succeededGuesses.length"
-      :noQuestions="succeededGuesses.length + failedGuesses.length"
-      :mapView="true"
-      v-if="generalStore.showResultModal">
-  </ResultModalComponent>
 </template>
 
 
 <style>
 .content {
-  width: 900px;
-  margin: auto;
+  display: flex;
+  flex-direction: row;
 }
-.message {
 
-  margin-top: 15px;
-  color: #053B50;
+
+.centerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #176B87;
+  width: 1000px;
+  margin-top: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+  box-shadow: 0 0 2px 2px;
+  border-radius: 8px;
+  max-width: 99vw;
+}
+
+.message {
+  color: white;
   font-weight: bold;
   font-size: 40px;
 }
@@ -160,23 +200,76 @@ function toggleSetToExamOrPractise() {
   border-radius: 5px;
   width: 150px;
   height: 40px;
-  margin-top: auto;
-  margin-bottom: 15px;
+  margin: 10px auto;
 }
 
-.content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+
+.lightButton {
+  background-color: #64CCC5;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  width: 150px;
+  height: 40px;
+  margin: 10px auto;
 }
+
 
 
 .progressBarContainer {
-  margin-top: auto;
-  width: 200px;
+  margin: auto;
+  width: 90%;
 
 }
 
+.buttonContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 200px;
+  height: 200px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: auto;
+  padding: 15px;
+  background: #176B87;
+  box-shadow: 0 0 2px 2px;
+  border-radius: 8px;
+
+}
+
+.rightContainer {
+  width: 200px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 50px;
+}
+
+.leftContainer {
+  width: 200px;
+}
+
+@media (max-width: 1405px) {
+  .content {
+    flex-direction: column;
+  }
+  .rightContainer {
+    margin-top: 25px;
+  }
+}
+
+@media (max-width: 800px) {
+  .message {
+    font-size: 30px;
+  }
+}
+@media (max-width: 500px) {
+  .message {
+    font-size: 20px;
+  }
+}
 
 </style>

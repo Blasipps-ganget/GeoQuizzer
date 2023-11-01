@@ -1,6 +1,6 @@
 <script setup>
 
-import {defineProps, watch, onMounted} from 'vue'
+import {watch, onMounted} from 'vue'
 const props = defineProps({
     amountAnswered: {
       type: Number,
@@ -38,7 +38,7 @@ onMounted(() => {
 p { color: red; }
 
 .progress {
-  margin: 20px auto;
+  margin: 5px auto;
   padding: 2px;
   width: 100%;
   max-width: 500px;
