@@ -1,6 +1,6 @@
 <script setup>
 
-import {ref} from "vue";
+import {ref, computed} from "vue";
 import LoginRegistrationModal from "@/components/LoginRegistrationModal.vue";
 import ClickableMap from "@/components/ClickableMap.vue";
 import { useGeneralStore } from '../stores/general.js';
@@ -14,6 +14,14 @@ const selectedQuiz = ref("");
 const buttonColor = ref('black');
 const generalStore = useGeneralStore();
 const showSelectBox = ref(false);
+
+const message = computed(() => {
+  if (generalStore.selectedQuiz === 'flags') {
+    return 'Learn the flags of the world';
+  } else if (generalStore.selectedQuiz === 'capitals') {
+    return 'Learn the capitals of the world';
+  }
+})
 
 const toggleSelectBox = () => {
 
@@ -43,7 +51,8 @@ const headers = [
 ]
 
 async function getResults() {
-  const accessToken = handleToken();
+  const accessToken = await handleToken();
+  console.log(accessToken)
   return fetch(`http://localhost:8080/highscores/?quiz=${generalStore.selectedQuiz}`, {
     headers: {
          'Authorization': `Bearer ${accessToken}`
@@ -86,7 +95,7 @@ const region = [
   },
 
 ]*/
-const five = 5;
+
 
 
 
@@ -110,7 +119,7 @@ const five = 5;
 
         <section>
           <div class="mapContent">
-            <h1 class="selectedQuizTitle">{{generalStore.selectedQuiz}}</h1>
+            <h1 class="selectedQuizTitle">{{message}}</h1>
             <h2 class="selectRegionTitle">Select Region</h2>
 
             <ClickableMap
@@ -176,15 +185,9 @@ const five = 5;
         <section class="regionProgressSection">
 
           <h2>Best Result:</h2>
-          <!--        <v-data-table-->
-          <!--            v-model:items-per-page="five"-->
-          <!--            :headers="headers"-->
-          <!--            :items="region"-->
-          <!--            item-value="percentage"-->
-          <!--            class="elevation-1"-->
-          <!--        ></v-data-table>-->
+
           <div class="listRegions" v-for="(item,index) in region" :key="index">
-            {{item.region}} : {{item.percentage}}%
+            {{item.region}} : {{item.percentage}}{{ item.percentage ? '%' : ''}}
           </div>
         </section>
       </div>
