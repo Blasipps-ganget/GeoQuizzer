@@ -2,7 +2,8 @@ const sqlite3 = require('sqlite3');
 const dbPath = './backend/database/geoquizzer.db';
 
 const express=require('express')
-const router=express.Router()
+const { Buffer } = require('node:buffer');
+const router=express.Router();
 module.exports=router;
 
 
@@ -92,13 +93,15 @@ async function getPercentage(selectedQuiz, region, userId) {
 }
 
 
-async function performOperations(selectedQuiz) {
+async function performOperations(selectedQuiz, username) {
   const regions = await getRegions();
   console.log(regions);
 
   // get username
   //   let userName = getNameFromToken(req);
-  let username = 'antom'
+  // username = 'antom'
+  console.log(username)
+
   let jsonResult = '';
 
 
@@ -174,16 +177,29 @@ WHERE user_id = 5;
 
 */
 
+const getNameFromToken = (req) => {
+  const authHeader = req.headers['Authorization']
+  console.log(authHeader)
+  const token = authHeader && authHeader.split(' ')[1]
+  console.log(token)
+  const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+
+  return payload.name;
+}
+
 router.get("/", (req, res) => {
   const selectedQuiz = req.query.quiz;
   console.log(selectedQuiz);
+  const name = getNameFromToken(req);
 
-
-  performOperations(selectedQuiz).then((result) => {
+  performOperations(selectedQuiz, name).then((result) => {
     console.log('---------' + result);
     return res.json(result);
   });
 
 
 
+
+
 })
+

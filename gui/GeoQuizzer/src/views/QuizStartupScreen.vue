@@ -4,6 +4,7 @@ import {ref} from "vue";
 import LoginRegistrationModal from "@/components/LoginRegistrationModal.vue";
 import ClickableMap from "@/components/ClickableMap.vue";
 import { useGeneralStore } from '../stores/general.js';
+import {handleToken} from "@/js/userApi";
 
 
 
@@ -42,10 +43,10 @@ const headers = [
 ]
 
 async function getResults() {
-  // const accessToken = handleToken();
+  const accessToken = handleToken();
   return fetch(`http://localhost:8080/highscores/?quiz=${generalStore.selectedQuiz}`, {
     headers: {
-    // 'Authorization': Bearer ${accessToken}
+         'Authorization': `Bearer ${accessToken}`
     },
     method: 'GET',})
     .then(response => response.json())
