@@ -4,6 +4,7 @@ import {defineProps} from 'vue';
 import {RouterLink} from "vue-router";
 import {removeStudent} from "@/js/classroomApi";
 
+const emit = defineEmits(['removeStudent'])
 defineProps({
       image: {
           type: String,
@@ -30,27 +31,21 @@ defineProps({
         required: true,
       }
 });
-const removeFromclassRoom = (userName) =>{
+const removeFromClassRoom = (userName) =>{
     removeStudent(userName)
+    emit('removeStudent', userName)
 }
 
-
 </script>
-
 <template>
         <div class="profile">
           <div class="studentInformation">
-<!--            <div class="profilePictureEdit">-->
-<!--              <v-img :src="image"></v-img>-->
-<!--            </div>-->
           <span class="studentName">Name: {{name}} </span>
             <div class="imgContent">
               <RouterLink to="/userProfile">
               <img class="studentImg" src="../assets/images/icons/user.png" alt="">
               </RouterLink>
             </div>
-
-
             <div class="studentContent">
             <div class="resultSection">
           <span>Best Result:</span>
@@ -77,7 +72,7 @@ const removeFromclassRoom = (userName) =>{
           </div>
         </div>
           <div class="removeaStudent">
-            <v-btn v-show="!owner" @click="removeFromclassRoom(name)" class="btnClass">Remove a student</v-btn>
+            <v-btn v-show="!owner" @click="removeFromClassRoom(name)"  class="btnClass">Remove a student</v-btn>
         </div>
         </div>
 

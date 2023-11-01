@@ -36,9 +36,13 @@ function copyText() {
   navigator.clipboard.writeText(textField.value);
   isClicked.value = true;
 }
+const removeStudent =(userName) =>{
+  students.value.students = students.value.students.filter(student => !(userName === student.username))
+}
 
 </script>
 <template>
+
   <div class="classroomContainer">
     <div class="headerSection">
       <h1 class="classroomTitle">Welcome to {{students.owner}}'s classroom!</h1>
@@ -63,11 +67,12 @@ function copyText() {
         <div v-for="(student,index) in students.students" :key="index">
           <ProfileComponent
               :image="student.image"
-              :name="student.name"
-              :countries="student.countries"
-              :flags="student.flags"
-              :capitals="student.capitals"
-              :owner="student.name === students.owner"
+              :name="student.username"
+              :countries="student.totalCountry"
+              :flags="student.totalFlag"
+              :capitals="student.totalCapital"
+              :owner="student.username === students.owner"
+              @remove-student = "removeStudent"
           />
         </div>
       </div>
