@@ -18,8 +18,8 @@ const answerArray = ref([]);
 const selectingRegions = ref(true);
 //const map = ref(null);
 const isZoomEnabled = ref(true);
-const isSetToExam = ref(true);
-const quiz = ref("exam");
+const isSetToExam = ref(false);
+const quiz = ref("practise");
 
 let questionIndex = 0;
 let regionGlobal = null;
@@ -114,6 +114,12 @@ function setToPractise() {
 }
 
 function setToExam() {
+  //TODO FIND isLoggedIn and check if true if not prompt to login or register and then return else continue
+
+
+
+
+
   isSetToExam.value = !isSetToExam.value;
   quiz.value = "exam";
 }
