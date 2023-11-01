@@ -1,18 +1,36 @@
 <script setup>
 
-import {ref} from "vue";
+import {ref, computed} from "vue";
 import LoginRegistrationModal from "@/components/LoginRegistrationModal.vue";
 import ClickableMap from "@/components/ClickableMap.vue";
 import { useGeneralStore } from '../stores/general.js';
+import {handleToken} from "@/js/userApi";
+import router from "@/router";
 
 
 
 
+
+const selectAmountOfQuestions = ref(0);
 const regions = ["Europe", "Asia", "America", "Oceania", "Africa"];
-const selectedQuiz = ref("");
+const selectPracticeOrExam = ref("");
 const buttonColor = ref('black');
 const generalStore = useGeneralStore();
 const showSelectBox = ref(false);
+
+const message = computed(() => {
+  if (generalStore.selectedQuiz === 'flags') {
+    return 'Learn the flags of the world';
+  } else if (generalStore.selectedQuiz === 'capitals') {
+    return 'Learn the capitals of the world';
+  }
+})
+
+function change() {
+
+  console.log(selectAmountOfQuestions.value);
+  console.log('change');
+}
 
 const toggleSelectBox = () => {
 
@@ -20,11 +38,22 @@ const toggleSelectBox = () => {
 
 };
 
+function startQuiz() {
 
+  generalStore.practiceOrExam = selectPracticeOrExam.value;
+  // generalStore.noQuestions =
+  generalStore.noQuestions = selectAmountOfQuestions.value;
+
+
+  if (generalStore.selectedQuiz === 'flags')
+    router.push({path: '/flag'});
+  else if (generalStore.selectedQuiz === 'capitals')
+    router.push({path: '/capital'})
+}
 
 const setSelectedQuiz = (quizToDo) => {
-  selectedQuiz.value !== quizToDo ? selectedQuiz.value = quizToDo : selectedQuiz.value = "";
-  console.log(selectedQuiz.value);
+  selectPracticeOrExam.value !== quizToDo ? selectPracticeOrExam.value = quizToDo : selectPracticeOrExam.value = "";
+  console.log(selectPracticeOrExam.value);
 }
 const getTabs = (region) => {
   const regionLength = region.length;
@@ -40,38 +69,30 @@ const headers = [
   {title: 'Percentage', align: 'end', key: 'percentage'}
 
 ]
-const region = [
-  {
-    region: 'Europe',
-    percentage: '20%'
-  }, {
-    region: 'Africa',
-    percentage: '30%'
-  },
-  {
-    region: 'America',
-    percentage: '2%'
-  },
-  {
-    region: 'Asia',
-    percentage: '15%'
-  },
-  {
-    region: 'Oceania',
-    percentage: '45%'
-  },
+
+async function getResults() {
+  const accessToken = await handleToken();
+  console.log(accessToken)
+  return fetch(`http://localhost:8080/highscores/?quiz=${generalStore.selectedQuiz}`, {
+    headers: {
+         'Authorization': `Bearer ${accessToken}`
+    },
+    method: 'GET',})
+    .then(response => response.json())
+    //.then(data => data)
+    .catch(error => console.error('There has been a problem with your fetch operation:', error));
+}
+
+let results = '';
+await getResults().then((res) => { results = res });
+console.log(results)
+
+const resultsAsObject = JSON.parse(results);
+console.log(resultsAsObject)
+const region = resultsAsObject.highscores;
+console.log(region)
 
 
-
-]
-const five = 5;
-
-
-
-
-// function handleRegionClick(region) {
-//   alert(`You clicked ${region}!`);
-// }
 
 
 </script>
@@ -88,7 +109,7 @@ const five = 5;
 
         <section>
           <div class="mapContent">
-            <h1 class="selectedQuizTitle">{{generalStore.selectedQuiz}}</h1>
+            <h1 class="selectedQuizTitle">{{message}}</h1>
             <h2 class="selectRegionTitle">Select Region</h2>
 
             <ClickableMap
@@ -132,17 +153,19 @@ const five = 5;
             </v-btn-toggle>
 
             <div class="buttonContent">
-              <v-btn class="buttonStart" density="default" rounded="l" @click=""><b>Start Quiz</b>
+              <v-btn class="buttonStart" density="default" rounded="l" @click="startQuiz()"><b>Start Quiz</b>
 
               </v-btn>
             </div>
 
-
+            <!-- @update:modelValue="change()" -->
             <v-select class="selectBox"
 
+                      v-model="selectAmountOfQuestions"
                       v-if="showSelectBox"
                       label="Amount of questions"
                       :items="['5','10','15','20','30']"
+
                       variant="solo-filled"
             ></v-select>
           </v-col>
@@ -154,15 +177,9 @@ const five = 5;
         <section class="regionProgressSection">
 
           <h2>Best Result:</h2>
-          <!--        <v-data-table-->
-          <!--            v-model:items-per-page="five"-->
-          <!--            :headers="headers"-->
-          <!--            :items="region"-->
-          <!--            item-value="percentage"-->
-          <!--            class="elevation-1"-->
-          <!--        ></v-data-table>-->
+
           <div class="listRegions" v-for="(item,index) in region" :key="index">
-            {{item.region}} : {{item.percentage}}
+            {{item.region}} : {{item.percentage}}{{ item.percentage ? '%' : ''}}
           </div>
         </section>
       </div>

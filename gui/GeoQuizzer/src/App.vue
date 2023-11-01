@@ -56,7 +56,7 @@ const logout = () =>{
 
     <div class="menuitem">
       <img class="nav__images" src="./assets/images/icons/planet-earth.png" alt="Countries">
-        <RouterLink class="navLink" to="/quiz" @click="selectQuiz('countries')">Countries</RouterLink>
+        <RouterLink class="navLink" to="/map" @click="selectQuiz('countries')">Countries</RouterLink>
     </div>
 
     <div class="menuitem">
@@ -93,7 +93,7 @@ const logout = () =>{
       </label>
       <ul class="menu">
         <li><RouterLink class="navLink" to="/quiz" @click="selectQuiz('flags')">Flags</RouterLink></li>
-        <li><RouterLink class="navLink" to="/quiz" @click="selectQuiz('countries')">Countries</RouterLink></li>
+        <li><RouterLink class="navLink" to="/map" @click="selectQuiz('countries')">Countries</RouterLink></li>
         <li><RouterLink class="navLink" to="/quiz" @click="selectQuiz('capitals')">Capitals</RouterLink></li>
         <li><RouterLink class="navLink" to="/classroom">Classroom</RouterLink></li>
         <li><RouterLink class="navLink" to="/userProfile">Profile</RouterLink></li>
@@ -121,7 +121,7 @@ const logout = () =>{
 
 
   </div>
-  <div><RouterView/></div>
+  <div><suspense><RouterView/></suspense></div>
 
   <div class="centerLinks">
     <div><RouterLink to="/">Home</RouterLink></div>
@@ -384,8 +384,7 @@ const logout = () =>{
   height: 50px;
 }
 
-
-@media screen and (max-width: 720px) {
+@media screen and (max-width: 1000px) {
 
   /* HAMBURGER MENU CSS */
 
