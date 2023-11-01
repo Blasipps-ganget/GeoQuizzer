@@ -6,7 +6,7 @@ import * as d3 from "d3";
 import { useMapStore } from '@/stores/map';
 import ResultModalComponent from "@/components/ResultModalComponent.vue";
 import { useGeneralStore } from '@/stores/general';
-//import { handleToken } from ?????????
+import {handleToken} from '@/js/userApi'
 const generalStore = useGeneralStore();
 const mapStore = useMapStore();
 const failedGuesses = ref([]);
@@ -47,12 +47,13 @@ async function handleResults() {
 
   generalStore.showResultModal = !generalStore.showResultModal;
   if (!isSetToExam.value) return;
+  const accessToken = await handleToken();
+  console.log("token",accessToken)
 
-  // const accessToken = handleToken();
   await fetch(`http://localhost:8080/countryquiz/result`, {
     headers: {
       'Content-Type': 'application/json'
-     // ,'Authorization': `Bearer ${accessToken}`
+      ,'Authorization': `Bearer ${accessToken}`
     },
     method: 'POST',
     body: JSON.stringify({
