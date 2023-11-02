@@ -8,23 +8,16 @@
       </div>
       <div class="content" id="question-area">
         <div id="answer-btns" class="btn-grid">
-        <v-btn v-bind:color="btn0color" class="btn btn-option" @click="checkAnswer(answerOne)" v-if="questionsAnswered < 10" :disabled="buttonPressed">{{ answerOne }}</v-btn>
-        <v-btn v-bind:color="btn1color" class="btn btn-option" @click="checkAnswer(answerTwo)" v-if="questionsAnswered < 10" :disabled="buttonPressed">{{ answerTwo }}</v-btn>
-        <v-btn v-bind:color="btn2color" class="btn btn-option" @click="checkAnswer(answerThree)" v-if="questionsAnswered < 10" :disabled="buttonPressed">{{ answerThree }}</v-btn>
-        <v-btn v-bind:color="btn3color" class="btn btn-option" @click="checkAnswer(answerFour)" v-if="questionsAnswered < 10" :disabled="buttonPressed">{{ answerFour }}</v-btn>
+        <v-btn v-bind:color="btn0color" class="btn btn-option" @click="checkAnswer(answerOne)" :disabled="buttonPressed">{{ answerOne }}</v-btn>
+        <v-btn v-bind:color="btn1color" class="btn btn-option" @click="checkAnswer(answerTwo)" :disabled="buttonPressed">{{ answerTwo }}</v-btn>
+        <v-btn v-bind:color="btn2color" class="btn btn-option" @click="checkAnswer(answerThree)" :disabled="buttonPressed">{{ answerThree }}</v-btn>
+        <v-btn v-bind:color="btn3color" class="btn btn-option" @click="checkAnswer(answerFour)" :disabled="buttonPressed">{{ answerFour }}</v-btn>
       </div>
       <v-btn class="btn btn-option" @click="displayNext" v-if="questionsAnswered < 10"  :disabled="answerSubmitted" >Next</v-btn>
         <div v-if="showMessage">
           <p>{{ message }}</p>
-          <div class="resultText" v-if="questionsAnswered >= 10">
-            <p>Quiz completed! Your final score is: {{ totalScore }} </p>
-          </div>
         </div>
         </div>
-        <button class="btn btn-reset" @click="resetQuiz" v-if="questionsAnswered > 9"> Try again</button>
-        <button class="btn btn-practice" @click="practiceQuiz" v-if="questionsAnswered > 9"> Go to Practice </button>
-        <button class="btn btn-home" @click="homeButton" v-if="questionsAnswered > 9"> Home </button>
-
       </div>
   </body>
 </template>
@@ -35,6 +28,8 @@ import { fetchCapital } from '../js/capitalApi';
 import { useQuizStore } from '../stores/quiz.js';
 import { fetchCountryFlag, postFlagResult } from '../js/flagApi';
 import { defineProps } from 'vue';
+import { useGeneralStore } from '../stores/general.js';
+
 
 
 const props = defineProps({
@@ -43,7 +38,7 @@ const props = defineProps({
 });
 
 
-
+const quizGeneralStore = useGeneralStore();
 const quizStore = useQuizStore();
 const normalColor = "#053B50";
 const correctColor = "green";
@@ -55,7 +50,6 @@ let btn2color = normalColor;
 let btn3color = normalColor;
 const index = ref(0);
 
-const finished = ref(false)
 let questionData;
 
 
@@ -81,10 +75,10 @@ const answerSubmitted = ref (true);
 let buttonPressed = ref ('');
 let correctCountry = ref('');
 let message = ref ('');
+let landlist = [];
 let resultText = ref ('');
 const correctAnswersArray = [];
 const guessesArray = [];
-
 
 const displayNext = () => {
   nextQuestion()
@@ -111,60 +105,44 @@ btn2color = normalColor;
 btn3color = normalColor;
 answerSubmitted.value = true;
 }
-
-let landlist = [];
-
-
-
 const generateRandomAnswers = async () => {
-  /*buttonPressed.value = false;
-  showMessage.value = true;
-  try {
-    const response = await fetchCapital();
-   data.value.capital = response[0].capital;
-    data.value.country = response[0].land;
-    data.value.wrongAnswers = response[0].felsvar;
-  data.value.flagUrl = response[0].flagUrl;
-  console.log(JSON.stringify(response[0]));
-
-    
-    correctCountry.value = response;
-    
-    shuffleArray(answers);
-    landlist = {...answers};
-*/
 buttonPressed.value = false;
 showMessage.value = true;
 const answers = [...quizStore.wrongAnswers, quizStore.correctAnswer];
 shuffleArray(answers);
 
-    answerOne.value = answers[0];
-    answerTwo.value = answers[1];
-    answerThree.value =  answers[2];
-    answerFour.value = answers[3];
+answerOne.value = answers[0];
+answerTwo.value = answers[1];
+answerThree.value =  answers[2];
+answerFour.value = answers[3];
   
 };
 
 onMounted(async () => {
-  //await generateRandomAnswers();
-  
-  if(props.currentQuiz === "capital"){
-questionData = await fetchCapital(22);
-quizStore.correctAnswer = questionData[index.value].land
-quizStore.capitalName = questionData[index.value].capital
-quizStore.flagUrl = questionData[index.value].flagUrl
-quizStore.wrongAnswers = questionData[index.value].felsvar
-console.log("CAPITAL", questionData);
-} else{
-  questionData = await fetchCountryFlag();
-  quizStore.correctAnswer = questionData[index.value].land
-quizStore.capitalName = questionData[index.value].capital
-quizStore.flagUrl = questionData[index.value].flagUrl
-quizStore.wrongAnswers = questionData[index.value].felsvar
-console.log("FLAG", questionData);
+  if (quizGeneralStore.practiceOrExam === 'exam') {
+  console.log("selected quiz:", quizGeneralStore.practiceOrExam);
+} else  {
+  quizGeneralStore.practiceOrExam = 'practice';
+  console.log("selected quiz:", quizGeneralStore.practiceOrExam);
 }
-console.log("DATA FROM ONMOUNTED",questionData);
-generateRandomAnswers()
+
+  if (props.currentQuiz === 'capital') {
+    questionData = await fetchCapital(22);
+    quizStore.correctAnswer = questionData[index.value].land;
+    quizStore.capitalName = questionData[index.value].capital;
+    quizStore.flagUrl = questionData[index.value].flagUrl;
+    quizStore.wrongAnswers = questionData[index.value].felsvar;
+    console.log('CAPITAL', questionData);
+  } else {
+    questionData = await fetchCountryFlag();
+    quizStore.correctAnswer = questionData[index.value].land;
+    quizStore.capitalName = questionData[index.value].capital;
+    quizStore.flagUrl = questionData[index.value].flagUrl;
+    quizStore.wrongAnswers = questionData[index.value].felsvar;
+    console.log('FLAG', questionData);
+  }
+  console.log('DATA FROM ONMOUNTED', questionData);
+  generateRandomAnswers();
 });
 
 const answerOne = ref('');
@@ -181,21 +159,6 @@ function shuffleArray(array) {
         array[j] = temp;
     }
 
-}
-
-const resetQuiz = async () => {
-  buttonPressed.value = false;
-  showMessage.value = false;
-  questionsAnswered.value = 0;
-  totalScore.value = 0;
-  btn0color = normalColor;
-  btn1color = normalColor;
-  btn2color = normalColor;
-  btn3color = normalColor;    
-}
-
-const homeButton = async () => {
-  window.location.href='/';
 }
 
 
@@ -219,7 +182,7 @@ const checkAnswer =  async (selectedAnswer) => {
         postFlagResult(
           correctAnswersArray,
           guessesArray,
-          region
+          quizGeneralStore.selectedRegion
         )
       }
 
@@ -332,7 +295,7 @@ const checkAnswer =  async (selectedAnswer) => {
   text-align: center;
   width: 210px;
   position: relative;
-  z-index.value: 1;
+  z-index: 1;
   overflow: hidden;
   border-radius: 10px;
   margin-top: 20px;

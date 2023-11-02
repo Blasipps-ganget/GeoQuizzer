@@ -23,7 +23,6 @@
     </div>
     <button class="btn btn-reset" @click="resetQuiz" v-if="questionsAnswered > 9"> Try again</button>
     <button class="btn btn-practice" @click="practiceQuiz" v-if="questionsAnswered > 9"> Go to Practice </button>
-    <button class="btn btn-home" @click="homeButton" v-if="questionsAnswered > 9"> Home </button>
 
   </div>
   </body>
@@ -136,10 +135,6 @@ const resetQuiz = async () => {
   btn2color = normalColor;
   btn3color = normalColor;
   await generateRandomAnswers();
-}
-
-const homeButton = async () => {
-  window.location.href='/';
 }
 
 // Validering av svar
