@@ -25,7 +25,7 @@ let oceania;
 let southAmerica;
 let northAmerica;
 let regionMap = {};
-let isZoomEnabled = false;
+let isZoomEnabled = true;
 const countriesMarked = ref([]);
 
 onMounted(async () => {
@@ -38,12 +38,14 @@ onMounted(async () => {
   const width = props.width;
   const height = props.height;
 
+
   const projection = d3.geoMercator()
       .scale(props.scale)
       .center([0, 20])
       .translate([width / 2, height / 2]);
 
   const zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoomed);
+  svg.call(zoom);
 
   const geoData = await d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson");
   await populateRegions();
@@ -184,11 +186,11 @@ onMounted(async () => {
   }
 
   function toggleZoom() {
-
     isZoomEnabled = !isZoomEnabled;
-    svg.call(zoom); // delete this line to disable free zooming
     if (isZoomEnabled) svg.call(zoom);
     else svg.on('.zoom', null)
+
+
 
   }
 
@@ -222,9 +224,10 @@ onMounted(async () => {
 <style scoped>
 #my_dataviz {
   background-color: #176B87;
-  border: 1px solid black;
-  max-width: 100vw;
+  border: 1px #64CCC5 solid;
+  max-width: 97vw;
   max-height: 100vh;
+  border-radius: 8px;
 }
 
 @media (max-width: 800px) {

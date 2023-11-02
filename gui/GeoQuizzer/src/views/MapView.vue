@@ -1,13 +1,13 @@
 <script setup>
-import {nextTick, ref} from 'vue';
+import {nextTick, ref, onMounted, onUnmounted} from 'vue';
 import ClickableMap from "@/components/ClickableMap.vue";
 import ProgressBarComponent from "@/components/ProgressBarComponent.vue";
-import * as d3 from "d3";
-import { useMapStore } from '@/stores/map';
 import ResultModalComponent from "@/components/ResultModalComponent.vue";
-import { useGeneralStore } from '@/stores/general';
-import { onMounted, onUnmounted } from 'vue';
-import {handleToken} from '@/js/userApi'
+import * as d3 from "d3";
+import {useMapStore} from '@/stores/map';
+import {useGeneralStore} from '@/stores/general';
+import {handleToken, isLoggedIn} from "@/js/userApi";
+
 const generalStore = useGeneralStore();
 const mapStore = useMapStore();
 const failedGuesses = ref([]);
@@ -18,8 +18,8 @@ const answerArray = ref([]);
 const selectingRegions = ref(true);
 //const map = ref(null);
 const isZoomEnabled = ref(true);
-const isSetToExam = ref(true);
-const quiz = ref("exam");
+const isSetToExam = ref(false);
+const quiz = ref("practise");
 
 let questionIndex = 0;
 let regionGlobal = null;
@@ -105,6 +105,7 @@ async function resetQuiz() {
 
 function toggleZoom() {
   mapStore.toggleZoom();
+  console.log("toggleZoom");
   isZoomEnabled.value = !isZoomEnabled.value;
 }
 
@@ -113,7 +114,15 @@ function setToPractise() {
   quiz.value = "practise";
 }
 
-function setToExam() {
+
+async function setToExam() {
+
+  const isLoggedInTemp = await isLoggedIn();
+  if (!isLoggedInTemp) {
+    alert("You need to be logged in to take an exam");
+    return;
+  }
+
   isSetToExam.value = !isSetToExam.value;
   quiz.value = "exam";
 }
@@ -140,9 +149,9 @@ function setToExam() {
     <div class="rightContainer">
       <div class="buttonContainer">
         <button :class="{ lightButton: isZoomEnabled, blueButton: !isZoomEnabled }" @click="toggleZoom">Enable zoom</button>
-        <button :class="{ lightButton: isSetToExam, blueButton: !isSetToExam }" v-if="selectingRegions" @click="setToExam">Exam</button>
         <button :class="{ lightButton: !isSetToExam, blueButton: isSetToExam }" v-if="selectingRegions" @click="setToPractise">Practise</button>
-        <button class="blueButton" v-if="!selectingRegions" @click="resetQuiz">Reset Quiz</button>
+        <button :class="{ lightButton: isSetToExam, blueButton: !isSetToExam }" v-if="selectingRegions" @click="setToExam">Exam</button>
+        <button class="blueButton" v-if="!selectingRegions" @click="resetQuiz">Exit Quiz</button>
         <div class="progressBarContainer">
           <ProgressBarComponent v-if="!selectingRegions"
                                 :amountAnswered="failedGuesses.length + succeededGuesses.length"
@@ -167,6 +176,7 @@ function setToExam() {
 .content {
   display: flex;
   flex-direction: row;
+
 }
 
 
@@ -232,25 +242,34 @@ function setToExam() {
   width: 200px;
   height: 200px;
   margin-right: auto;
-  margin-left: auto;
+  margin-left: 100px;
   margin-bottom: auto;
   padding: 15px;
   background: #176B87;
   box-shadow: 0 0 2px 2px;
   border-radius: 8px;
+}
 
+.leftContainer {
+  width: calc(50% - 500px);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .rightContainer {
-  width: 200px;
+  width: calc(50% - 500px);
   margin-right: auto;
   margin-left: auto;
   margin-top: 50px;
 }
 
-.leftContainer {
-  width: 200px;
+@media (max-width: 1800px) {
+  .buttonContainer{
+    margin-left: auto;
+  }
+
 }
+
 
 @media (max-width: 1405px) {
   .content {
@@ -258,6 +277,7 @@ function setToExam() {
   }
   .rightContainer {
     margin-top: 25px;
+    width: 100%;
   }
 }
 
