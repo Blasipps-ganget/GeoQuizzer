@@ -45,7 +45,7 @@ export const getClassroomData = async () => {
 export const getInviteLink = async () => {
     try {
         const name = getName();
-        const response = await fetch(classroomEndpoint + `getClassroomInvite` + name)
+        const response = await fetch(classroomEndpoint + `getClassroomInvite/` + name)
         if (response.ok) {
             const text = await response.text();
             return text;

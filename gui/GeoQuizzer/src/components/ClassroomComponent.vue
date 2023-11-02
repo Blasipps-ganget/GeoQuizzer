@@ -190,5 +190,13 @@ const removeStudent =(userName) =>{
   margin-top: 50px;
   text-align: center;
 }
-
+@media (max-width: 500px)
+{
+  .headerSection{
+    text-align: center;
+  }
+  .row{
+    display: grid;
+  }
+}
 </style>
