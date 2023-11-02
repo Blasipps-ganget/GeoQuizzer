@@ -1,9 +1,10 @@
+
 <template>
   <body>
     <div class="container">
-      <div class="questionText" v-if="questionsAnswered <10" id="question-text">  <br> {{ generalStore.capitalName ? ("Which country does this capital belong to?" + generalStore.capitalName) : "Which flag does this country belong to"  }}  </div>
+      <div class="questionText" v-if="questionsAnswered <10" id="question-text">  {{ quizText }} <br>  {{ quizStore.capitalName  }}  </div>
       <div class="capital" v-if="questionsAnswered < 10">
-      <img :src="generalStore.flagUrl" alt="Quiz" />
+      <img :src="quizStore.flagUrl" alt="Quiz" />
       </div>
       <div class="content" id="question-area">
         <div id="answer-btns" class="btn-grid">
@@ -12,7 +13,7 @@
         <v-btn v-bind:color="btn2color" class="btn btn-option" @click="checkAnswer(answerThree)" v-if="questionsAnswered < 10" :disabled="buttonPressed">{{ answerThree }}</v-btn>
         <v-btn v-bind:color="btn3color" class="btn btn-option" @click="checkAnswer(answerFour)" v-if="questionsAnswered < 10" :disabled="buttonPressed">{{ answerFour }}</v-btn>
       </div>
-      <v-btn class="btn btn-option" @click="displayNext" v-if="questionsAnswered < 10" :disabled="!answerSubmitted" >Next</v-btn>
+      <v-btn class="btn btn-option" @click="displayNext" v-if="questionsAnswered < 10"  :disabled="answerSubmitted" >Next</v-btn>
         <div v-if="showMessage">
           <p>{{ message }}</p>
           <div class="resultText" v-if="questionsAnswered >= 10">
@@ -30,37 +31,69 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
+import { fetchCapital } from '../js/capitalApi';
+import { useQuizStore } from '../stores/quiz.js';
+import { fetchCountryFlag, postFlagResult } from '../js/flagApi';
+import { defineProps } from 'vue';
 
+
+const props = defineProps({
+  quizText: String,
+  currentQuiz: String
+});
+
+
+
+const quizStore = useQuizStore();
 const normalColor = "#053B50";
 const correctColor = "green";
 const wrongColor = "red";
-
 
 let btn0color = normalColor;
 let btn1color = normalColor;
 let btn2color = normalColor;
 let btn3color = normalColor;
+const index = ref(0);
 
-import { useGeneralStore } from '../stores/quiz.js';
-const generalStore = useGeneralStore();
+const finished = ref(false)
+let questionData;
 
+
+
+
+
+const nextQuestion = () =>{
+  index.value++;
+  if(index.value < 3){
+    quizStore.correctAnswer = questionData[index.value].land
+    quizStore.capitalName = questionData[index.value].capital
+    quizStore.flagUrl = questionData[index.value].flagUrl
+    quizStore.wrongAnswers = questionData[index.value].felsvar
+  }
+}
 
 
 const correctAnswer = ref(false); 
 const questionsAnswered = ref(0);
 const totalScore = ref(0);
 const showMessage = ref(false); 
-const answerSubmitted = ref (false);
+const answerSubmitted = ref (true);
 let buttonPressed = ref ('');
 let correctCountry = ref('');
 let message = ref ('');
 let resultText = ref ('');
+const correctAnswersArray = [];
+const guessesArray = [];
+
 
 const displayNext = () => {
+  nextQuestion()
+  quizStore.currentQuestion += quizStore.currentQuestion;
 if(questionsAnswered.value < 10 && answerSubmitted.value){
-  answerSubmitted.value = false;
+  answerSubmitted.value = true;
   buttonPressed.value = true;
   if (questionsAnswered.value < 10){
+    answerSubmitted.value = true;
     showMessage.value = true;
     generateRandomAnswers();
     showMessage.value = false;
@@ -76,6 +109,7 @@ btn0color = normalColor;
 btn1color = normalColor;
 btn2color = normalColor;
 btn3color = normalColor;
+answerSubmitted.value = true;
 }
 
 let landlist = [];
@@ -101,7 +135,7 @@ const generateRandomAnswers = async () => {
 */
 buttonPressed.value = false;
 showMessage.value = true;
-const answers = [...generalStore.wrongAnswers, generalStore.correctAnswer];
+const answers = [...quizStore.wrongAnswers, quizStore.correctAnswer];
 shuffleArray(answers);
 
     answerOne.value = answers[0];
@@ -112,7 +146,25 @@ shuffleArray(answers);
 };
 
 onMounted(async () => {
-  await generateRandomAnswers();
+  //await generateRandomAnswers();
+  
+  if(props.currentQuiz === "capital"){
+questionData = await fetchCapital(22);
+quizStore.correctAnswer = questionData[index.value].land
+quizStore.capitalName = questionData[index.value].capital
+quizStore.flagUrl = questionData[index.value].flagUrl
+quizStore.wrongAnswers = questionData[index.value].felsvar
+console.log("CAPITAL", questionData);
+} else{
+  questionData = await fetchCountryFlag();
+  quizStore.correctAnswer = questionData[index.value].land
+quizStore.capitalName = questionData[index.value].capital
+quizStore.flagUrl = questionData[index.value].flagUrl
+quizStore.wrongAnswers = questionData[index.value].felsvar
+console.log("FLAG", questionData);
+}
+console.log("DATA FROM ONMOUNTED",questionData);
+generateRandomAnswers()
 });
 
 const answerOne = ref('');
@@ -128,6 +180,7 @@ function shuffleArray(array) {
         array[i] = array[j];
         array[j] = temp;
     }
+
 }
 
 const resetQuiz = async () => {
@@ -148,13 +201,29 @@ const homeButton = async () => {
 
 // Validering av svar
 const checkAnswer =  async (selectedAnswer) => {
+  correctAnswersArray.push(quizStore.correctAnswer)
+  guessesArray.push(selectedAnswer)
   showMessage.value = true;
-  buttonPressed.value = true;
-  if (selectedAnswer === correctCountry.value.land) {
-    correctAnswer.value = true; 
+  if (selectedAnswer === quizStore.correctAnswer) {
+    correctAnswer.value = true;
    // message.value = 'Correct'
     if (questionsAnswered.value < 10) {
+      console.log("KORREKTARRAY", correctAnswersArray);
+      console.log("FELARRAY", guessesArray);
       totalScore.value += 1;
+    } else {
+      if(props.currentQuiz === "capital"){
+        console.log(correctAnswersArray)
+      
+      } else {
+        postFlagResult(
+          correctAnswersArray,
+          guessesArray,
+          region
+        )
+      }
+
+      
     }
     console.log('Correct!');
     console.log(landlist);
@@ -191,7 +260,7 @@ const checkAnswer =  async (selectedAnswer) => {
   }
 }
   questionsAnswered.value += 1;
-  answerSubmitted.value = true;
+  answerSubmitted.value = false;
   buttonPressed.value = true;
   };
 
@@ -206,8 +275,10 @@ const checkAnswer =  async (selectedAnswer) => {
   }
 
   .capital img {
-    width: 300px;
+    width: 100%;
     height: 200px;
+    border: 2px solid black
+    
   }
 
     * {
@@ -261,7 +332,7 @@ const checkAnswer =  async (selectedAnswer) => {
   text-align: center;
   width: 210px;
   position: relative;
-  z-index: 1;
+  z-index.value: 1;
   overflow: hidden;
   border-radius: 10px;
   margin-top: 20px;
