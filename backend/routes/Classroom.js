@@ -11,9 +11,10 @@ router.get("/getStudentsInClassRoom/:name", (req, res) => {
     db.get(query, name, (err, result) => {
         if (err) res.status(500).send("Internal Server Error")
         if (result) {
+            console.log("RE",result)
             const query2 = 'SELECT name FROM users WHERE classroom = ?'
             db.all(query2, result.classRoom, (err, result2) => {
-                console.log(result2)
+                console.log("res",result2)
                 res.status(200).send({owner: result.classRoom, students: result2})
             })
         }
