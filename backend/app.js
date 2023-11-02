@@ -14,18 +14,24 @@ const userRoute = require('./routes/User')
 const highScoreRoute = require('./routes/HighScores')
 require('./database/db');
 const classroomRoute = require('./routes/Classroom')
+const jwt = require("jsonwebtoken");
+const dotenv = require('dotenv');
+const {resolve} = require("path");
+dotenv.config({path: resolve(__dirname, '../.env')})
+const jwtsecretkey = process.env.JWT_SECRET_KEY;
 
 
-app.listen(PORT, () => console.log(serverStartUpMessage));
 app.use(cors());
 app.use(express.json());
 app.use(cookieparser());
+app.use("/user", userRoute);
+app.use("/classroom", classroomRoute);
+app.use(authenticateToken)
 app.use("/capitalquiz", capitalQuizRoute);
 app.use("/flagquiz", flagQuizRoute);
 app.use("/countryquiz", countryQuizRoute);
 app.use("/countries", countriesRoute);
-app.use("/user", userRoute);
-app.use("/classroom", classroomRoute);
+app.listen(PORT, () => console.log(serverStartUpMessage));
 
 app.use("/highscores", highScoreRoute);
 
@@ -50,3 +56,22 @@ const serverStartUpMessage = (`    _____                              _
                                                                                        `);
 
 module.exports = router;
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+    if (token == null) return res.sendStatus(401)
+    if(req.method === 'POST'){
+    console.log("AUTHING")
+
+    jwt.verify(token, jwtsecretkey, (err, user) => {
+        console.log("err")
+        if (err){
+            console.log("error", err)
+            return res.sendStatus(403)
+        }
+        console.log('user', user)
+        next()
+    });
+    }
+    next();
+}

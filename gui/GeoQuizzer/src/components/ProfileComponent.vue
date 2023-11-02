@@ -33,6 +33,7 @@ defineProps({
 });
 const removeFromClassRoom = (userName) =>{
     removeStudent(userName)
+  console.log("emit")
     emit('removeStudent', userName)
 }
 

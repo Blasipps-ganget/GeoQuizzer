@@ -29,6 +29,9 @@ const validate = async () => {
     password: loginPassword.value
   }
   generalStore.loggedInUser = await login(user)
+  if(!(generalStore.loggedInUser === 'login')){
+    generalStore.showLoginModal = false;
+  }
 }
 const signUp = async () => {
   const regUser = {
@@ -38,6 +41,9 @@ const signUp = async () => {
     secondPass: password2
   }
   generalStore.loggedInUser = await signUpRest(regUser)
+  if(!(generalStore.loggedInUser === 'login')){
+    generalStore.showLoginModal = false;
+  }
 }
 
 const nameRules = [

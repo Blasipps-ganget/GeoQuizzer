@@ -53,7 +53,7 @@ const router = createRouter({
 
      },
      {
-       path: '/join/:id',
+       path: '/joinclass/:name',
        name: 'joinclassroom',
        component: () => import('../components/JoinClassroom.vue')
 

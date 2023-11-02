@@ -19,8 +19,9 @@ const isClicked = ref(false);
 
 onMounted(async () => {
   try {
-    inviteLink.value = await getInviteLink();
     students.value = await getClassroomData();
+    inviteLink.value = await getInviteLink();
+
   } catch (err) {
     console.error('Error fetching invitelink', err)
   }
@@ -37,6 +38,7 @@ function copyText() {
   isClicked.value = true;
 }
 const removeStudent =(userName) =>{
+  console.log("REMOVING")
   students.value.students = students.value.students.filter(student => !(userName === student.username))
 }
 
