@@ -57,11 +57,10 @@ const serverStartUpMessage = (`    _____                              _
 
 module.exports = router;
 function authenticateToken(req, res, next) {
+    if(req.method === 'POST'){
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
     if (token == null) return res.sendStatus(401)
-    if(req.method === 'POST'){
-    console.log("AUTHING")
 
     jwt.verify(token, jwtsecretkey, (err, user) => {
         console.log("err")
