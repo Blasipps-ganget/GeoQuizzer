@@ -60,6 +60,7 @@ async function handleResults() {
 
   generalStore.showResultModal = !generalStore.showResultModal;
   if (!isSetToExam.value) return;
+
   const accessToken = await handleToken();
   console.log("token",accessToken)
 
