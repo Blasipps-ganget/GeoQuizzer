@@ -32,6 +32,10 @@ function change() {
   console.log('change');
 }
 
+function handleRegionClick(region) {
+  generalStore.selectedRegion = region;
+}
+
 const toggleSelectBox = () => {
 
   showSelectBox.value = !showSelectBox.value;

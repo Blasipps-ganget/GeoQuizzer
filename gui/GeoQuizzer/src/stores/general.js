@@ -9,5 +9,6 @@ export const useGeneralStore = defineStore('generalstore', () => {
     const loggedInUser = ref('')
     const practiceOrExam = ref('')
     const noQuestions = ref(0)
-    return { selectedQuiz, showLoginModal, loginOption, showResultModal, loggedInUser, practiceOrExam, noQuestions}
+    const selectedRegion = ref('')
+    return { selectedQuiz, showLoginModal, loginOption, showResultModal, loggedInUser, practiceOrExam, noQuestions, selectedRegion}
 })

@@ -147,6 +147,7 @@ onMounted(async () => {
 
     if (props.markRegion) {
       countriesMarked.value = regionMap[region];
+      emit("regionClicked", region);
       updateMap();
       return
     }
