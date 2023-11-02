@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import {computed, ref} from 'vue'
 import { defineStore } from 'pinia'
 
 export const useGeneralStore = defineStore('generalstore', () => {
@@ -6,9 +6,10 @@ export const useGeneralStore = defineStore('generalstore', () => {
     const showLoginModal = ref(false)
     const loginOption = ref(true)
     const showResultModal = ref(false)
-    const loggedInUser = ref('')
+    const loggedInUser = ref('');
+    const isLoggedIn = computed(() => !!loggedInUser.value);
     const practiceOrExam = ref('')
     const noQuestions = ref(0)
     const selectedRegion = ref('')
-    return { selectedQuiz, showLoginModal, loginOption, showResultModal, loggedInUser, practiceOrExam, noQuestions, selectedRegion}
+    return { selectedQuiz, showLoginModal, loginOption, showResultModal, loggedInUser, isLoggedIn, practiceOrExam, noQuestions, selectedRegion}
 })

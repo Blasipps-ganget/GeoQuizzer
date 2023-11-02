@@ -21,24 +21,11 @@ const showModalRegister = () => {
   generalStore.loginOption = false
   generalStore.showLoginModal = !generalStore.showLoginModal;
 }
-onMounted(async () => {
-  try{
-  const currentUser = await getName()
-  generalStore.loggedInUser = currentUser
-    loggedIn.value = await isLoggedIn()
-  }catch (e) {
-    console.log(e)
-  }
-})
-const loginText = async () => {
-  this.$router.push({ path: '/' });
-}
 
-const registerLogoutText = () =>{
-  return generalStore.loggedInUser === 'login' ? 'Register' : 'Logout'
-}
+
+
 const logout = () =>{
-  this.$router.push({ path: '/' })
+  console.log("logout")
 }
 
 function closeHamburgerMenu() {
@@ -117,8 +104,8 @@ function closeHamburgerMenu() {
 
       </div>
       <div class="buttonsTopRight">
-        <v-btn class="custom-btn" density="default" rounded="xl" @click=" !isLoggedIn ? showModalLogin() : this.$router.push({ path: '/' }); ">{{ generalStore.loggedInUser === '' ? "login" : generalStore.loggedInUser}}</v-btn>
-        <v-btn class="custom-btn" density="default" rounded="xl" @click=" !isLoggedIn ? showModalRegister(): logout();">{{ generalStore.loggedInUser === 'login' ? 'Register' : 'Logout' }}</v-btn>
+        <v-btn class="custom-btn" density="default" rounded="xl" @click=" !generalStore.isLoggedIn ? showModalLogin() : this.$router.push({ path: '/' }); ">{{ !generalStore.isLoggedIn ? "login" : generalStore.loggedInUser}}</v-btn>
+        <v-btn class="custom-btn" density="default" rounded="xl" @click=" !generalStore.isLoggedIn ? showModalRegister(): logout();">{{ generalStore.isLoggedIn ? 'Register' : 'Logout' }}</v-btn>
       </div>
 
     </div>

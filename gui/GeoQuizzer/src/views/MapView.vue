@@ -6,7 +6,8 @@ import ResultModalComponent from "@/components/ResultModalComponent.vue";
 import * as d3 from "d3";
 import {useMapStore} from '@/stores/map';
 import {useGeneralStore} from '@/stores/general';
-import {handleToken, isLoggedIn} from "@/js/userApi";
+import {handleToken} from "@/js/userApi";
+import HighScoreComponent from "@/components/HighScoreComponent.vue";
 
 const generalStore = useGeneralStore();
 const mapStore = useMapStore();
@@ -16,13 +17,12 @@ const includedCountries = ref([]);
 const question = ref();
 const answerArray = ref([]);
 const selectingRegions = ref(true);
-//const map = ref(null);
 const isZoomEnabled = ref(true);
 const isSetToExam = ref(false);
 const quiz = ref("practise");
-
 let questionIndex = 0;
 let regionGlobal = null;
+generalStore.selectedQuiz = "countries";
 
 onMounted(() => {
   function handleResize(){
@@ -114,11 +114,9 @@ function setToPractise() {
   quiz.value = "practise";
 }
 
-
 async function setToExam() {
 
-  const isLoggedInTemp = await isLoggedIn();
-  if (!isLoggedInTemp) {
+  if (!generalStore.isLoggedIn) {
     alert("You need to be logged in to take an exam");
     return;
   }
@@ -159,8 +157,11 @@ async function setToExam() {
           />
         </div>
       </div>
-    </div>
+      <div class="highScoreContainer" >
+        <high-score-component v-if="generalStore.isLoggedIn && selectingRegions"> selectingRegions.value</high-score-component>
+      </div>
 
+    </div>
 
     <ResultModalComponent
         :correctGuesses="succeededGuesses.length"
@@ -171,14 +172,11 @@ async function setToExam() {
   </div>
 </template>
 
-
 <style>
 .content {
   display: flex;
   flex-direction: row;
-
 }
-
 
 .centerContainer {
   display: flex;
@@ -213,7 +211,6 @@ async function setToExam() {
   margin: 10px auto;
 }
 
-
 .lightButton {
   background-color: #64CCC5;
   color: white;
@@ -226,28 +223,9 @@ async function setToExam() {
   margin: 10px auto;
 }
 
-
-
 .progressBarContainer {
   margin: auto;
   width: 90%;
-
-}
-
-.buttonContainer {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  width: 200px;
-  height: 200px;
-  margin-right: auto;
-  margin-left: 100px;
-  margin-bottom: auto;
-  padding: 15px;
-  background: #176B87;
-  box-shadow: 0 0 2px 2px;
-  border-radius: 8px;
 }
 
 .leftContainer {
@@ -261,13 +239,38 @@ async function setToExam() {
   margin-right: auto;
   margin-left: auto;
   margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 200px;
+  height: 200px;
+  margin-right: auto;
+  margin-left: 100px;
+  padding: 15px;
+  background: #176B87;
+  box-shadow: 0 0 2px 2px;
+  border-radius: 8px;
+}
+
+.highScoreContainer{
+  margin-right: auto;
+  margin-left: 100px;
 }
 
 @media (max-width: 1800px) {
   .buttonContainer{
     margin-left: auto;
   }
-
+  .highScoreContainer {
+    margin-left: auto;
+  }
 }
 
 
@@ -278,6 +281,13 @@ async function setToExam() {
   .rightContainer {
     margin-top: 25px;
     width: 100%;
+    flex-direction: row;
+  }
+  .buttonContainer{
+    margin-right: 0;
+  }
+  .highScoreContainer {
+    margin-left: 0;
   }
 }
 
@@ -289,6 +299,18 @@ async function setToExam() {
 @media (max-width: 500px) {
   .message {
     font-size: 20px;
+  }
+  .rightContainer {
+    gap: 5px;
+  }
+}
+
+@media (max-width: 375px) {
+  .message {
+    font-size: 18px;
+  }
+  .rightContainer {
+    gap: 0;
   }
 }
 

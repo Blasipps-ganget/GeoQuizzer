@@ -191,10 +191,7 @@ onMounted(async () => {
     if (isZoomEnabled) svg.call(zoom);
     else svg.on('.zoom', null)
 
-
-
   }
-
 
   async function populateRegions() {
     europe = await d3.json("http://localhost:8080/countryquiz/europe");
