@@ -41,6 +41,10 @@ const logout = () =>{
   this.$router.push({ path: '/' })
 }
 
+function closeHamburgerMenu() {
+  const elMenuToggle = document.querySelector("#menu-toggle");
+  elMenuToggle.checked = false;
+}
 
 </script>
 
@@ -91,12 +95,12 @@ const logout = () =>{
       <label class='menu-button-container' for="menu-toggle">
         <div class='menu-button'></div>
       </label>
-      <ul class="menu">
-        <li><RouterLink class="navLink" to="/quiz" @click="selectQuiz('flags')">Flags</RouterLink></li>
-        <li><RouterLink class="navLink" to="/map" @click="selectQuiz('countries')">Countries</RouterLink></li>
-        <li><RouterLink class="navLink" to="/quiz" @click="selectQuiz('capitals')">Capitals</RouterLink></li>
-        <li><RouterLink class="navLink" to="/classroom">Classroom</RouterLink></li>
-        <li><RouterLink class="navLink" to="/userProfile">Profile</RouterLink></li>
+      <ul id="menu" class="menu">
+        <li><RouterLink class="navLink" to="/quiz" @click="selectQuiz('flags'); closeHamburgerMenu();">Flags</RouterLink></li>
+        <li><RouterLink class="navLink" to="/map" @click="selectQuiz('countries'); closeHamburgerMenu();">Countries</RouterLink></li>
+        <li><RouterLink class="navLink" to="/quiz" @click="selectQuiz('capitals'); closeHamburgerMenu()">Capitals</RouterLink></li>
+        <li><RouterLink class="navLink" to="/classroom" @click="closeHamburgerMenu()">Classroom</RouterLink></li>
+        <li><RouterLink class="navLink" to="/userProfile" @click="closeHamburgerMenu()">Profile</RouterLink></li>
       </ul>
 
     </div>
