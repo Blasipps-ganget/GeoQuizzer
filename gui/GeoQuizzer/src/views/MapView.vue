@@ -6,7 +6,7 @@ import ResultModalComponent from "@/components/ResultModalComponent.vue";
 import * as d3 from "d3";
 import {useMapStore} from '@/stores/map';
 import {useGeneralStore} from '@/stores/general';
-import {handleToken, isLoggedIn} from "@/js/userApi";
+import {handleToken} from "@/js/userApi";
 import HighScoreComponent from "@/components/HighScoreComponent.vue";
 
 const generalStore = useGeneralStore();
@@ -17,11 +17,9 @@ const includedCountries = ref([]);
 const question = ref();
 const answerArray = ref([]);
 const selectingRegions = ref(true);
-//const map = ref(null);
 const isZoomEnabled = ref(true);
 const isSetToExam = ref(false);
 const quiz = ref("practise");
-
 let questionIndex = 0;
 let regionGlobal = null;
 generalStore.selectedQuiz = "countries";
@@ -118,8 +116,7 @@ function setToPractise() {
 
 async function setToExam() {
 
-  const isLoggedInTemp = await isLoggedIn();
-  if (!isLoggedInTemp) {
+  if (!generalStore.isLoggedIn) {
     alert("You need to be logged in to take an exam");
     return;
   }
@@ -160,7 +157,10 @@ async function setToExam() {
           />
         </div>
       </div>
-      <div class="highScoreContainer"><high-score-component></high-score-component></div>
+      <div class="highScoreContainer" >
+        <high-score-component v-if="generalStore.isLoggedIn && selectingRegions"> selectingRegions.value</high-score-component>
+      </div>
+
     </div>
 
     <ResultModalComponent
