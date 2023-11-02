@@ -2,8 +2,8 @@
 <template>
   <body>
     <div class="container">
-      <div class="questionText" v-if="questionsAnswered <10" id="question-text">  {{ quizText }} <br>  {{ quizStore.capitalName  }}  </div>
-      <div class="capital" v-if="questionsAnswered < 10">
+      <div class="questionText" id="question-text">  {{ quizText }} <br>  {{ quizStore.capitalName  }}  </div>
+      <div class="capital">
       <img :src="quizStore.flagUrl" alt="Quiz" />
       </div>
       <div class="content" id="question-area">
@@ -13,7 +13,7 @@
         <v-btn v-bind:color="btn2color" class="btn btn-option" @click="checkAnswer(answerThree)" :disabled="buttonPressed">{{ answerThree }}</v-btn>
         <v-btn v-bind:color="btn3color" class="btn btn-option" @click="checkAnswer(answerFour)" :disabled="buttonPressed">{{ answerFour }}</v-btn>
       </div>
-      <v-btn class="btn btn-option" @click="displayNext" v-if="questionsAnswered < 10"  :disabled="answerSubmitted" >Next</v-btn>
+      <v-btn class="btn btn-option" @click="displayNext"  :disabled="answerSubmitted" >Next</v-btn>
         <div v-if="showMessage">
           <p>{{ message }}</p>
         </div>
@@ -82,17 +82,22 @@ const guessesArray = [];
 
 const displayNext = () => {
   nextQuestion()
-  quizStore.currentQuestion += quizStore.currentQuestion;
-if(questionsAnswered.value < 10 && answerSubmitted.value){
-  answerSubmitted.value = true;
+  console.log("LLÄNGDARRAY", correctAnswersArray.length);
+  quizStore.currentQuestion ++;
+  console.log("CurrentQuestion", quizStore.currentQuestion)
+  console.log("noQuestions", quizGeneralStore.noQuestions)
+if(quizStore.currentQuestion >= quizGeneralStore.noQuestions){
+  console.log("QUIZ DONE");
+    quizGeneralStore.showResultModal=true;
+/*   answerSubmitted.value = true;
   buttonPressed.value = true;
-  if (questionsAnswered.value < 10){
+  if (questionsAnswered.value){
     answerSubmitted.value = true;
     showMessage.value = true;
     generateRandomAnswers();
     showMessage.value = false;
     resultText.value = true;
-  } 
+  }  */
 } else {
   generateRandomAnswers();
   showMessage.value = true;
@@ -120,9 +125,15 @@ answerFour.value = answers[3];
 
 onMounted(async () => {
   if (quizGeneralStore.practiceOrExam === 'exam') {
+  console.log(quizGeneralStore.selectedRegion);
+  console.log("REGION",quizGeneralStore.selectedRegion);
+  console.log("ANTAL FRÅGOR:", quizGeneralStore.noQuestions);
   console.log("selected quiz:", quizGeneralStore.practiceOrExam);
 } else  {
   quizGeneralStore.practiceOrExam = 'practice';
+  console.log("REGION",quizGeneralStore.selectedRegion);
+  console.log("ANTAL FRÅGOR:", quizGeneralStore.noQuestions);
+  quizGeneralStore.noQuestions;
   console.log("selected quiz:", quizGeneralStore.practiceOrExam);
 }
 
@@ -165,12 +176,14 @@ function shuffleArray(array) {
 // Validering av svar
 const checkAnswer =  async (selectedAnswer) => {
   correctAnswersArray.push(quizStore.correctAnswer)
+  quizStore.correctAnswersArray = correctAnswersArray;
   guessesArray.push(selectedAnswer)
   showMessage.value = true;
   if (selectedAnswer === quizStore.correctAnswer) {
     correctAnswer.value = true;
+    quizStore.increment();
    // message.value = 'Correct'
-    if (questionsAnswered.value < 10) {
+    if (questionsAnswered.value) {
       console.log("KORREKTARRAY", correctAnswersArray);
       console.log("FELARRAY", guessesArray);
       totalScore.value += 1;
