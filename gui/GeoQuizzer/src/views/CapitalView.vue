@@ -1,42 +1,28 @@
 <template>
   <div>
-    <QuizComponent>
+    <QuizComponent :quizText="quizCapitalText" :currentQuiz="capital"></QuizComponent>>
     
-    </QuizComponent>
+    
   </div>
 </template>
 
-<script >
-
+<script setup>
 import  QuizComponent  from "../components/QuizComponent.vue";
 import { fetchCapital } from '../js/capitalApi';
-import {ref} from 'vue'
-import { useGeneralStore } from '../stores/quiz.js';
+import {ref, onMounted} from 'vue'
+import { useQuizStore } from '../stores/quiz.js';
+import { useGeneralStore } from "../stores/general.js";
 const generalStore = useGeneralStore();
-let index = 0;
+const quizCapitalText = ref("Which capital does this country belong to?");
 
-const amountOfQuestions = 2;
-const questionData = await fetchCapital(amountOfQuestions);
-const currentQuestion = ref(questionData[index]);
+const quizStore = useQuizStore();
+const capital = "capital";
 
-generalStore.correctAnswer = questionData[index].land
-generalStore.capitalName = questionData[index].capital
-generalStore.flagUrl = questionData[index].flagUrl
-generalStore.wrongAnswers = questionData[index].felsvar
+onMounted(async () => {
+  const questionData = await fetchCapital(3);
+  console.log(questionData);
+})
 
-console.log("DATA",questionData);
-console.log("DATA1", questionData[0])
-
-let questionNr = questionData[index];
-export default {
-  components: {
-  QuizComponent ,
-  },
-};
-const nextQuestion = () =>{
-  index++;
-  currentQuestion.value = questionData[index]
-}
 </script>
 
 

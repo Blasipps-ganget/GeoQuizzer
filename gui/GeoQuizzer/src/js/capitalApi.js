@@ -1,7 +1,28 @@
-const capitalQuizEndpoint = "http://localhost:8080/capitalquiz/"
+
+import{handleToken} from '@/js/userApi'
+
+export const postCapitalResult = async (correctAnswers, guesses) => {
+const accessToken = await handleToken()
+  
+
+await fetch(`http://localhost:8080/capitalquiz/postResult`, {
+    
+headers: {
+      'Content-Type': 'application/json'
+      ,'Authorization': `Bearer ${accessToken}`
+    },
+    method: 'POST',
+    body: JSON.stringify({
+      questions: correctAnswers,
+      answers: guesses,
+      region: "EUROPE"
+    }),
+  });
+
+}
 
 
-export const fetchCapital = async (amount) => {
+export const fetchCapital = async () => {
 
     const infoToReturn = [{
         capital: "Stockholm",
@@ -13,6 +34,11 @@ export const fetchCapital = async (amount) => {
         land: "Denmark",
         flagUrl: "https://mainfacts.com/media/images/coats_of_arms/dk.svg",
         felsvar: ["Sweden", "Finland", "China"]
+      }, {
+        capital: "OSLO",
+        land: "Norway",
+        flagUrl: "https://mainfacts.com/media/images/coats_of_arms/no.svg",
+        felsvar: ["Sweden", "Uzbekistan", "China"]
       }]
   
       return infoToReturn;
@@ -32,4 +58,3 @@ export const fetchCapital = async (amount) => {
   }
   */
   };
-  

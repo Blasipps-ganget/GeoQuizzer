@@ -1,11 +1,12 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useGeneralStore = defineStore('capital', () => {
+export const useQuizStore = defineStore('capital', () => {
     const correctAnswer = ref('')
     const capitalName = ref('')
     const flagUrl = ref('false')
     const wrongAnswers = ref([])
+    const currentQuestion = ref(0);
     
-    return { correctAnswer, flagUrl, wrongAnswers, capitalName }
+    return { correctAnswer, flagUrl, wrongAnswers, capitalName, currentQuestion}
 })
