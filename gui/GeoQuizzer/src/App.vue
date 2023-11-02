@@ -64,18 +64,9 @@ function closeHamburgerMenu() {
       <img class="nav__images" src="./assets/images/icons/user.png" alt="Profile">
       <RouterLink class="navLink" to="/userProfile">Profile</RouterLink>
     </div>
-
-
-
-
   </div>
   <LoginRegistrationModal v-show="generalStore.showLoginModal"></LoginRegistrationModal>
-
-
   <div class="headerContent">
-
-
-
     <div class="hamburgerMenu">
 
       <input id="menu-toggle" type="checkbox" />
@@ -106,6 +97,7 @@ function closeHamburgerMenu() {
       <div class="buttonsTopRight">
         <v-btn class="custom-btn" density="default" rounded="xl" @click=" !generalStore.isLoggedIn ? showModalLogin() : this.$router.push({ path: '/' }); ">{{ !generalStore.isLoggedIn ? "login" : generalStore.loggedInUser}}</v-btn>
         <v-btn class="custom-btn" density="default" rounded="xl" @click=" !generalStore.isLoggedIn ? showModalRegister(): logout();">{{ generalStore.isLoggedIn ? 'Register' : 'Logout' }}</v-btn>
+
       </div>
 
     </div>

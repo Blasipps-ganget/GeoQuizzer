@@ -1,9 +1,16 @@
 <script setup>
 
-import {defineProps, ref} from 'vue';
+import {defineProps, onMounted, ref} from 'vue';
 import ClassroomPopUp from "@/components/ClassroomPopUp.vue";
-import { useRouter} from 'vue-router';
+import {useRoute, useRouter} from 'vue-router';
+import HomeView from "@/views/HomeView.vue";
+import {getName, handleToken} from "@/js/userApi";
+const classroomEndpoint = "http://localhost:8080/classroom";
 
+
+const isOpen = ref(true);
+const router = useRouter();
+const route = useRoute();
 
 defineProps({
 
@@ -17,80 +24,75 @@ defineProps({
 
 });
 
+onMounted (() =>{
+  console.log("HEJ")
+})
 const declineInvitation = () => {
-
 router.push('/');
-
 }
 
 
-const acceptInvitation = () => {
-
-
-  const userName ='Tja';
-  const classRoomName = 'TestClassroom';
-
-  const data = { userName, classRoomName}
-
-
-  fetch('http://localhost:8080/classroom/joinClassroomInvite', {
-      method: 'POST',
-      headers: {
-
-        'Content-type': 'application/json',
-      },
-    body: JSON.stringify(data),
-
+const acceptInvitation = async () => {
+  const routes = route.fullPath
+  console.log(routes);
+  const name = getName()
+  console.log(classroomEndpoint + routes +"/" +  name)
+  fetch(classroomEndpoint + routes +"/" + name).then(r => {
+    if(r)
+      console.log(r)
   })
-      .then((response) => {
+  /*
+    const userName ='Tja';
+    const classRoomName = 'TestClassroom';
 
-      if(response.ok) {
+    const data = { userName, classRoomName}
 
-        console.log('Successfully joined the classroom')
-        router.push('/classroom')
-      } else {
+    fetch('http://localhost:8080/classroom/joinClassroomInvite', {
+        method: 'POST',
+        headers: {
 
-        console.error('Failed to join')
-      }
+          'Content-type': 'application/json',
+        },
+      body: JSON.stringify(data),
 
-      })
-      .catch((error) => {
+    })
+        .then((response) => {
 
-    console.error('Error joining classroom', error)
+        if(response.ok) {
 
-  });
+          console.log('Successfully joined the classroom')
+          router.push('/classroom')
+        } else {
+
+          console.error('Failed to join')
+        }
+
+        })
+        .catch((error) => {
+
+      console.error('Error joining classroom', error)
+    });
+  */
 }
-
-const isOpen = ref(true);
-const router = useRouter();
-
-
-
 
 
 
 </script>
 
 <template>
-    <div class="centerContent">
-
+    <home-view></home-view>
       <ClassroomPopUp :open="isOpen" @close ="isOpen = !isOpen" >
 
         <div class="popupContent">
-          <h2 class="joinClassroom">You have received an invitation to join TestClassroom</h2>
-          <p class="popupQuestion">Do you want to join?</p>
+          <h2 class="joinClassroom">Would you like to join {{ this.$route.params.name }}'s classroom?</h2>
+          <p class="popupQuestion">Click to reply</p>
           <div class="chooseButton">
             <v-btn @click="acceptInvitation" class="popup-alt">Accept</v-btn>
             <v-btn @click="declineInvitation" class="popup-alt">Decline</v-btn>
-
-            <!--            <v-btn @click="copyText" class="popup-copy">-->
-            <!--              Copy-->
-            <!--            </v-btn>-->
           </div>
         </div>
       </ClassroomPopUp>
 
-    </div>
 </template>
 
 

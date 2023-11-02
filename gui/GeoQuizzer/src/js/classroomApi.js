@@ -1,10 +1,10 @@
-import {getName} from "@/js/userApi";
+import {getName, handleToken} from "@/js/userApi";
 const classroomEndpoint = "http://localhost:8080/classroom/";
 
 export const getClassroomData = async () => {
-    const name = await getName()
-    return fetch(classroomEndpoint + "getStudentsInClassRoom/" + name)
-        .then(response => {
+    const name = getName()
+    console.log(name)
+    return fetch((classroomEndpoint + "getStudentsInClassRoom/" + name)).then(response => {
             if (!response.ok) {
                 throw new Error('Failed to fetch the list of strings');
             }
@@ -12,8 +12,9 @@ export const getClassroomData = async () => {
         })
         .then(stringList => {
             const stringsArray = stringList;
-            const restCalls = stringsArray.students.map((string) => {
-                return fetch(classroomEndpoint + "getClassroom/" + string.name)
+            const restCalls = stringsArray.students.map((student) => {
+                console.log(student)
+                return fetch(classroomEndpoint + "getClassroom/" + student.name)
                     .then(response => {
                         if (!response.ok) {
                             console.log("ERROR")
@@ -26,6 +27,7 @@ export const getClassroomData = async () => {
             });
            return Promise.all(restCalls)
                 .then(results => {
+                    console.log(results)
                     return {
                         owner: stringsArray.owner,
                         students: results
@@ -42,7 +44,8 @@ export const getClassroomData = async () => {
 }
 export const getInviteLink = async () => {
     try {
-        const response = await fetch(classroomEndpoint + `getClassroomInvite`)
+        const name = getName();
+        const response = await fetch(classroomEndpoint + `getClassroomInvite` + name)
         if (response.ok) {
             const text = await response.text();
             return text;
@@ -54,10 +57,11 @@ export const getInviteLink = async () => {
     }
 };
 
-export const removeStudent = (userName) =>{
+export const removeStudent = async (userName) => {
+    const accessToken = await handleToken();
     return fetch(classroomEndpoint + 'removeStudent', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`},
         body: JSON.stringify({userName: userName})
     })
 

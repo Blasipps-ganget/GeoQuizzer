@@ -2,17 +2,20 @@ const express = require("express");
 const router = express.Router();
 const sqlite3 = require('sqlite3').verbose();
 const dbPath = './backend/database/geoquizzer.db'
-router.get("/getStudentsInClassRoom/:name", (req, res) =>{
+
+router.get("/getStudentsInClassRoom/:name", (req, res) => {
     const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE);
     const {name} = req.params;
+    console.log("NAS;D", name)
     const query = 'SELECT classroom FROM users WHERE name = ?'
     db.get(query, name, (err, result) => {
-        if(err) res.status(500).send("Internal Server Error")
-        if(result) {
-        const query2 = 'SELECT name FROM users WHERE classroom = ?'
-        db.all(query2, result.classRoom, (err, result2) => {
-            res.status(200).send({owner: result.classRoom, students: result2})
-        })
+        if (err) res.status(500).send("Internal Server Error")
+        if (result) {
+            const query2 = 'SELECT name FROM users WHERE classroom = ?'
+            db.all(query2, result.classRoom, (err, result2) => {
+                console.log(result2)
+                res.status(200).send({owner: result.classRoom, students: result2})
+            })
         }
     })
 })
@@ -20,7 +23,7 @@ router.get("/getStudentsInClassRoom/:name", (req, res) =>{
 router.get("/getClassroom/:name", async (req, res) => {
     const name = req.params.name
     const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE);
-
+    console.log(name)
     const countryquiz = 'SELECT regions.name AS regionName, COUNT(countries.id) AS countryCount, MAX(IFNULL(countryquiz.points, 0)) AS highestPoints\n' +
         'FROM regions\n' +
         'LEFT JOIN countries ON regions.id = countries.region_id\n' +
@@ -48,20 +51,21 @@ router.get("/getClassroom/:name", async (req, res) => {
         fetchFlagCapitalQuizData(db, flagquizQuery, name),
         fetchFlagCapitalQuizData(db, capitalquizQuery, name)
     ]).then(([countryQuizData, flagData, capitalData]) => {
-            const { userPoints: userPointsCountry, totalPoints: totalPointsCountry } = countryQuizData;
-            const { userPoints: userPointsFlag, totalPoints: totalPointsFlag } = flagData;
-            const { userPoints: userPointsCapital, totalPoints: totalPointsCapital } = capitalData;
+        const {userPoints: userPointsCountry, totalPoints: totalPointsCountry} = countryQuizData;
+        const {userPoints: userPointsFlag, totalPoints: totalPointsFlag} = flagData;
+        const {userPoints: userPointsCapital, totalPoints: totalPointsCapital} = capitalData;
 
-            result.totalCountry = Math.trunc((userPointsCountry/totalPointsCountry)*100);
-            result.totalFlag = Math.trunc((userPointsFlag/totalPointsFlag)*100);
-            result.totalCapital = Math.trunc((userPointsCapital/totalPointsCapital)*100);
-            res.send(result);
-        })
+        result.totalCountry = Math.trunc((userPointsCountry / totalPointsCountry) * 100);
+        result.totalFlag = Math.trunc((userPointsFlag / totalPointsFlag) * 100);
+        result.totalCapital = Math.trunc((userPointsCapital / totalPointsCapital) * 100);
+        res.send(result);
+    })
         .catch(error => {
             res.status(500).send("Internal Server Error");
         });
 
 });
+
 function fetchCountryQuizData(db, countryQuery, name) {
     return new Promise((resolve, reject) => {
         db.all(countryQuery, name, (err, result) => {
@@ -106,27 +110,32 @@ function fetchFlagCapitalQuizData(db, query, name) {
     })
 }
 
-router.get("/getClassroomInvite", (req, res) => {
+router.get("/getClassroomInvite/:name", (req, res) => {
     const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE);
-    let inviteLink = `http://localhost:8080/classroom/join/`;
-    const name = 'test' //getName();
+    let inviteLink = `http://localhost:5173/joinclass/`;
+
+    const {name } = req.params;
+
     const query = 'SELECT classRoom FROM users WHERE name = ?'
-    db.get(query, name, (err, result) => {
-        if (err) {
-            res.status(500).send("Internal Server Error");
-        }
-        if (result) {
-            inviteLink += result.classRoom;
-            res.status(200).send(inviteLink);
-        }
-    })
+    if (name) {
+        db.get(query, name, (err, result) => {
+            if (err) {
+                res.status(500).send("Internal Server Error");
+            }
+            if (result) {
+                inviteLink += result.classRoom;
+                res.status(200).send(inviteLink);
+            }
+        })
+    } else {
+        res.status(500).send("Internal Server Error");
+    }
 });
 
 
-router.post("/join/:link", (req, res) => {
+router.get("/joinclass/:link/:name", (req, res) => {
     const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE);
-    const {link} = req.params;
-    const name = 'test2' //getName()
+    const {link, name } = req.params;
     const query2 = 'UPDATE users SET classRoom = ? WHERE name = ?'
     db.run(query2, link, name, (err) => {
         if (err) {
@@ -142,7 +151,6 @@ router.post("/removeStudent", (req, res) => {
     const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE);
     const name = req.body.userName;
     const query = ('UPDATE users SET classRoom = ? WHERE name = ?')
-
     db.run(query, name, name, (err, result) => {
         if (err) {
             console.log(err);
@@ -155,5 +163,11 @@ router.post("/removeStudent", (req, res) => {
         }
     })
 })
+const getNameFromToken = (req) => {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+    const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    return payload.name;
+}
 
 module.exports = router;

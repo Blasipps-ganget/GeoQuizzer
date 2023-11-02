@@ -9,28 +9,10 @@ const {resolve} = require("path");
 dotenv.config({path: resolve(__dirname, '../.env')})
 const jwtsecretkey = process.env.JWT_SECRET_KEY;
 const refreshKey = process.env.REFRESH_TOKEN_SECRET;
-function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
 
-    console.log("trying to auth")
-    if (token == null) return res.sendStatus(401)
-
-    jwt.verify(token, jwtsecretkey, (err, user) => {
-        console.log(err)
-        if (err){
-            console.log("error", err)
-            return res.sendStatus(403)
-        }
-        console.log('user', user)
-        next()
-    });
-
-}
-router.post("/login" ,(req, res) => {
+router.post("/login",(req, res) => {
     const db = createDbConnection(dbPath);
     const query = 'SELECT password FROM users WHERE name = ?';
-    console.log(req.body)
     const loginAttempt = {
         username: req.body.username,
         password: req.body.password
@@ -135,13 +117,17 @@ router.post('/checkValidity', (req, res) => {
 })
 
 router.post('/refresh', (req, res) => {
+
+    console.log("REFRESHING");
     const authHeader = req.headers['authorization']
+    console.log("header", authHeader)
     const token = authHeader && authHeader.split(' ')[1]
+    console.log("token", token)
     if (token) {
         jwt.verify(token, refreshKey,
             (err, decoded) => {
                 if (err) {
-                    console.log("err ref", err.message)
+                    console.log("err refFFFFFFFFF", err.message)
                     return res.status(406).json({message: 'Unauthorized'});
                 } else {
                     console.log(decoded.name)

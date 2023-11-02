@@ -3,9 +3,11 @@ const loginEndpoint = userEndpoint + "login";
 const registerEndpoint = userEndpoint + "signup";
 export const login = async (userLog) => {
     const accessToken = handleToken();
+    console.log(userLog)
+    console.log(accessToken)
     return fetch(loginEndpoint, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`},
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(userLog),
     }).then(async (response) => {
         let {token, refreshToken} = await response.json();
@@ -57,8 +59,6 @@ export const getToken = () => {
             refreshToken = value;
         }
     }
-
-
     return {accessToken, refreshToken};
 }
 
@@ -89,6 +89,7 @@ export const refreshToken = async () => {
     }
     return refreshed;
 }
+
 export const isLoggedIn = async () => {
     const isValid = await checkValidity();
     console.log("isvalid", isValid)
@@ -98,6 +99,7 @@ export const isLoggedIn = async () => {
         return await refreshToken()
     }
 }
+
 export const getName =  () => {
     const {accessToken} = getToken();
     if (accessToken) {
@@ -112,7 +114,6 @@ export const handleToken = async () => {
     const {accessToken} = getToken();
     if (accessToken) {
         const valid = await checkValidity()
-
         if (!valid) {
             await refreshToken();
         }
@@ -130,9 +131,4 @@ const parseJwt = (token) => {
 export const logout = () =>{
 
 }
-/*
-fetch(userEndpoint + 'signup', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${token2}`},
-        body: JSON.stringify(userReg)
- */
+
