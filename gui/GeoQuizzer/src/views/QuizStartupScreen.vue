@@ -5,11 +5,12 @@ import ClickableMap from "@/components/ClickableMap.vue";
 import { useGeneralStore } from '@/stores/general';
 import router from "@/router";
 import HighScoreComponent from "@/components/HighScoreComponent.vue";
-const selectAmountOfQuestions = ref(0);
+const selectAmountOfQuestions = ref('5');
 const selectPracticeOrExam = ref("");
 const generalStore = useGeneralStore();
 const showSelectBox = ref(true);
 const isSetToExam = ref(false);
+
 
 
 const message = computed(() => {
@@ -48,6 +49,13 @@ const toggleSelectBox = () => {
 };
 
 function startQuiz() {
+
+  if (generalStore.selectedRegion === '') {
+    alert('Please select a region');
+    return;
+  }
+
+
   generalStore.practiceOrExam = selectPracticeOrExam.value;
   generalStore.noQuestions = selectAmountOfQuestions.value;
 
@@ -57,7 +65,9 @@ function startQuiz() {
     router.push({path: '/capital'})
 }
 
-const setSelectedQuiz = (quizToDo) => {
+
+
+function setSelectedQuiz(quizToDo){
   if (quizToDo === 'exam' && isSetToExam.value) return;
   if (quizToDo === 'practice' && !isSetToExam.value) return;
 
@@ -85,7 +95,7 @@ const setSelectedQuiz = (quizToDo) => {
         <div class="selectionButtons">
 
           <div class="onlyButtons">
-            <button  :class="{ lightButton: !isSetToExam, blueButton: isSetToExam }"  @click="toggleSelectBox(); setSelectedQuiz('practice')">Practise</button>
+            <button :class="{ lightButton: !isSetToExam, blueButton: isSetToExam }"  @click="toggleSelectBox(); setSelectedQuiz('practice')">Practise</button>
             <button :class="{ lightButton: isSetToExam, blueButton: !isSetToExam }"  @click="toggleSelectBox(); checkForLoggedIn()">Exam</button>
             <div class="buttonContent">
               <button class="blueButton" @click="startQuiz()">Start Quiz</button>
@@ -97,9 +107,9 @@ const setSelectedQuiz = (quizToDo) => {
                       v-if="showSelectBox"
                       label="Nr of questions"
                       :items="['5','10','15','20','30']"
-                      variant="solo-filled"
-            >
+                      variant="solo-filled">
             </v-select>
+
           </div>
         </div>
         <div class="highScoreContainer">
