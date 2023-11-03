@@ -19,7 +19,6 @@ const message = computed(() => {
   else return '';
 });
 
-
 function handleRegionClick(region) {
   generalStore.selectedRegion = region;
 }
