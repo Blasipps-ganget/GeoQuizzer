@@ -1,11 +1,8 @@
 const sqlite3 = require('sqlite3');
 const dbPath = './backend/database/geoquizzer.db';
-
 const express=require('express')
-const { Buffer } = require('node:buffer');
 const router=express.Router();
 module.exports=router;
-
 
 function connectToDatabase() {
   return new Promise((resolve, reject) => {
@@ -13,24 +10,12 @@ function connectToDatabase() {
   });
 }
 
-
-
 async function getIdFromName(name) {
   const db = await connectToDatabase();
   const query = 'SELECT users.id FROM users WHERE users.name = ?';
   const row = await new Promise((resolve, reject) => db.get(query, [name], (err, row) => err ? reject(err) : resolve(row)));
   db.close()
   return row ? row.id : null;
-}
-
-async function getNoCountries(region) {
-  const db = await connectToDatabase();
-  const query = 'SELECT COUNT(countries.name)' +
-      ' FROM countries JOIN regions ON countries.region_id = regions.id WHERE regions.name = ?';
-  const count = await new Promise((resolve, reject) => db.get(query, [region], (err, count) => err ? reject(err) : resolve(count)))
-  db.close()
-  return count ? count : 0;
-
 }
 
 async function getRegions() {
@@ -46,7 +31,6 @@ async function getRegions() {
 
 async function getPercentage(selectedQuiz, region, userId) {
   let regionId = 0;
-  console.log(region)
   switch (region) {
     case 'europe':
       regionId = 1;
@@ -93,31 +77,18 @@ async function getPercentage(selectedQuiz, region, userId) {
   db.close()
 }
 
-
 async function performOperations(selectedQuiz, username) {
   const regions = await getRegions();
-  console.log(regions);
-
-  // get username
-  //   let userName = getNameFromToken(req);
-  // username = 'antom'
-  console.log(username)
-
   let jsonResult = '';
-
 
   const userId = await getIdFromName(username);
   let array = []
-  console.log('id =' + userId);
 
   if (userId !== null) {
 
-    for (i = 0; i < regions.length; i++) {
+    for (let i = 0; i < regions.length; i++) {
 
       const percentageResult2 = await getPercentage(selectedQuiz, regions[i], userId)
-      console.log('percentage result2')
-      console.log(percentageResult2);
-      // const percentageResult = 50;
       let regionStylized = '';
       switch (regions[i]) {
         case 'europe':
@@ -139,68 +110,21 @@ async function performOperations(selectedQuiz, username) {
           regionStylized = "South America"
           break;
       }
-
       array.push({region: regionStylized, percentage: percentageResult2 });
-
-
     }
 
     const resultObject = { highscores: array }
     jsonResult = JSON.stringify(resultObject);
-
   }
 
-  console.log('FRÅN PERFORM OPERATIONS')
-  console.log(jsonResult)
   return jsonResult;
-}
-
-
-
-/*
-
-
-SELECT COUNT(countries.name)
-FROM countries
-JOIN regions ON countries.region_id = regions.id
-WHERE regions.name = 'europe';
-
-
-
-SELECT MAX(points) AS highest_score
-FROM countryquiz
-WHERE user_id = 5;
-
-
-
-}
-
-
-*/
-
-const getNameFromToken = (req) => {
-  const authHeader = req.headers['authorization']
-  console.log(authHeader)
-  const token = authHeader && authHeader.split(' ')[1]
-  console.log(token)
-  const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-
-  return payload.name;
 }
 
 router.get("/", (req, res) => {
   const selectedQuiz = req.query.quiz;
   const name = req.query.name
-  console.log(selectedQuiz);
-console.log("NN", name)
   performOperations(selectedQuiz, name).then((result) => {
-    console.log('---------' + result);
     return res.json(result);
   });
-
-
-
-
-
 })
 
