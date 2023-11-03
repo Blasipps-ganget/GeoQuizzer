@@ -1,5 +1,5 @@
 <script setup>
-import { useGeneralStore } from '../stores/general.js';
+import { useGeneralStore } from '@/stores/general';
 const generalStore = useGeneralStore();
 import { computed } from 'vue';
 const props = defineProps({
@@ -56,7 +56,7 @@ console.log(noQuestions);
           <div>
             <button v-if="mapView" class="retryButton" @click="generalStore.showResultModal = false">Select region</button>
             <RouterLink v-else to="/quiz" class="retryButton">Retry the quiz</RouterLink>
-            <RouterLink to="/" class="retryButton">Return home</RouterLink>
+            <RouterLink to="/" class="retryButton" @click="generalStore.showResultModal = false">Return home</RouterLink>
           </div>
         </div>
       </div>

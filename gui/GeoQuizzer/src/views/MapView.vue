@@ -161,7 +161,6 @@ async function setToExam() {
       <div class="highScoreContainer" >
         <high-score-component v-if="generalStore.isLoggedIn && selectingRegions"> selectingRegions.value</high-score-component>
       </div>
-
     </div>
 
     <ResultModalComponent
@@ -210,6 +209,7 @@ async function setToExam() {
   width: 150px;
   height: 40px;
   margin: 10px auto;
+  box-shadow: 4px 7px 10px rgba(0,0,0,.4);
 }
 
 .lightButton {
@@ -222,6 +222,7 @@ async function setToExam() {
   width: 150px;
   height: 40px;
   margin: 10px auto;
+  box-shadow: 4px 7px 10px rgba(0,0,0,.4);
 }
 
 .progressBarContainer {
@@ -264,8 +265,6 @@ async function setToExam() {
   box-shadow: 0 0 2px 2px;
   border-radius: 8px;
 }
-
-
 
 @media (max-width: 1800px) {
   .buttonContainer{
