@@ -14,18 +14,99 @@ router.post("/postResult",express.json(),(req, res) => {
 
  });
 
-router.get("/getCapital", async (req, res) => {
-  const db = new Db();
-  try {
-    const quizData = [];
-    const query = ('SELECT name from regions WHERE name = ? LIMIT 10')
-    const worldCountries = await fetchCapital();
-    res.send(worldCountries);
-  } catch (error){
-    console.error(error);
-    res.status(500).send("Internal Server error")
-  }
+router.get("/getCapitalQuestions/:nrOfQuestions/:region", async (req, res) => {
+  
+const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE);
+
+  console.log(req.params)
+  const nrOfQuestions = req.params.nrOfQuestions
+  const region = req.params.region
+  console.log(nrOfQuestions)
+  console.log(region)
+  
+
+
+      const r = await fetchCountries(region, nrOfQuestions)
+      
+      res.status(200).send(r)
+  
 });
+
+const getRandomCountries = (region, amount) => {
+  const q = 'SELECT name FROM countries WHERE region_id = (SELECT id FROM regions WHERE name = ?) ORDER BY RANDOM() LIMIT ?';
+  const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE);
+
+
+  return new Promise((resolve, reject) => {
+      db.all(q, [region, amount], (err, results) => {
+          if (err) {
+              reject(err);
+          } else {
+              resolve(results);
+          }
+      });
+  });
+};
+
+const getWrongCountries = (correctCountry, region, amount) => {
+  return getRandomUniqueCountries(region, amount, correctCountry).then((wrongCountries) => {
+    return { name: correctCountry, wrong: wrongCountries };
+  });
+};
+
+const getRandomUniqueCountries = (region, amount, correctCountry) => {
+  const wrongCountries = [];
+
+  return new Promise(async (resolve, reject) => {
+    while (wrongCountries.length < amount) {
+      try {
+        const randomCountry = (await getRandomCountries(region, 1))[0].name;
+        if (randomCountry !== correctCountry && !wrongCountries.includes(randomCountry)) {
+          wrongCountries.push(randomCountry);
+        }
+      } catch (err) {
+        reject(err);
+        return;
+      }
+    }
+
+    resolve(wrongCountries);
+  });
+};
+
+
+const fetchCountries = async (region, amount) => {
+  
+
+console.log("FECHSD")
+  const results = [];
+  for (let i = 0; i < amount; i++) {
+      try {
+          const correctCountry = (await getRandomCountries(region, 1))[0].name;
+          console.log("correct", correctCountry)
+
+          const data = await getWrongCountries(correctCountry, region, 3);
+          console.log("data",data)
+          const flagsResponse = await fetch(`https://restcountries.com/v3.1/name/${data.name}?fields=capital,coatOfArms`);
+const flagsData = await flagsResponse.json();
+console.log(flagsData);
+          let question = {
+            name: data.name,
+            wrongAnswers: data.wrong,
+            capital: flagsData[0].capital,
+            flagUrl: flagsData[0].coatOfArms
+          }
+          
+          results.push(question);
+      } catch (err) {
+          console.error(err);
+      }
+  }
+
+  return results
+};
+
+
 async function compareResults(results, userName) {
   if (30 < results.answers.length) {
       console.log("Cheat detected!");
