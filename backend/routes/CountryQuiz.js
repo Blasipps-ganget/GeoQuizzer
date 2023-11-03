@@ -12,8 +12,8 @@ express().use(express.json());
 router.post("/result", express.json(), (req, res) => {
     let userName = getNameFromToken(req);
     compareResults(req.body, userName)
-        .then(() => res.sendStatus(200))
-        .catch(err => res.status(500).send({err}));
+        .then(() => res.status(200).send("Successfully added to db"))
+        .catch(err => console.log(err.message));
 });
 
 router.get("/:region", (req, res) => {
@@ -21,7 +21,7 @@ router.get("/:region", (req, res) => {
     const shouldShuffle = req.query.shuffle === 'true';
     getCountries(region)
         .then(countries => res.send(shouldShuffle ? shuffle(countries) : countries))
-        .catch(err => res.status(500).send({err}));
+        .catch(err => console.log(err.message));
 });
 
 function shuffle(array) {

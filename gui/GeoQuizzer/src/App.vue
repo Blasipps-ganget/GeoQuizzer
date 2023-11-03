@@ -6,8 +6,8 @@ import LoginRegistrationModal from "@/components/LoginRegistrationModal.vue";
 import {useGeneralStore} from './stores/general.js';
 import {getName, isLoggedIn} from "@/js/userApi";
 import {onMounted, ref} from "vue";
-import router from "@/router";
-const loggedIn = ref(false);
+
+
 const generalStore = useGeneralStore()
 function selectQuiz(selection) {
   generalStore.selectedQuiz = selection

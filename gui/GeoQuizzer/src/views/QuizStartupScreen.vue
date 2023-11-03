@@ -11,6 +11,7 @@ const generalStore = useGeneralStore();
 const showSelectBox = ref(true);
 const isSetToExam = ref(false);
 
+
 const message = computed(() => {
   if (generalStore.selectedQuiz === 'flags')
     return 'Learn the flags of the world';
@@ -18,6 +19,33 @@ const message = computed(() => {
     return 'Learn the capitals of the world';
   else return '';
 })
+
+function checkForLoggedIn() {
+  alert('is loggged in:' + generalStore.isLoggedIn)
+  if (!generalStore.isLoggedIn) {
+    alert('You need to be logged in to take an exam!')
+    setSelectedQuiz('practice')
+    isSetToExam.value = false;
+    return;
+  }
+  setSelectedQuiz('exam');
+
+}
+
+
+
+
+/*async function setToExam() {
+
+  if (!generalStore.isLoggedIn) {
+    generalStore.showLoginModal = true;
+
+    return;
+  }
+
+  isSetToExam.value = !isSetToExam.value;
+  quiz.value = "exam";
+}*/
 
 function handleRegionClick(region) {
   generalStore.selectedRegion = region;
@@ -39,7 +67,11 @@ function startQuiz() {
 }
 
 const setSelectedQuiz = (quizToDo) => {
+  if (quizToDo === 'exam' && isSetToExam.value) return;
+  if (quizToDo === 'practice' && !isSetToExam.value) return;
+
   selectPracticeOrExam.value !== quizToDo ? selectPracticeOrExam.value = quizToDo : selectPracticeOrExam.value = "";
+
   console.log(selectPracticeOrExam.value);
 }
 
@@ -62,8 +94,8 @@ const setSelectedQuiz = (quizToDo) => {
         <div class="selectionButtons">
 
           <div class="onlyButtons">
-            <button :class="{ lightButton: !isSetToExam, blueButton: isSetToExam }"  @click="toggleSelectBox(); setSelectedQuiz('practice')">Practise</button>
-            <button :class="{ lightButton: isSetToExam, blueButton: !isSetToExam }"  @click="toggleSelectBox(); setSelectedQuiz('exam')">Exam</button>
+            <button  :class="{ lightButton: !isSetToExam, blueButton: isSetToExam }"  @click="toggleSelectBox(); setSelectedQuiz('practice')">Practise</button>
+            <button :class="{ lightButton: isSetToExam, blueButton: !isSetToExam }"  @click="toggleSelectBox(); checkForLoggedIn()">Exam</button>
             <div class="buttonContent">
               <button class="blueButton" @click="startQuiz()">Start Quiz</button>
 
@@ -80,10 +112,11 @@ const setSelectedQuiz = (quizToDo) => {
           </div>
         </div>
         <div class="highScoreContainer">
-          <high-score-component v-if="generalStore.isLoggedIn"> </high-score-component>
+          <HighScoreComponent v-if="true"></HighScoreComponent>
         </div>
 
       </div>
+
     </div>
   </main>
 </template>
