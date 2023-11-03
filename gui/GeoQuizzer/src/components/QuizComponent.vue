@@ -49,7 +49,7 @@ let correctAnswersArray = [];
 let guessesArray = [];
 
 
-const quizGeneralStore = useGeneralStore();
+const generalStore = useGeneralStore();
 const quizStore = useQuizStore();
 const normalColor = "#053B50";
 const correctColor = "green";
@@ -62,7 +62,7 @@ let btn3color = normalColor;
 const index = ref(0);
 
 let questionData;
-const showColors = computed(() => quizGeneralStore.practiceOrExam === 'practice');
+const showColors = computed(() => generalStore.practiceOrExam === 'practice');
 const props = defineProps({
   quizText: String,
   currentQuiz: String
@@ -70,8 +70,8 @@ const props = defineProps({
 
 const nextQuestion = () => {
   index.value++;
-  if (index.value < quizGeneralStore.noQuestions) {
-    if (quizGeneralStore.selectedQuiz === "capitals") {
+  if (index.value < generalStore.noQuestions) {
+    if (generalStore.selectedQuiz === "capitals") {
       quizStore.correctAnswer = questionData[index.value].land
       quizStore.capitalName = questionData[index.value].capital[0]
       quizStore.flagUrl = questionData[index.value].flagurl.svg
@@ -84,11 +84,22 @@ const nextQuestion = () => {
   }
 }
 
-const displayNext = () => {
+const displayNext = async () => {
   nextQuestion()
+  console.log("currentQuestion",quizStore.currentQuestion)
+  console.log("noQuestions",generalStore.noQuestions)
   quizStore.currentQuestion++;
-  if (quizStore.currentQuestion >= quizGeneralStore.noQuestions) {
-    quizGeneralStore.showResultModal = true;
+  if (quizStore.currentQuestion === generalStore.noQuestions) {
+    generalStore.showResultModal = true;
+    if (props.currentQuiz === "capital") {
+      await postCapitalResult(correctAnswersArray, guessesArray, generalStore.selectedRegion)
+    } else {
+      await postFlagResult(
+          correctAnswersArray,
+          guessesArray,
+          generalStore.selectedRegion
+      )
+    }
   } else {
     generateRandomAnswers();
     showMessage.value = true;
@@ -114,28 +125,26 @@ const generateRandomAnswers = async () => {
 };
 
 onMounted(async () => {
-  quizGeneralStore.currentQuestion = 0;
+  generalStore.currentQuestion = 0;
   guessesArray = [];
   correctAnswersArray = [];
-  if (quizGeneralStore.practiceOrExam === 'exam') {
-    quizGeneralStore.noQuestions = 30;
-  } else {
-    quizGeneralStore.practiceOrExam = 'practice';
+  if (generalStore.practiceOrExam === 'exam') {
+    generalStore.noQuestions = 30;
   }
 
   if (props.currentQuiz === 'capital') {
-    questionData = await fetchCapital(quizGeneralStore.noQuestions, quizGeneralStore.selectedRegion);
+    questionData = await fetchCapital(generalStore.noQuestions, generalStore.selectedRegion);
     quizStore.correctAnswer = questionData[index.value].land;
     quizStore.capitalName = questionData[index.value].capital[0];
     quizStore.flagUrl = questionData[index.value].flagurl.svg;
     quizStore.wrongAnswers = questionData[index.value].felsvar;
   } else {
-    questionData = await fetchCountryFlag(quizGeneralStore.noQuestions, quizGeneralStore.selectedRegion);
+    questionData = await fetchCountryFlag(generalStore.noQuestions, generalStore.selectedRegion);
     quizStore.correctAnswer = questionData[index.value].land;
     quizStore.flagUrl = questionData[index.value].flagurl.svg;
     quizStore.wrongAnswers = questionData[index.value].felsvar;
   }
-  generateRandomAnswers();
+  await generateRandomAnswers();
 });
 
 const answerOne = ref('');
@@ -161,18 +170,7 @@ const checkAnswer = async (selectedAnswer) => {
   if (selectedAnswer === quizStore.correctAnswer) {
     correctAnswer.value = true;
     quizStore.increment();
-    if (questionsAnswered.value) {
-    } else {
-      if (props.currentQuiz === "capital") {
-        await postCapitalResult(correctAnswersArray, guessesArray, quizGeneralStore.selectedRegion)
-      } else {
-        await postFlagResult(
-            correctAnswersArray,
-            guessesArray,
-            quizGeneralStore.selectedRegion
-        )
-      }
-    }
+
     if (selectedAnswer === answerOne.value) {
       btn0color = correctColor;
     } else if (selectedAnswer === answerTwo.value) {
