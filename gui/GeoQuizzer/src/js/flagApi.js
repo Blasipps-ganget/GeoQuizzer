@@ -33,6 +33,16 @@ export const fetchCountryFlag = async () => {
             felsvar: ["Sweden", "Finland", "China"]
           },{
             capital: "",
+            land: "Denmark",
+            flagUrl: "https://flagcdn.com/dk.svg",
+            felsvar: ["Sweden", "Finland", "China"]
+          },{
+            capital: "",
+            land: "Denmark",
+            flagUrl: "https://flagcdn.com/dk.svg",
+            felsvar: ["Sweden", "Finland", "China"]
+          },{
+            capital: "",
             land: "Norway",
             flagUrl: "https://flagcdn.com/no.svg",
             felsvar: ["Sweden", "Finland", "Uzbekistan"]
