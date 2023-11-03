@@ -6,8 +6,7 @@ module.exports=router;
 express().use(express.json());
 
 router.post("/result", express.json(), (req, res) => {
-    let userName = getNameFromToken(req);
-    compareResults(req.body, userName)
+    compareResults(req.body, req.query.name)
         .then(() => res.status(200).send())
         .catch(err => console.log(err.message));
 });
@@ -115,10 +114,5 @@ async function getCountries(region) {
     return rows.map(row => row.name);
 }
 
-const getNameFromToken = (req) => {
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
-    const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-    return payload.name;
-}
+
 
