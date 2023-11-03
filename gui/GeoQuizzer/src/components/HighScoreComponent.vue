@@ -6,7 +6,9 @@ const generalStore = useGeneralStore();
 async function getResults() {
   const accessToken = await handleToken();
   console.log(accessToken)
-  return fetch(`http://localhost:8080/highscores/?quiz=${generalStore.selectedQuiz}`, {
+  /* return fetch(`http://localhost:8080/highscores/?name=${userName.value}&quiz=${quiztype}`, {*/
+
+  return fetch(`http://localhost:8080/highscores/?name=${generalStore.loggedInUser}&quiz=${generalStore.selectedQuiz}`, {
     headers: {'Authorization': `Bearer ${accessToken}`},
     method: 'GET',})
       .then(response => response.json())

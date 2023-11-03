@@ -6,8 +6,8 @@ import LoginRegistrationModal from "@/components/LoginRegistrationModal.vue";
 import {useGeneralStore} from './stores/general.js';
 import {getName, isLoggedIn} from "@/js/userApi";
 import {onMounted, ref} from "vue";
-import router from "@/router";
-const loggedIn = ref(false);
+
+
 const generalStore = useGeneralStore()
 function selectQuiz(selection) {
   generalStore.selectedQuiz = selection
@@ -99,7 +99,7 @@ onMounted(() =>{
 
       </div>
       <div class="buttonsTopRight">
-        <v-btn class="custom-btn" density="default" rounded="xl" @click=" !generalStore.isLoggedIn ? showModalLogin() : this.$router.push({ path: '/' }); ">{{ !generalStore.isLoggedIn ? "login" : generalStore.loggedInUser}}</v-btn>
+        <v-btn class="custom-btn" density="default" rounded="xl" @click=" !generalStore.isLoggedIn ? showModalLogin() : this.$router.push({ path: `/userProfile/${generalStore.loggedInUser}` }); ">{{ !generalStore.isLoggedIn ? "login" : generalStore.loggedInUser}}</v-btn>
         <v-btn class="custom-btn" density="default" rounded="xl" @click=" !generalStore.isLoggedIn ? showModalRegister(): logout();">{{ !generalStore.isLoggedIn ? 'Register' : 'Logout' }}</v-btn>
 
       </div>
