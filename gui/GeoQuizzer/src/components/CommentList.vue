@@ -29,6 +29,18 @@ defineProps({
 
 <style scoped>
 
+
+@media screen and (max-width: 800px) {
+
+    .commentItem {
+
+
+      width: 330px;
+    }
+
+}
+
+
 .commentContent {
 
   margin-top: 10px;

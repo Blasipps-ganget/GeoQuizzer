@@ -34,6 +34,7 @@ const submitComment = async () => {
 
    // comments.value.push(newComment.value);
     comments.value.push(commentValue);
+    window.location.reload()
 
 
      await createComment();
@@ -170,8 +171,11 @@ const createComment = async () => {
     </div>
     </div>
     <div class="resultContent">
-     <h2 class="statisticName">Statistics:</h2>
+
       <div class="resultItem">
+        <div class="centerTitle">
+          <h2 class="statisticName">Statistics:</h2>
+        </div>
       <img class="imgIcon" src="/src/assets/images/icons/planet-earth.png" alt="">
       <h3 class="quizName">Countries:</h3>
 
@@ -189,7 +193,7 @@ const createComment = async () => {
 
 
 
-      <div class="resultItem">
+      <div class="resultItem2">
       <img class="imgIcon" src="/src/assets/images/icons/flag.png" alt="">
       <h3 class="quizName">Flags:</h3>
 
@@ -206,7 +210,7 @@ const createComment = async () => {
 
 
 
-      <div class="resultItem">
+      <div class="resultItem2">
       <img class="imgIcon"  src="/src/assets/images/icons/capitals.png" alt="">
       <img src="" alt="">
       <h3 class="quizName">Capitals:</h3>
@@ -243,7 +247,7 @@ const createComment = async () => {
   </div>
   <div class="comment-section">
 <!--  <AddComment @updateComments="updateComments"/>-->
-    <div class="comment-section">
+    <div class="centerComment">
       <h2 class="commentName">Leave a comment:</h2>
 
       <v-sheet width="300" class="mx-auto">
@@ -277,38 +281,78 @@ const createComment = async () => {
 
 @media screen and (max-width: 800px) {
 
-  .userContent {
 
-    display: flex;
+  .centerComment {
 
-
-  width: 400px;
-
-
-
+    margin-top: 80px;
   }
 
-  .userContainer {
 
-    height: fit-content;
-    width: fit-content;
+.userContainer {
+
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+
+
+}
+
+  .userContent {
+
+    width: 375px;
+
+
+
   }
 
   .resultContent {
 
 
-    flex-direction: row-reverse;
-    margin-right: auto;
+    display: flex;
+    height: 565px;
+    width: 310px;
+
 
   }
 
   .resultItem {
 
+    margin-bottom: 200px;
+    height: 10px;
+  }
 
+  .comment-section {
+
+
+
+  }
+
+  .statisticName {
+
+    margin-bottom: 10px;
   }
 
 
 }
+
+
+
+
+
+.centerTitle  {
+
+
+  margin-bottom: 13px;
+
+}
+
+
+.resultItem2 {
+
+  margin-top: 100px;
+
+}
+
 
 
 
@@ -388,6 +432,7 @@ margin-top: 20px;
   display: flex;
 
 
+
 }
 
 .userContainer {
@@ -406,7 +451,7 @@ margin-top: 20px;
   border-radius: 10px;
   background-color: #053B50;
   color: #EEEEEE;
-  height: 600px;
+  height: fit-content;
 
 
 
