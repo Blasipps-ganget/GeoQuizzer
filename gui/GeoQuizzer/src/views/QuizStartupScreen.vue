@@ -47,7 +47,7 @@ function setToPractise() {
   selectPracticeOrExam.value = 'practice';
 }
 
-async function setToExam() {
+function setToExam() {
   if (isSetToExam.value === true) return;
   if (!generalStore.isLoggedIn) {
     alert("You need to be logged in to take an exam");
