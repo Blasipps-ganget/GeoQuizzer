@@ -1,7 +1,7 @@
 
 import{handleToken} from '@/js/userApi'
 
-export const postCapitalResult = async (correctAnswers, guesses) => {
+export const postCapitalResult = async (correctAnswers, guesses,region) => {
 const accessToken = await handleToken()
   
 
@@ -15,7 +15,7 @@ headers: {
     body: JSON.stringify({
       questions: correctAnswers,
       answers: guesses,
-      region: "EUROPE"
+      region: region
     }),
   });
 

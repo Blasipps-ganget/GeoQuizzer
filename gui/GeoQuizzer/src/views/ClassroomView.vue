@@ -1,6 +1,7 @@
 <script setup>
 
 import ClassroomComponent from "@/components/ClassroomComponent.vue";
+import {useGeneralStore} from "@/stores/general";
 
 
 
@@ -8,7 +9,7 @@ import ClassroomComponent from "@/components/ClassroomComponent.vue";
 
 <template>
 <div>
-  <ClassroomComponent/>
+  <ClassroomComponent v-if="useGeneralStore().isLoggedIn"/>
 
 </div>
 </template>
