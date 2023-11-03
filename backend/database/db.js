@@ -113,6 +113,7 @@ function createTables() {
     db.run('CREATE TABLE IF NOT EXISTS flagquiz (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, region_id INTEGER, attemptNr INTEGER, points INTEGER, max_points INTEGER, percent INTEGER, wrongAnswers TEXT, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (region_id) REFERENCES regions(id))');
     db.run('CREATE TABLE IF NOT EXISTS capitalquiz (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, region_id INTEGER, attemptNr INTEGER, points INTEGER, max_points INTEGER, percent INTEGER, wrongAnswers TEXT, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (region_id) REFERENCES regions(id))');
     db.run('CREATE TABLE IF NOT EXISTS countryquiz (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, region_id INTEGER, attemptNr INTEGER, points INTEGER, max_points INTEGER, percent INTEGER, wrongAnswers TEXT, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (region_id) REFERENCES regions(id))');
+    db.run('CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, commented_id INTEGER, comment TEXT, date DATETIME, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (commented_id) REFERENCES users(id))');
 
 
 }

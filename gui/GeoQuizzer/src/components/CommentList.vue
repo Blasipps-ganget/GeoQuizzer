@@ -19,12 +19,9 @@ defineProps({
 <div class="centerContent">
     <div class="commentContent">
 
-      <div v-for="(comment,index) in comments" :key="index">{{comment}}</div>
-
-      <div class="commentButton">
-          <v-btn>Delete</v-btn>
+      <div v-for="(comment, index) in comments" :key="index">
+        <div class="commentItem">{{ comment.username + ": " + comment.comment }}</div>
       </div>
-
 
     </div>
     </div>
@@ -35,7 +32,14 @@ defineProps({
 .commentContent {
 
   margin-top: 10px;
-  background-color: #EEEEEE;
+
+
 }
 
+.commentItem {
+
+  margin-bottom: 10px;
+  background-color: #EEEEEE;
+  padding: 10px;
+}
 </style>

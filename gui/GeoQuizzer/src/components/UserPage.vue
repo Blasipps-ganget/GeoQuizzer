@@ -122,14 +122,12 @@ onMounted(() => {
 })
 const createComment = async () => {
   console.log("xcfvgh")
+  const accessToken = await handleToken();
   try {
 
     const response = await fetch('http://localhost:8080/userProfile/createComments', {
         method: 'POST',
-        headers: {
-
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`},
       body: JSON.stringify({
           user_name: userName.value,
           commented_name: getName(),

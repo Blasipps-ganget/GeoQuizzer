@@ -14,6 +14,7 @@ const userRoute = require('./routes/User')
 const highScoreRoute = require('./routes/HighScores')
 require('./database/db');
 const classroomRoute = require('./routes/Classroom')
+const profileRoute = require('./routes/Profile')
 const jwt = require("jsonwebtoken");
 const dotenv = require('dotenv');
 const {resolve} = require("path");
@@ -31,6 +32,9 @@ app.use("/capitalquiz", capitalQuizRoute);
 app.use("/flagquiz", flagQuizRoute);
 app.use("/countryquiz", countryQuizRoute);
 app.use("/countries", countriesRoute);
+app.use("/countries", countriesRoute);
+app.use("/userProfile", profileRoute);
+
 app.listen(PORT, () => console.log(serverStartUpMessage));
 
 app.use("/highscores", highScoreRoute);
