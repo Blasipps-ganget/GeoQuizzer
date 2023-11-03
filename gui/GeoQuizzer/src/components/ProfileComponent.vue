@@ -43,7 +43,7 @@ const removeFromClassRoom = (userName) =>{
           <div class="studentInformation">
           <span class="studentName">Name: {{name}} </span>
             <div class="imgContent">
-              <RouterLink to="/userProfile">
+              <RouterLink :to="`/userProfile/${name}`">
               <img class="studentImg" src="../assets/images/icons/user.png" alt="">
               </RouterLink>
             </div>

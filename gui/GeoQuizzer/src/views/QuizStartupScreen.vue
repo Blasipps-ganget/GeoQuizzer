@@ -21,7 +21,7 @@ const message = computed(() => {
 })
 
 function checkForLoggedIn() {
-
+console.log(generalStore.practiceOrExam)
   if (!generalStore.isLoggedIn) {
     alert('You need to be logged in to take an exam!')
     setSelectedQuiz('practice')
@@ -30,6 +30,7 @@ function checkForLoggedIn() {
   }
   setSelectedQuiz('exam');
 
+  console.log(generalStore.practiceOrExam)
 }
 
 

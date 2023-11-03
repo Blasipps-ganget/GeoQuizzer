@@ -6,6 +6,7 @@ import LoginRegistrationModal from "@/components/LoginRegistrationModal.vue";
 import {useGeneralStore} from './stores/general.js';
 import {getName, isLoggedIn} from "@/js/userApi";
 import {onMounted, ref} from "vue";
+import router from "@/router";
 
 
 const generalStore = useGeneralStore()
@@ -66,7 +67,7 @@ onMounted(() =>{
 
     <div class="menuitem">
       <img class="nav__images" src="./assets/images/icons/user.png" alt="Profile">
-      <RouterLink class="navLink" to="/userProfile">Profile</RouterLink>
+      <RouterLink class="navLink" :to="`/userProfile/${generalStore.loggedInUser}`">Profile</RouterLink>
     </div>
   </div>
   <LoginRegistrationModal v-show="generalStore.showLoginModal"></LoginRegistrationModal>
@@ -82,7 +83,7 @@ onMounted(() =>{
         <li><RouterLink class="navLink" to="/map" @click="selectQuiz('countries'); closeHamburgerMenu();">Countries</RouterLink></li>
         <li><RouterLink class="navLink" to="/quiz" @click="selectQuiz('capitals'); closeHamburgerMenu()">Capitals</RouterLink></li>
         <li><RouterLink class="navLink" to="/classroom" @click="closeHamburgerMenu()">Classroom</RouterLink></li>
-        <li><RouterLink class="navLink" to="/userProfile" @click="closeHamburgerMenu()">Profile</RouterLink></li>
+        <li><RouterLink class="navLink" :to="`/userProfile/${generalStore.loggedInUser}`" @click="closeHamburgerMenu()">Profile</RouterLink></li>
       </ul>
 
     </div>
@@ -99,7 +100,7 @@ onMounted(() =>{
 
       </div>
       <div class="buttonsTopRight">
-        <v-btn class="custom-btn" density="default" rounded="xl" @click=" !generalStore.isLoggedIn ? showModalLogin() : this.$router.push({ path: `/userProfile/${generalStore.loggedInUser}` }); ">{{ !generalStore.isLoggedIn ? "login" : generalStore.loggedInUser}}</v-btn>
+        <v-btn class="custom-btn" density="default" rounded="xl" @click=" !generalStore.isLoggedIn ? showModalLogin() : this.$router.push({ path:`/userProfile/${generalStore.loggedInUser}` }); ">{{ !generalStore.isLoggedIn ? "login" : generalStore.loggedInUser}}</v-btn>
         <v-btn class="custom-btn" density="default" rounded="xl" @click=" !generalStore.isLoggedIn ? showModalRegister(): logout();">{{ !generalStore.isLoggedIn ? 'Register' : 'Logout' }}</v-btn>
 
       </div>
@@ -110,15 +111,7 @@ onMounted(() =>{
   </div>
   <div><suspense><RouterView/></suspense></div>
 
-  <div class="centerLinks">
-    <div><RouterLink to="/">Home</RouterLink></div>
-    <div><RouterLink to="/register">Register</RouterLink></div>
-    <div><RouterLink to="/map">Map</RouterLink></div>
-    <div><RouterLink to="/flag">FlagQuiz</RouterLink></div>
-    <div><RouterLink to="/capital">Capitals quiz</RouterLink></div>
-    <div><RouterLink to="/quiz">ChooseQuiz</RouterLink></div>
-  </div>
-  <!--  WHEN ADDING A NEW LINK ADD HERE AND IN ROUTER -->
+
 
   <footer>
     <div class="footerContent">

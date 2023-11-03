@@ -6,15 +6,12 @@ const dbPath = './backend/database/geoquizzer.db'
 router.get("/getStudentsInClassRoom/:name", (req, res) => {
     const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE);
     const {name} = req.params;
-    console.log("NAS;D", name)
     const query = 'SELECT classroom FROM users WHERE name = ?'
     db.get(query, name, (err, result) => {
         if (err) res.status(500).send("Internal Server Error")
         if (result) {
-            console.log("RE",result)
             const query2 = 'SELECT name FROM users WHERE classroom = ?'
             db.all(query2, result.classRoom, (err, result2) => {
-                console.log("res",result2)
                 res.status(200).send({owner: result.classRoom, students: result2})
             })
         }
@@ -24,7 +21,6 @@ router.get("/getStudentsInClassRoom/:name", (req, res) => {
 router.get("/getClassroom/:name", async (req, res) => {
     const name = req.params.name
     const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE);
-    console.log(name)
     const countryquiz = 'SELECT regions.name AS regionName, COUNT(countries.id) AS countryCount, MAX(IFNULL(countryquiz.points, 0)) AS highestPoints\n' +
         'FROM regions\n' +
         'LEFT JOIN countries ON regions.id = countries.region_id\n' +
@@ -116,7 +112,6 @@ router.get("/getClassroomInvite/:name", (req, res) => {
     let inviteLink = `http://localhost:5173/joinclass/`;
 
     const {name } = req.params;
-
     const query = 'SELECT classRoom FROM users WHERE name = ?'
     if (name) {
         db.get(query, name, (err, result) => {
@@ -141,9 +136,9 @@ router.get("/joinclass/:link/:name", (req, res) => {
     db.run(query2, link, name, (err) => {
         if (err) {
             console.error("Error joining classroom", err)
-            res.status(500).send("Error joining the classroom")
+            res.status(500).send("Error")
         } else {
-            res.status(200).send("King bro, you have joined the classroom")
+            res.status(200).send("Success")
         }
     });
 });
@@ -154,21 +149,13 @@ router.post("/removeStudent", (req, res) => {
     const query = ('UPDATE users SET classRoom = ? WHERE name = ?')
     db.run(query, name, name, (err, result) => {
         if (err) {
-            console.log(err);
             res.status(500).send("server error");
         }
         if (result) {
-            console.log(result)
-            console.log("successfully updated")
             res.status(200).send("done")
         }
     })
 })
-const getNameFromToken = (req) => {
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
-    const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-    return payload.name;
-}
+
 
 module.exports = router;

@@ -149,9 +149,10 @@ const removeStudent =(userName) =>{
 }
 
 .row {
-  display: flex;
+  display: grid;
   justify-content: space-around;
   gap: 20px;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .createClassroomButton {
