@@ -248,8 +248,6 @@ onMounted(() =>{
   color:#EEEEEE;
 
 
-
-
 }
 
 .footerContent span {
