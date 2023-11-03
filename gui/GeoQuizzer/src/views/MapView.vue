@@ -64,10 +64,10 @@ async function handleResults() {
   const accessToken = await handleToken();
   console.log("token",accessToken)
 
-  await fetch(`http://localhost:8080/countryquiz/result`, {
+  await fetch(`http://localhost:8080/countryquiz/result?name=${generalStore.loggedInUser}`, {
     headers: {
-      'Content-Type': 'application/json'
-      ,'Authorization': `Bearer ${accessToken}`
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`
     },
     method: 'POST',
     body: JSON.stringify({
@@ -88,6 +88,7 @@ async function handleRegionClick(region) {
   if (!region) return;
   selectingRegions.value = false;
   includedCountries.value = await d3.json(`http://localhost:8080/countryquiz/${region}?shuffle=true`);
+
   question.value = includedCountries.value[0];
 
 }

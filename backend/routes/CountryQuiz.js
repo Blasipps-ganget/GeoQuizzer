@@ -1,18 +1,14 @@
-// import {getNameFromToken, authenticateToken} from '../routes/User'
-
 const sqlite3 = require('sqlite3');
 const express=require('express')
 const router=express.Router()
 const dbPath = './backend/database/geoquizzer.db'
-
-
 module.exports=router;
 express().use(express.json());
 
 router.post("/result", express.json(), (req, res) => {
     let userName = getNameFromToken(req);
     compareResults(req.body, userName)
-        .then(() => res.status(200).send("Successfully added to db"))
+        .then(() => res.status(200).send())
         .catch(err => console.log(err.message));
 });
 
@@ -64,7 +60,6 @@ async function compareResults(results, userName) {
         return;
     }
     let percent = Math.round((correctAnswers / results.answers.length) * 100);
-    console.log(percent);
 
     const data = {
         user_id,
@@ -119,6 +114,7 @@ async function getCountries(region) {
     db.close();
     return rows.map(row => row.name);
 }
+
 const getNameFromToken = (req) => {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]

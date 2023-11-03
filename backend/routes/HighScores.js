@@ -46,7 +46,6 @@ async function getRegions() {
 
 async function getPercentage(selectedQuiz, region, userId) {
   let regionId = 0;
-  console.log(region)
   switch (region) {
     case 'europe':
       regionId = 1;
@@ -96,28 +95,17 @@ async function getPercentage(selectedQuiz, region, userId) {
 
 async function performOperations(selectedQuiz, username) {
   const regions = await getRegions();
-  console.log(regions);
-
-  // get username
-  //   let userName = getNameFromToken(req);
-  // username = 'antom'
-  console.log(username)
-
   let jsonResult = '';
 
 
   const userId = await getIdFromName(username);
   let array = []
-  console.log('id =' + userId);
 
   if (userId !== null) {
 
-    for (i = 0; i < regions.length; i++) {
+    for (let i = 0; i < regions.length; i++) {
 
       const percentageResult2 = await getPercentage(selectedQuiz, regions[i], userId)
-      console.log('percentage result2')
-      console.log(percentageResult2);
-      // const percentageResult = 50;
       let regionStylized = '';
       switch (regions[i]) {
         case 'europe':
@@ -150,33 +138,9 @@ async function performOperations(selectedQuiz, username) {
 
   }
 
-  console.log('FRÅN PERFORM OPERATIONS')
-  console.log(jsonResult)
   return jsonResult;
 }
 
-
-
-/*
-
-
-SELECT COUNT(countries.name)
-FROM countries
-JOIN regions ON countries.region_id = regions.id
-WHERE regions.name = 'europe';
-
-
-
-SELECT MAX(points) AS highest_score
-FROM countryquiz
-WHERE user_id = 5;
-
-
-
-}
-
-
-*/
 
 const getNameFromToken = (req) => {
   const authHeader = req.headers['authorization']
@@ -191,10 +155,7 @@ const getNameFromToken = (req) => {
 router.get("/", (req, res) => {
   const selectedQuiz = req.query.quiz;
   const name = req.query.name
-  console.log(selectedQuiz);
-console.log("NN", name)
   performOperations(selectedQuiz, name).then((result) => {
-    console.log('---------' + result);
     return res.json(result);
   });
 
