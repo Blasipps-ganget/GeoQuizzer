@@ -374,9 +374,27 @@ right: auto;
       font-size: 30px;
       margin: 2%;
     }
-    .resultText {
-      font-size: 30px;
-    }
+
+    @media (max-width: 768px) {
+  .container {
+    max-width: 100%;
+    height: 100%;
+    overflow: scroll;
+    border: red;
+  }
+  .questionText {
+    padding-top: 0%;
+  }
+
+
+
+  .btn {
+    width: 150px; /* Adjusted button width to fit the screen width */
+    font-size: 16px; /* Adjusted font size for buttons on mobile */
+    height: 55px; /* Retained button height on mobile */
+    margin: 10px;
+  }
+}
   
    
  
