@@ -5,7 +5,7 @@ import ClickableMap from "@/components/ClickableMap.vue";
 import { useGeneralStore } from '@/stores/general';
 import router from "@/router";
 import HighScoreComponent from "@/components/HighScoreComponent.vue";
-const selectAmountOfQuestions = ref('5');
+const selectAmountOfQuestions = ref(5);
 const selectPracticeOrExam = ref("");
 const generalStore = useGeneralStore();
 const showSelectBox = ref(true);
@@ -42,7 +42,7 @@ function setToPractise() {
   if (isSetToExam.value === false) return;
   isSetToExam.value = false;
   showSelectBox.value = true;
-  selectAmountOfQuestions.value = '5';
+  selectAmountOfQuestions.value = 5;
   selectPracticeOrExam.value = 'practice';
 }
 
@@ -53,7 +53,7 @@ function setToExam() {
     return;
   }
 
-  selectAmountOfQuestions.value = '30';
+  selectAmountOfQuestions.value = 30;
   selectPracticeOrExam.value = 'exam';
   showSelectBox.value = false;
   isSetToExam.value = true;
