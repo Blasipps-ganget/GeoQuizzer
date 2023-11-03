@@ -21,7 +21,7 @@ import {ref, onMounted} from 'vue';
 import { useGeneralStore } from "../stores/general";
 import { useQuizStore } from "../stores/quiz";
 import { fetchCountryFlag } from "../js/flagApi";
-const quizFlagText = ref("Which flag does this country belong to?");
+const quizFlagText = ref("Which country does this flag belong to?");
 const flag = "flag";
 const generalStore = useGeneralStore();
 const quizStore = useQuizStore();

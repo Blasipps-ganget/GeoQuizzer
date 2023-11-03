@@ -22,9 +22,40 @@ headers: {
 }
 
 
-export const fetchCapital = async () => {
+export const fetchCapital = async (nrOfQuestions, region) => {
 
-    const infoToReturn = [{
+
+    //  const resp = await fetch(`http://localhost:8080/capitalquiz/getCapitalQuestions/${nrOfQuestions}/${region}`,{
+        
+      //})
+
+      //console.log(resp.json())
+
+        const response = await fetch(`http://localhost:8080/capitalquiz/getCapitalQuestions/${nrOfQuestions}/${region}`);
+    
+      
+    
+        if (!response.ok) {
+          throw new Error("Failed to fetch countries");
+        }
+        
+        const worldCountries = await response.json();
+        console.log(worldCountries)
+        const result = []
+        for(let index = 0; index < worldCountries.length; index++ ){
+          const info = {
+            land: worldCountries[index].name,
+            flagurl: worldCountries[index].flagUrl,
+            felsvar: worldCountries[index].wrongAnswers,
+            capital: worldCountries[index].capital
+          };
+            result.push(info)
+        }
+        
+        return result;
+      } 
+
+ /*    const infoToReturn = [{
         capital: "Stockholm",
         land: "Sweden",
         flagUrl: "https://mainfacts.com/media/images/coats_of_arms/se.svg",
@@ -42,7 +73,7 @@ export const fetchCapital = async () => {
       }]
   
       return infoToReturn;
-/*    try {
+    try {
       const response = await fetch(capitalQuizEndpoint + `getCapitalamount=${amount}`);
       
       if (!response.ok) {
@@ -56,5 +87,4 @@ export const fetchCapital = async () => {
       throw error; // Rethrow the error for handling in your component
   ^
   }
-  */
-  };
+   */
