@@ -31,15 +31,14 @@ const quizStore = useQuizStore();
 
 
 onMounted(async () => {
-  const questionData = await fetchCountryFlag(3);
-  console.log(questionData);
+  quizStore.currentQuestion = 0;
 });
 
 
 
 
 
-/* 
+/*
 let index = 0;
 
 

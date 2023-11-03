@@ -9,8 +9,8 @@ express().use(express.json());
 router.post("/postResult", express.json(), (req, res) => {
     let userName = getNameFromToken(req);
     compareResults(req.body, userName)
-        .then(() => res.sendStatus(200))
-        .catch(err => res.status(500).send({err}));
+        .then(() => res.status(200).send())
+        .catch(err => console.log(err.message));
 
 });
 
@@ -116,16 +116,25 @@ async function compareResults(results, userName) {
         console.log("User not found!");
         return;
     }
+    let percent = Math.round((correctAnswers / results.answers.length) * 100);
 
-    addToDb(user_id, correctAnswers, wrongAnswers, results.region).catch(err => console.log(err.message));
+    const data = {
+        user_id,
+        points: correctAnswers,
+        wrongAnswers,
+        maxPoints: results.answers.length,
+        percent,
+        region: results.region,
+    };
+    addToDb(data).catch(err => console.log(err.message));
 }
 
-async function addToDb(user_id, points, wrongAnswers, region) {
+async function addToDb(data) {
     const db = await connectToDatabase();
-    const attemptNr = await getAttemptNumber(user_id, db);
-    const region_id = await getRegionId(db, region);
-    const query = 'INSERT INTO capitalquiz (user_id, region_id, attemptNr, points, wrongAnswers) VALUES (?, ?, ?, ?, ?)';
-    db.run(query, [user_id, region_id, attemptNr, points, wrongAnswers], err => err ? console.log(err.message) : console.log("Successfully added to db"));
+    const attemptNr = await getAttemptNumber(data.user_id, db);
+    const region_id = await getRegionId(db, data.region);
+    const query = 'INSERT INTO capitalquiz (user_id, region_id, attemptNr, points, max_points, percent, wrongAnswers) VALUES (?, ?, ?, ?, ?,?,?)';
+    db.run(query, [data.user_id, region_id, attemptNr, data.points, data.maxPoints, data.percent, data.wrongAnswers], err => err ? console.log(err.message) : console.log("Successfully added to db"));
     db.close();
 }
 
@@ -156,5 +165,10 @@ function connectToDatabase() {
         const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE, (err) => err ? reject(err) : resolve(db));
     });
 }
-
+const getNameFromToken = (req) => {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+    const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    return payload.name;
+}
 module.exports = router;

@@ -207,12 +207,7 @@ const createRefreshToken = (name) => {
     }
     return jwt.sign(payload, refreshKey, {expiresIn: 50000});
 }
-const getNameFromToken = (req) => {
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
-    const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-    return payload.name;
-}
+
 
 module.exports = router;
 
