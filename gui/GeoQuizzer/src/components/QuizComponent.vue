@@ -4,7 +4,11 @@
     <div class="container">
       <div class="questionText" id="question-text">  {{ quizText }} <br>  {{ quizStore.capitalName  }}  </div>
       <div class="capital">
-      <img :src="quizStore.flagUrl" alt="Quiz" />
+        <img
+  :src="quizStore.flagUrl"
+  alt="Quiz"
+  :class="{ 'capital-flag': currentQuiz === 'capital', 'country-flag': currentQuiz === 'flag' }"
+/>
       </div>
       <div class="content" id="question-area">
         <div id="answer-btns" class="btn-grid">
@@ -24,8 +28,8 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { fetchCapital } from '../js/capitalApi';
 import { useQuizStore } from '../stores/quiz.js';
+import { fetchCapital, postCapitalResult } from '../js/capitalApi';
 import { fetchCountryFlag, postFlagResult } from '../js/flagApi';
 import { defineProps } from 'vue';
 import { useGeneralStore } from '../stores/general.js';
@@ -76,7 +80,6 @@ let buttonPressed = ref ('');
 let correctCountry = ref('');
 let message = ref ('');
 let landlist = [];
-let resultText = ref ('');
 const correctAnswersArray = [];
 const guessesArray = [];
 
@@ -250,11 +253,18 @@ const checkAnswer =  async (selectedAnswer) => {
     align-items: center;
   }
 
-  .capital img {
+
+  .capital-flag {
     width: 100%;
     height: 200px;
-    border: 2px solid black
     
+  }
+
+  .country-flag {
+    border: 2px solid black;
+    width: 300px;
+    height: 100%;
+
   }
 
     * {
