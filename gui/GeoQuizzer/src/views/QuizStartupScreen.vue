@@ -11,50 +11,24 @@ const generalStore = useGeneralStore();
 const showSelectBox = ref(true);
 const isSetToExam = ref(false);
 
-
-
 const message = computed(() => {
   if (generalStore.selectedQuiz === 'flags')
     return 'Learn the flags of the world';
   else if (generalStore.selectedQuiz === 'capitals')
     return 'Learn the capitals of the world';
   else return '';
-})
-
-function checkForLoggedIn() {
-console.log(generalStore.practiceOrExam)
-  if (!generalStore.isLoggedIn) {
-    alert('You need to be logged in to take an exam!')
-    setSelectedQuiz('practice')
-    isSetToExam.value = false;
-    return;
-  }
-  setSelectedQuiz('exam');
-
-  console.log(generalStore.practiceOrExam)
-}
-
-
-
-
+});
 
 
 function handleRegionClick(region) {
   generalStore.selectedRegion = region;
 }
 
-const toggleSelectBox = () => {
-  showSelectBox.value = !showSelectBox.value;
-  isSetToExam.value = !isSetToExam.value;
-};
-
 function startQuiz() {
-
   if (generalStore.selectedRegion === '') {
     alert('Please select a region');
     return;
   }
-
 
   generalStore.practiceOrExam = selectPracticeOrExam.value;
   generalStore.noQuestions = selectAmountOfQuestions.value;
@@ -65,15 +39,25 @@ function startQuiz() {
     router.push({path: '/capital'})
 }
 
+function setToPractise() {
+  if (isSetToExam.value === false) return;
+  isSetToExam.value = false;
+  showSelectBox.value = true;
+  selectAmountOfQuestions.value = '5';
+  selectPracticeOrExam.value = 'practice';
+}
 
+async function setToExam() {
+  if (isSetToExam.value === true) return;
+  if (!generalStore.isLoggedIn) {
+    alert("You need to be logged in to take an exam");
+    return;
+  }
 
-function setSelectedQuiz(quizToDo){
-  if (quizToDo === 'exam' && isSetToExam.value) return;
-  if (quizToDo === 'practice' && !isSetToExam.value) return;
-
-  selectPracticeOrExam.value !== quizToDo ? selectPracticeOrExam.value = quizToDo : selectPracticeOrExam.value = "";
-
-  console.log(selectPracticeOrExam.value);
+  selectAmountOfQuestions.value = '30';
+  selectPracticeOrExam.value = 'exam';
+  showSelectBox.value = false;
+  isSetToExam.value = true;
 }
 
 
@@ -95,11 +79,10 @@ function setSelectedQuiz(quizToDo){
         <div class="selectionButtons">
 
           <div class="onlyButtons">
-            <button :class="{ lightButton: !isSetToExam, blueButton: isSetToExam }"  @click="toggleSelectBox(); setSelectedQuiz('practice')">Practise</button>
-            <button :class="{ lightButton: isSetToExam, blueButton: !isSetToExam }"  @click="toggleSelectBox(); checkForLoggedIn()">Exam</button>
+            <button :class="{ lightButton: !isSetToExam, blueButton: isSetToExam }" @click="setToPractise">Practise</button>
+            <button :class="{ lightButton: isSetToExam, blueButton: !isSetToExam }" @click="setToExam">Exam</button>
             <div class="buttonContent">
               <button class="blueButton" @click="startQuiz()">Start Quiz</button>
-
             </div>
           </div>
           <div>
@@ -189,10 +172,10 @@ function setSelectedQuiz(quizToDo){
 }
 
 .masterCenter {
-  margin-top: 20px;
   display: flex;
   justify-content: center;
   flex-direction: row;
+  margin-bottom: 50px;
 }
 
 .selectionButtons {
