@@ -46,6 +46,7 @@ async function getRegions() {
 
 async function getPercentage(selectedQuiz, region, userId) {
   let regionId = 0;
+  console.log(region)
   switch (region) {
     case 'europe':
       regionId = 1;
@@ -189,9 +190,9 @@ const getNameFromToken = (req) => {
 
 router.get("/", (req, res) => {
   const selectedQuiz = req.query.quiz;
+  const name = req.query.name
   console.log(selectedQuiz);
-  const name = getNameFromToken(req);
-
+console.log("NN", name)
   performOperations(selectedQuiz, name).then((result) => {
     console.log('---------' + result);
     return res.json(result);
