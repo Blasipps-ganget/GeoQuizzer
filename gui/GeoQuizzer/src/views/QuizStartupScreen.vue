@@ -3,21 +3,21 @@
 import {ref, computed} from "vue";
 import ClickableMap from "@/components/ClickableMap.vue";
 import { useGeneralStore } from '@/stores/general';
-import {handleToken} from "@/js/userApi";
 import router from "@/router";
-
+import HighScoreComponent from "@/components/HighScoreComponent.vue";
 const selectAmountOfQuestions = ref(0);
 const selectPracticeOrExam = ref("");
 const buttonColor = ref('black');
 const generalStore = useGeneralStore();
 const showSelectBox = ref(false);
 
+
 const message = computed(() => {
   if (generalStore.selectedQuiz === 'flags')
     return 'Learn the flags of the world';
   else if (generalStore.selectedQuiz === 'capitals')
     return 'Learn the capitals of the world';
-  else return 'N/A';
+  else return '';
 })
 
 function handleRegionClick(region) {
@@ -43,43 +43,19 @@ const setSelectedQuiz = (quizToDo) => {
   console.log(selectPracticeOrExam.value);
 }
 
-async function getResults() {
-  const accessToken = await handleToken();
-  console.log(accessToken)
-  return fetch(`http://localhost:8080/highscores/?quiz=${generalStore.selectedQuiz}`, {
-    headers: {
-         'Authorization': `Bearer ${accessToken}`
-    },
-    method: 'GET',})
-    .then(response => response.json())
-    .catch(error => console.error('There has been a problem with your fetch operation:', error));
-}
-
-let results = '';
-await getResults().then((res) => { results = res });
-const resultsAsObject = JSON.parse(results);
-const region = resultsAsObject.highscores;
 
 </script>
 <template>
   <main>
     <div class="masterCenter">
-      <div class="noContentContainer">
+      <div class="leftContainer">
       </div>
       <div class="centerContent">
-        <section>
           <div class="mapContent">
             <h1 class="selectedQuizTitle">{{message}}</h1>
             <h2 class="selectRegionTitle">Select Region</h2>
-            <ClickableMap
-                @regionClicked="handleRegionClick"
-                :scale=112
-                :height=559
-                :width=700
-                :markRegion=true
-            />
+            <ClickableMap @regionClicked="handleRegionClick" :scale=112 :height=559 :width=700 :markRegion=true />
           </div>
-        </section>
         <div class="DifficultyInput">
           <p class="chooseDifficulty">Choose difficulty</p>
           <v-col cols="12" class="py-2">
@@ -95,8 +71,7 @@ const region = resultsAsObject.highscores;
               <v-btn class="buttonStart" density="default" rounded="l" @click="startQuiz()"><b>Start Quiz</b>
               </v-btn>
             </div>
-            <v-select class="selectBox"
-                      v-model="selectAmountOfQuestions"
+            <v-select class="selectBox" v-model="selectAmountOfQuestions"
                       v-if="showSelectBox"
                       label="Amount of questions"
                       :items="['5','10','15','20','30']"
@@ -106,13 +81,10 @@ const region = resultsAsObject.highscores;
         </div>
         <div/>
       </div>
-      <div class="progressContent">
-        <section class="regionProgressSection">
-          <h2>Best Result:</h2>
-          <div class="listRegions" v-for="(item,index) in region" :key="index">
-            {{item.region}} : {{item.percentage}}{{ item.percentage ? '%' : ''}}
-          </div>
-        </section>
+      <div class="rightContainer">
+        <div class="highScoreContainer">
+          <high-score-component> </high-score-component>
+        </div>
       </div>
     </div>
   </main>
@@ -120,34 +92,31 @@ const region = resultsAsObject.highscores;
 
 <style scoped>
 
-.listRegions {
-  font-size: larger;
-}
-
 .selectBox {
   margin-top: 35px;
 }
 
-.noContentContainer {
-  margin: auto;
-  width: 250px;
+.leftContainer{
+  width: calc(50% - 420px);
+  margin-left: auto;
+  margin-right: auto;
+  //border: black solid 5px;
 }
 
-.progressContent {
-  display: flex;
-  border: 1px solid black;
-  padding:10px;
-  height: 220px;
-  width: 250px;
+.rightContainer {
+  width: calc(50% - 420px);
   margin-right: auto;
   margin-left: auto;
-  margin-top: 100px;
-  background-color: #176B87;
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  border: black solid 5px;
+  gap: 40px;
 }
 
-.regionProgressSection {
-  color: #EEEEEE;
-  margin-left: 20px;
+.highScoreContainer{
+  margin-right: auto;
+  margin-top: 122px;
 }
 
 .buttonContent {
@@ -167,17 +136,34 @@ const region = resultsAsObject.highscores;
   box-shadow: 4px 7px 10px rgba(0,0,0,.4);
 }
 
-.masterCenter {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-}
-
 .centerContent {
   display: flex;
   justify-content: center;
   flex-direction: column;
   margin: auto;
+//border: black solid 5px;
+}
+
+.mapContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 840px;
+  margin-top: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+  box-shadow: 0 0 2px 2px;
+  border-radius: 8px;
+  max-width: 99vw;
+
+}
+
+.masterCenter {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .DifficultyInput {
@@ -195,16 +181,6 @@ const region = resultsAsObject.highscores;
   border-radius: 5px;
   margin-right: 10px;
   width: 50%;
-}
-
-#map {
-  height: 200px;
-  width: 200px;
-  background-color: rgb(128, 128, 128);
-}
-
-.mapContent {
-  text-align: center;
 }
 
 .chooseDifficulty {

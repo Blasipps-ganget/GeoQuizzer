@@ -245,6 +245,11 @@ async function setToExam() {
   gap: 40px;
 }
 
+.highScoreContainer{
+  margin-right: auto;
+  margin-left: 100px;
+}
+
 .buttonContainer {
   display: flex;
   flex-wrap: wrap;
@@ -260,10 +265,7 @@ async function setToExam() {
   border-radius: 8px;
 }
 
-.highScoreContainer{
-  margin-right: auto;
-  margin-left: 100px;
-}
+
 
 @media (max-width: 1800px) {
   .buttonContainer{

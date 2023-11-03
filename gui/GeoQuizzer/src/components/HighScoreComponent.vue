@@ -3,8 +3,6 @@ import {handleToken} from "@/js/userApi";
 import { useGeneralStore } from '@/stores/general';
 const generalStore = useGeneralStore();
 
-//TODO Dont forget to set correct generalStore in parent component or change to use props i think Kevin wants us to use props here
-
 async function getResults() {
   const accessToken = await handleToken();
   console.log(accessToken)
@@ -48,7 +46,6 @@ const region = resultsAsObject.highscores;
   box-shadow: 0 0 2px 2px black;
   border-radius: 8px;
   color: white;
-
 }
 
 
