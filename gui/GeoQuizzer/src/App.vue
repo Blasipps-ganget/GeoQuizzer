@@ -6,6 +6,7 @@ import LoginRegistrationModal from "@/components/LoginRegistrationModal.vue";
 import {useGeneralStore} from './stores/general.js';
 import {getName, isLoggedIn} from "@/js/userApi";
 import {onMounted, ref} from "vue";
+import router from "@/router";
 const loggedIn = ref(false);
 const generalStore = useGeneralStore()
 function selectQuiz(selection) {
@@ -22,16 +23,19 @@ const showModalRegister = () => {
   generalStore.showLoginModal = !generalStore.showLoginModal;
 }
 
-
-
 const logout = () =>{
-  console.log("logout")
+  document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  window.location.reload();
 }
 
 function closeHamburgerMenu() {
   const elMenuToggle = document.querySelector("#menu-toggle");
   elMenuToggle.checked = false;
 }
+onMounted(() =>{
+  generalStore.loggedInUser = getName()
+})
 
 </script>
 
@@ -96,7 +100,7 @@ function closeHamburgerMenu() {
       </div>
       <div class="buttonsTopRight">
         <v-btn class="custom-btn" density="default" rounded="xl" @click=" !generalStore.isLoggedIn ? showModalLogin() : this.$router.push({ path: '/' }); ">{{ !generalStore.isLoggedIn ? "login" : generalStore.loggedInUser}}</v-btn>
-        <v-btn class="custom-btn" density="default" rounded="xl" @click=" !generalStore.isLoggedIn ? showModalRegister(): logout();">{{ generalStore.isLoggedIn ? 'Register' : 'Logout' }}</v-btn>
+        <v-btn class="custom-btn" density="default" rounded="xl" @click=" !generalStore.isLoggedIn ? showModalRegister(): logout();">{{ !generalStore.isLoggedIn ? 'Register' : 'Logout' }}</v-btn>
 
       </div>
 
