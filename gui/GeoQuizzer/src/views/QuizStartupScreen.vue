@@ -1,53 +1,36 @@
 <script setup>
 
 import {ref, computed} from "vue";
-import LoginRegistrationModal from "@/components/LoginRegistrationModal.vue";
 import ClickableMap from "@/components/ClickableMap.vue";
-import { useGeneralStore } from '../stores/general.js';
-import {handleToken} from "@/js/userApi";
+import { useGeneralStore } from '@/stores/general';
 import router from "@/router";
-
-
-
-
-
+import HighScoreComponent from "@/components/HighScoreComponent.vue";
 const selectAmountOfQuestions = ref(0);
-const regions = ["Europe", "Asia", "America", "Oceania", "Africa"];
 const selectPracticeOrExam = ref("");
-const buttonColor = ref('black');
 const generalStore = useGeneralStore();
-const showSelectBox = ref(false);
+const showSelectBox = ref(true);
+const isSetToExam = ref(false);
 
 const message = computed(() => {
-  if (generalStore.selectedQuiz === 'flags') {
+  if (generalStore.selectedQuiz === 'flags')
     return 'Learn the flags of the world';
-  } else if (generalStore.selectedQuiz === 'capitals') {
+  else if (generalStore.selectedQuiz === 'capitals')
     return 'Learn the capitals of the world';
-  }
+  else return '';
 })
-
-function change() {
-
-  console.log(selectAmountOfQuestions.value);
-  console.log('change');
-}
 
 function handleRegionClick(region) {
   generalStore.selectedRegion = region;
 }
 
 const toggleSelectBox = () => {
-
   showSelectBox.value = !showSelectBox.value;
-
+  isSetToExam.value = !isSetToExam.value;
 };
 
 function startQuiz() {
-
   generalStore.practiceOrExam = selectPracticeOrExam.value;
-  // generalStore.noQuestions =
   generalStore.noQuestions = selectAmountOfQuestions.value;
-
 
   if (generalStore.selectedQuiz === 'flags')
     router.push({path: '/flag'});
@@ -59,315 +42,252 @@ const setSelectedQuiz = (quizToDo) => {
   selectPracticeOrExam.value !== quizToDo ? selectPracticeOrExam.value = quizToDo : selectPracticeOrExam.value = "";
   console.log(selectPracticeOrExam.value);
 }
-const getTabs = (region) => {
-  const regionLength = region.length;
-  if (regionLength > 4) {
-    return '&nbsp;'.repeat(regionLength - 4);
-
-  }
-  return '';
-}
-
-const headers = [
-  {title: 'Region', align: 'start', key: 'region'},
-  {title: 'Percentage', align: 'end', key: 'percentage'}
-
-]
-
-async function getResults() {
-  const accessToken = await handleToken();
-  console.log(accessToken)
-  return fetch(`http://localhost:8080/highscores/?quiz=${generalStore.selectedQuiz}`, {
-    headers: {
-         'Authorization': `Bearer ${accessToken}`
-    },
-    method: 'GET',})
-    .then(response => response.json())
-    //.then(data => data)
-    .catch(error => console.error('There has been a problem with your fetch operation:', error));
-}
-
-let results = '';
-await getResults().then((res) => { results = res });
-console.log(results)
-
-const resultsAsObject = JSON.parse(results);
-console.log(resultsAsObject)
-const region = resultsAsObject.highscores;
-console.log(region)
-
-
 
 
 </script>
-
 <template>
   <main>
     <div class="masterCenter">
-
-      <div class="noContentContainer">
-
-
+      <div class="leftContainer">
       </div>
       <div class="centerContent">
-
-        <section>
           <div class="mapContent">
             <h1 class="selectedQuizTitle">{{message}}</h1>
-            <h2 class="selectRegionTitle">Select Region</h2>
-
-            <ClickableMap
-                @regionClicked="handleRegionClick"
-                :scale=112
-                :height=559
-                :width=700
-                :markRegion=true
-            />
-
+            <h2 class="selectedRegionTitle">Select Region</h2>
+            <ClickableMap @regionClicked="handleRegionClick" :markRegion=true />
           </div>
-        </section>
-
-
-        <div class="DifficultyInput">
-
-          <p class="chooseDifficulty">Choose difficulty</p>
-
-          <v-col
-              cols="12"
-              class="py-2"
-          >
-
-            <v-btn-toggle
-                v-model:selected-class="buttonColor"
-                rounded="5"
-                color="blue"
-                group
-            >
-              <v-btn class="buttonsDifficulty" value="practice" @click="toggleSelectBox(); setSelectedQuiz('practice')">
-
-                Practice
-              </v-btn>
-
-              <v-btn class="buttonsDifficulty" value="Exam" @click="toggleSelectBox(); setSelectedQuiz('exam') ">
-
-
-                Exam
-              </v-btn>
-
-            </v-btn-toggle>
-
-            <div class="buttonContent">
-              <v-btn class="buttonStart" density="default" rounded="l" @click="startQuiz()"><b>Start Quiz</b>
-
-              </v-btn>
-            </div>
-
-            <!-- @update:modelValue="change()" -->
-            <v-select class="selectBox"
-
-                      v-model="selectAmountOfQuestions"
-                      v-if="showSelectBox"
-                      label="Amount of questions"
-                      :items="['5','10','15','20','30']"
-
-                      variant="solo-filled"
-            ></v-select>
-          </v-col>
-
-        </div>
         <div/>
       </div>
-      <div class="progressContent">
-        <section class="regionProgressSection">
+      <div class="rightContainer">
+        <div class="selectionButtons">
 
-          <h2>Best Result:</h2>
+          <div class="onlyButtons">
+            <button :class="{ lightButton: !isSetToExam, blueButton: isSetToExam }"  @click="toggleSelectBox(); setSelectedQuiz('practice')">Practise</button>
+            <button :class="{ lightButton: isSetToExam, blueButton: !isSetToExam }"  @click="toggleSelectBox(); setSelectedQuiz('exam')">Exam</button>
+            <div class="buttonContent">
+              <button class="blueButton" @click="startQuiz()">Start Quiz</button>
 
-          <div class="listRegions" v-for="(item,index) in region" :key="index">
-            {{item.region}} : {{item.percentage}}{{ item.percentage ? '%' : ''}}
+            </div>
           </div>
-        </section>
+          <div>
+            <v-select class="selectBox" v-model="selectAmountOfQuestions"
+                      v-if="showSelectBox"
+                      label="Nr of questions"
+                      :items="['5','10','15','20','30']"
+                      variant="solo-filled"
+            >
+            </v-select>
+          </div>
+        </div>
+        <div class="highScoreContainer">
+          <high-score-component v-if="generalStore.isLoggedIn"> </high-score-component>
+        </div>
+
       </div>
     </div>
-
-
   </main>
-  <!--  <LoginRegistrationModal></LoginRegistrationModal>-->
 </template>
 
 <style scoped>
 
-.listRegions {
-
-  font-size: larger;
-
-}
-
-
 .selectBox {
-
   margin-top: 35px;
-
+  width: 145px;
 }
 
-.noContentContainer {
-  margin: auto;
-  width: 250px;
-
+.leftContainer{
+  width: calc(50% - 500px);
+  margin-left: auto;
+  margin-right: auto;
 }
 
-
-.progressContent {
-
-  display: flex;
-
-  border: 1px solid black;
-
-  padding:10px;
-  height: 220px;
-  width: 250px;
+.rightContainer {
+  width: calc(50% - 500px);
   margin-right: auto;
   margin-left: auto;
-  margin-top: 100px;
-  background-color: #176B87;
-
-
-
-
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 
 }
 
-.regionProgressSection {
-
-  color: #EEEEEE;
-  margin-left: 20px;
-
-
+.onlyButtons {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: auto;
 
 }
 
-
-
+.highScoreContainer{
+  margin-right: auto;
+  margin-left: 100px;
+}
 
 .buttonContent {
-
   display: flex;
-  margin-top: 10px;
+
   flex-direction: column;
   justify-content: center;
-
-
-
-}
-
-.buttonStart {
-
-  background-color: #053B50;
-  color: #EEEEEE;
-  font-weight:bold;
-  margin-top: 20px;
-  font-size: 15px;
-  height: 50px;
-  box-shadow: 4px 7px 10px rgba(0,0,0,.4);
-
-}
-
-
-
-.masterCenter {
-
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-
-
 }
 
 .centerContent {
-
-
   display: flex;
   justify-content: center;
   flex-direction: column;
-
   margin: auto;
-
-
-
-
-
-}
-
-
-.DifficultyInput {
-
-
-  display: flex;
-  justify-content: center;
-  margin: auto;
-  flex-direction: column;
-  align-items: center;
-
-
-}
-
-.buttonsDifficulty {
-
-  background-color: #053B50;
-  color: #EEEEEE;
-  font-weight: bolder;
-  border-radius: 5px;
-  margin-right: 10px;
-  width: 50%;
-
-
-
-
-
-}
-
-
-
-
-#map {
-  height: 200px;
-  width: 200px;
-  background-color: rgb(128, 128, 128);
 }
 
 .mapContent {
-
-
-  text-align: center;
-
-
-
-
-
-}
-
-.chooseDifficulty {
-
-  color: #053B50;
-  font-weight: bold;
-  font-size: 20px;
-  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #176B87;
+  width: 1000px;
+  margin-top: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+  box-shadow: 0 0 2px 2px;
+  border-radius: 8px;
+  max-width: 99vw;
 
 }
 
-.selectRegionTitle {
+.masterCenter {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}
 
-  color: #053B50;
+.selectionButtons {
+  margin-right: auto;
+  margin-left: 100px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 0 2px 2px;
+  border-radius: 8px;
+  background: #176B87;
+  padding: 10px;
+  width: 200px;
+  height: 300px;
+}
+
+.selectedRegionTitle {
+  color: white;
   font-weight: bold;
   font-size: 20px;
   margin-top: 10px;
-
 }
 
 .selectedQuizTitle {
-
-  color: #053B50;
+  color: white;
   font-size: 40px;
-
-
 }
+
+.blueButton {
+  background-color: #053B50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  width: 150px;
+  height: 40px;
+  margin: 10px auto;
+  box-shadow: 4px 7px 10px rgba(0,0,0,.4);
+}
+
+.lightButton {
+  background-color: #64CCC5;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  width: 150px;
+  height: 40px;
+  margin: 10px auto;
+  box-shadow: 4px 7px 10px rgba(0,0,0,.4);
+}
+
+@media (max-width: 1800px) {
+  .selectionButtons{
+    margin-left: auto;
+  }
+  .highScoreContainer {
+    margin-left: auto;
+  }
+}
+
+
+@media (max-width: 1405px) {
+  .masterCenter {
+    flex-direction: column;
+  }
+  .rightContainer {
+    margin-top: 25px;
+    width: 100%;
+    flex-direction: row;
+  }
+  .selectionButtons{
+    margin-right: 0;
+  }
+  .highScoreContainer {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 800px) {
+  .selectedQuizTitle {
+    font-size: 30px;
+  }
+  .selectedRegionTitle {
+
+    font-size: 16px;
+    margin-top: 5px;
+  }
+}
+@media (max-width: 500px) {
+
+  .rightContainer {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .selectedQuizTitle {
+    font-size: 20px;
+  }
+  .selectedRegionTitle {
+
+    font-size: 12px;
+    margin-top: 5px;
+  }
+
+  .selectionButtons {
+    margin-left:  auto;
+    margin-right: auto;
+    margin-bottom: 15px;
+  }
+  .highScoreContainer {
+    margin: auto;
+  }
+}
+
+@media (max-width: 375px) {
+  .selectedQuizTitle {
+    font-size: 18px;
+  }
+  .selectedRegionTitle {
+
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  .rightContainer {
+    gap: 0;
+  }
+}
+
 </style>

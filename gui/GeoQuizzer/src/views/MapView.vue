@@ -60,6 +60,7 @@ async function handleResults() {
 
   generalStore.showResultModal = !generalStore.showResultModal;
   if (!isSetToExam.value) return;
+
   const accessToken = await handleToken();
   console.log("token",accessToken)
 
@@ -160,7 +161,6 @@ async function setToExam() {
       <div class="highScoreContainer" >
         <high-score-component v-if="generalStore.isLoggedIn && selectingRegions"> selectingRegions.value</high-score-component>
       </div>
-
     </div>
 
     <ResultModalComponent
@@ -209,6 +209,7 @@ async function setToExam() {
   width: 150px;
   height: 40px;
   margin: 10px auto;
+  box-shadow: 4px 7px 10px rgba(0,0,0,.4);
 }
 
 .lightButton {
@@ -221,6 +222,7 @@ async function setToExam() {
   width: 150px;
   height: 40px;
   margin: 10px auto;
+  box-shadow: 4px 7px 10px rgba(0,0,0,.4);
 }
 
 .progressBarContainer {
@@ -244,6 +246,11 @@ async function setToExam() {
   gap: 40px;
 }
 
+.highScoreContainer{
+  margin-right: auto;
+  margin-left: 100px;
+}
+
 .buttonContainer {
   display: flex;
   flex-wrap: wrap;
@@ -257,11 +264,6 @@ async function setToExam() {
   background: #176B87;
   box-shadow: 0 0 2px 2px;
   border-radius: 8px;
-}
-
-.highScoreContainer{
-  margin-right: auto;
-  margin-left: 100px;
 }
 
 @media (max-width: 1800px) {
