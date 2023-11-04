@@ -39,7 +39,6 @@ function startQuiz() {
 }
 
 function setToPractise() {
-  if (isSetToExam.value === false) return;
   isSetToExam.value = false;
   showSelectBox.value = true;
   selectAmountOfQuestions.value = 5;
@@ -47,7 +46,6 @@ function setToPractise() {
 }
 
 function setToExam() {
-  if (isSetToExam.value === true) return;
   if (!generalStore.isLoggedIn) {
     alert("You need to be logged in to take an exam");
     return;
@@ -81,7 +79,7 @@ function setToExam() {
             <v-btn :class="{ lightButton: !isSetToExam, blueButton: isSetToExam }" @click="setToPractise">Practise</v-btn>
             <v-btn :class="{ lightButton: isSetToExam, blueButton: !isSetToExam }" @click="setToExam">Exam</v-btn>
             <div class="buttonContent">
-              <v-btm class="blueButton" @click="startQuiz()">Start Quiz</v-btm>
+              <v-btn class="blueButton" @click="startQuiz()">Start Quiz</v-btn>
             </div>
           </div>
           <div>
@@ -216,7 +214,7 @@ function setToExam() {
   width: 150px;
   height: 40px !important;
   margin: 10px auto;
-  box-shadow: 4px 7px 10px rgba(0,0,0,.75);
+  box-shadow: 4px 7px 10px rgba(0,0,0,.4);
 }
 
 .lightButton {
@@ -231,7 +229,7 @@ function setToExam() {
   width: 150px;
   height: 40px !important;
   margin: 10px auto;
-  box-shadow: 4px 7px 10px rgba(0,0,0,.75);
+  box-shadow: 4px 7px 10px rgba(0,0,0,.4);
 }
 
 @media (max-width: 1800px) {
