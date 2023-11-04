@@ -126,13 +126,14 @@ function setToExam() {
 }
 
 </script>
-
+Learn the flags of the world
 <template>
   <div class="content">
     <div class="leftContainer"></div>
     <div class="centerContainer">
-      <div class="message" v-if="question">Where is: {{ question }}?</div>
-      <div class="message" v-else>Select region to start {{ quiz }}</div>
+      <h1 class="question" v-if="question">Where is: {{ question }}?</h1>
+      <h1 class="title" v-if="!question">Learn the countries of the world</h1>
+      <h2 class="selectRegion" v-if="!question"> Select region to start {{ quiz }}</h2>
       <ClickableMap
           :failedGuesses="failedGuesses"
           :succeededGuesses="succeededGuesses"
@@ -183,18 +184,22 @@ function setToExam() {
   align-items: center;
   background: #176B87;
   width: 1000px;
-  margin: 50px auto;
+  margin: 100px auto;
   padding: 20px;
   box-shadow: 0 0 2px 2px;
   border-radius: 8px;
   max-width: 99vw;
-
 }
 
-.message {
+.question, .title {
   color: white;
-  font-weight: bold;
   font-size: 40px;
+}
+
+.selectRegion {
+  color: white;
+  font-size: 30px;
+  margin-top: 5px;
 }
 
 .blueButton {
@@ -242,7 +247,7 @@ function setToExam() {
   width: calc(50% - 500px);
   margin-right: auto;
   margin-left: auto;
-  margin-top: 50px;
+  margin-top: 100px;
   display: flex;
   flex-direction: column;
   gap: 40px;
@@ -278,18 +283,22 @@ function setToExam() {
 
 }
 
-
 @media (max-width: 1405px) {
   .content {
     flex-direction: column;
   }
   .rightContainer {
-    margin-top: 25px;
     width: 100%;
     flex-direction: row;
+    margin-top: 0;
+  }
+
+  .centerContainer {
+    margin-bottom: 40px;
   }
   .buttonContainer{
     margin-right: 0;
+    margin-bottom: 80px;
   }
   .highScoreContainer {
     margin-left: 0;
@@ -297,13 +306,34 @@ function setToExam() {
 }
 
 @media (max-width: 800px) {
-  .message {
+
+
+  .question, .title {
+    color: white;
     font-size: 30px;
+  }
+
+  .selectRegion {
+    color: white;
+    font-size: 20px;
+
+  }
+
+  .rightContainer {
+    margin-bottom: 60px;
   }
 }
 @media (max-width: 500px) {
-  .message {
+
+
+  .question, .title {
+    color: white;
     font-size: 20px;
+  }
+
+  .selectRegion {
+    color: white;
+    font-size: 16px;
   }
   .rightContainer {
     gap: 5px;
@@ -311,7 +341,7 @@ function setToExam() {
 }
 
 @media (max-width: 375px) {
-  .message {
+  .title {
     font-size: 18px;
   }
   .rightContainer {

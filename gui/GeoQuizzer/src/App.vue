@@ -123,9 +123,16 @@ onMounted(() =>{
       <span>Social media</span>
     </div>
   </footer>
+  <div class="bottomFiller"></div>
 </template>
 
 <style scoped>
+
+.bottomFiller{
+  background-color: #176B87;
+  height: 100px;
+}
+
 
 /* CSS FOR HAMBURGER MENU */
 

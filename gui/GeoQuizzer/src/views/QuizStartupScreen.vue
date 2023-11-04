@@ -65,11 +65,9 @@ function setToExam() {
       <div class="leftContainer">
       </div>
       <div class="centerContent">
-          <div class="mapContent">
-            <h1 class="selectedQuizTitle">{{message}}</h1>
-            <h2 class="selectedRegionTitle">Select Region</h2>
-            <ClickableMap @regionClicked="handleRegionClick" :markRegion=true />
-          </div>
+          <h1 class="selectedQuizTitle">{{message}}</h1>
+          <h2 class="selectedRegionTitle">Select Region</h2>
+          <ClickableMap @regionClicked="handleRegionClick" :markRegion=true />
         <div/>
       </div>
       <div class="rightContainer">
@@ -117,12 +115,11 @@ function setToExam() {
 
 .rightContainer {
   width: calc(50% - 500px);
-  margin-right: auto;
-  margin-left: auto;
-  margin-top: 50px;
   display: flex;
   flex-direction: column;
   gap: 40px;
+  margin: 100px auto;
+
 
 }
 
@@ -147,32 +144,21 @@ function setToExam() {
 
 .centerContent {
   display: flex;
-  justify-content: center;
-  flex-direction: column;
-  margin: auto;
-}
-
-.mapContent {
-  display: flex;
   flex-direction: column;
   align-items: center;
   background: #176B87;
   width: 1000px;
-  margin-top: 50px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 100px auto;
   padding: 20px;
   box-shadow: 0 0 2px 2px;
   border-radius: 8px;
   max-width: 99vw;
-
 }
 
 .masterCenter {
   display: flex;
   justify-content: center;
   flex-direction: row;
-  margin-bottom: 50px;
 }
 
 .selectionButtons {
@@ -193,7 +179,7 @@ function setToExam() {
 .selectedRegionTitle {
   color: white;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 30px;
   margin-top: 10px;
 }
 
@@ -247,10 +233,15 @@ function setToExam() {
     flex-direction: column;
   }
   .rightContainer {
-    margin-top: 25px;
     width: 100%;
     flex-direction: row;
+    margin-top: 0;
+    margin-bottom: 40px;
   }
+  .centerContent {
+    margin-bottom: 40px;
+  }
+
   .selectionButtons{
     margin-right: 0;
   }
@@ -265,7 +256,7 @@ function setToExam() {
   }
   .selectedRegionTitle {
 
-    font-size: 16px;
+    font-size: 20px;
     margin-top: 5px;
   }
 }
@@ -280,8 +271,7 @@ function setToExam() {
   }
   .selectedRegionTitle {
 
-    font-size: 12px;
-    margin-top: 5px;
+    font-size: 16px;
   }
 
   .selectionButtons {
@@ -298,11 +288,7 @@ function setToExam() {
   .selectedQuizTitle {
     font-size: 18px;
   }
-  .selectedRegionTitle {
 
-    font-size: 14px;
-    margin-top: 5px;
-  }
   .rightContainer {
     gap: 0;
   }
