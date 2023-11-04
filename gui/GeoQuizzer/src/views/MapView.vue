@@ -113,18 +113,18 @@ function toggleZoom() {
 
 function setToPractise() {
   if (isSetToExam.value === false) return;
-  isSetToExam.value = !isSetToExam.value;
+  isSetToExam.value = false;
   quiz.value = "practise";
 }
 
-async function setToExam() {
+function setToExam() {
   if (isSetToExam.value === true) return;
   if (!generalStore.isLoggedIn) {
     alert("You need to be logged in to take an exam");
     return;
   }
 
-  isSetToExam.value = !isSetToExam.value;
+  isSetToExam.value = true;
   quiz.value = "exam";
 }
 
@@ -186,13 +186,12 @@ async function setToExam() {
   align-items: center;
   background: #176B87;
   width: 1000px;
-  margin-top: 50px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 50px auto;
   padding: 20px;
   box-shadow: 0 0 2px 2px;
   border-radius: 8px;
   max-width: 99vw;
+
 }
 
 .message {

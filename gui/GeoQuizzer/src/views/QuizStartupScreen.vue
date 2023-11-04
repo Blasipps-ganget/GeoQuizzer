@@ -5,12 +5,11 @@ import ClickableMap from "@/components/ClickableMap.vue";
 import { useGeneralStore } from '@/stores/general';
 import router from "@/router";
 import HighScoreComponent from "@/components/HighScoreComponent.vue";
-const selectAmountOfQuestions = ref(0);
+const selectAmountOfQuestions = ref(5);
 const selectPracticeOrExam = ref("");
 const generalStore = useGeneralStore();
 const showSelectBox = ref(true);
 const isSetToExam = ref(false);
-
 
 const message = computed(() => {
   if (generalStore.selectedQuiz === 'flags')
@@ -18,36 +17,18 @@ const message = computed(() => {
   else if (generalStore.selectedQuiz === 'capitals')
     return 'Learn the capitals of the world';
   else return '';
-})
-
-function checkForLoggedIn() {
-console.log(generalStore.practiceOrExam)
-  if (!generalStore.isLoggedIn) {
-    alert('You need to be logged in to take an exam!')
-    setSelectedQuiz('practice')
-    isSetToExam.value = false;
-    return;
-  }
-  setSelectedQuiz('exam');
-
-  console.log(generalStore.practiceOrExam)
-}
-
-
-
-
-
+});
 
 function handleRegionClick(region) {
   generalStore.selectedRegion = region;
 }
 
-const toggleSelectBox = () => {
-  showSelectBox.value = !showSelectBox.value;
-  isSetToExam.value = !isSetToExam.value;
-};
-
 function startQuiz() {
+  if (generalStore.selectedRegion === '') {
+    alert('Please select a region');
+    return;
+  }
+
   generalStore.practiceOrExam = selectPracticeOrExam.value;
   generalStore.noQuestions = selectAmountOfQuestions.value;
 
@@ -57,13 +38,25 @@ function startQuiz() {
     router.push({path: '/capital'})
 }
 
-const setSelectedQuiz = (quizToDo) => {
-  if (quizToDo === 'exam' && isSetToExam.value) return;
-  if (quizToDo === 'practice' && !isSetToExam.value) return;
+function setToPractise() {
+  if (isSetToExam.value === false) return;
+  isSetToExam.value = false;
+  showSelectBox.value = true;
+  selectAmountOfQuestions.value = 5;
+  selectPracticeOrExam.value = 'practice';
+}
 
-  selectPracticeOrExam.value !== quizToDo ? selectPracticeOrExam.value = quizToDo : selectPracticeOrExam.value = "";
+function setToExam() {
+  if (isSetToExam.value === true) return;
+  if (!generalStore.isLoggedIn) {
+    alert("You need to be logged in to take an exam");
+    return;
+  }
 
-  console.log(selectPracticeOrExam.value);
+  selectAmountOfQuestions.value = 30;
+  selectPracticeOrExam.value = 'exam';
+  showSelectBox.value = false;
+  isSetToExam.value = true;
 }
 
 
@@ -85,11 +78,10 @@ const setSelectedQuiz = (quizToDo) => {
         <div class="selectionButtons">
 
           <div class="onlyButtons">
-            <button  :class="{ lightButton: !isSetToExam, blueButton: isSetToExam }"  @click="toggleSelectBox(); setSelectedQuiz('practice')">Practise</button>
-            <button :class="{ lightButton: isSetToExam, blueButton: !isSetToExam }"  @click="toggleSelectBox(); checkForLoggedIn()">Exam</button>
+            <button :class="{ lightButton: !isSetToExam, blueButton: isSetToExam }" @click="setToPractise">Practise</button>
+            <button :class="{ lightButton: isSetToExam, blueButton: !isSetToExam }" @click="setToExam">Exam</button>
             <div class="buttonContent">
               <button class="blueButton" @click="startQuiz()">Start Quiz</button>
-
             </div>
           </div>
           <div>
@@ -97,9 +89,9 @@ const setSelectedQuiz = (quizToDo) => {
                       v-if="showSelectBox"
                       label="Nr of questions"
                       :items="['5','10','15','20','30']"
-                      variant="solo-filled"
-            >
+                      variant="solo-filled">
             </v-select>
+
           </div>
         </div>
         <div class="highScoreContainer">
@@ -179,10 +171,10 @@ const setSelectedQuiz = (quizToDo) => {
 }
 
 .masterCenter {
-  margin-top: 20px;
   display: flex;
   justify-content: center;
   flex-direction: row;
+  margin-bottom: 50px;
 }
 
 .selectionButtons {
