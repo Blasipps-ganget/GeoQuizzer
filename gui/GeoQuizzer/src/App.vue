@@ -303,23 +303,21 @@ onMounted(() =>{
 }
 
 .buttonSpaceCompensation {
-  width: 20px;
+  width: 30px;
 }
 
 .custom-btn {
-
   text-transform: none;
   font-family: initial;
   font-size: 16px;
   background-color: #053B50;
+  color: white;
   display: flex;
-  color: #EEEEEE;
-  width: 120px;
+  width: 150px;
   padding: 20px;
   margin: 10px;
   border-radius: 5px;
-  box-shadow: 1px 3px 5px 0 rgba(0,0,0,0.75);
-
+  box-shadow: 4px 7px 10px rgba(0,0,0,.75);
 }
 
 .bigMenu {

@@ -149,10 +149,10 @@ function setToExam() {
     </div>
     <div class="rightContainer">
       <div class="buttonContainer">
-        <button :class="{ lightButton: isZoomEnabled, blueButton: !isZoomEnabled }" @click="toggleZoom">Enable zoom</button>
-        <button :class="{ lightButton: !isSetToExam, blueButton: isSetToExam }" v-if="selectingRegions" @click="setToPractise">Practise</button>
-        <button :class="{ lightButton: isSetToExam, blueButton: !isSetToExam }" v-if="selectingRegions" @click="setToExam">Exam</button>
-        <button class="blueButton" v-if="!selectingRegions" @click="resetQuiz">Exit Quiz</button>
+        <v-btn :class="{ lightButton: isZoomEnabled, blueButton: !isZoomEnabled }" @click="toggleZoom">Enable zoom</v-btn>
+        <v-btn :class="{ lightButton: !isSetToExam, blueButton: isSetToExam }" v-if="selectingRegions" @click="setToPractise">Practise</v-btn>
+        <v-btn :class="{ lightButton: isSetToExam, blueButton: !isSetToExam }" v-if="selectingRegions" @click="setToExam">Exam</v-btn>
+        <v-btn class="blueButton" v-if="!selectingRegions" @click="resetQuiz">Exit Quiz</v-btn>
         <div class="progressBarContainer">
           <ProgressBarComponent v-if="!selectingRegions"
                                 :amountAnswered="failedGuesses.length + succeededGuesses.length"
@@ -202,28 +202,32 @@ function setToExam() {
 
 .blueButton {
   background-color: #053B50;
+  text-transform: none;
+  font-family: initial;
   color: white;
   border: none;
   padding: 10px 20px;
   font-size: 16px;
   border-radius: 5px;
   width: 150px;
-  height: 40px;
+  height: 40px !important;
   margin: 10px auto;
-  box-shadow: 4px 7px 10px rgba(0,0,0,.4);
+  box-shadow: 4px 7px 10px rgba(0,0,0,.75);
 }
 
 .lightButton {
   background-color: #64CCC5;
+  text-transform: none;
+  font-family: initial;
   color: white;
   border: none;
   padding: 10px 20px;
   font-size: 16px;
   border-radius: 5px;
   width: 150px;
-  height: 40px;
+  height: 40px !important;
   margin: 10px auto;
-  box-shadow: 4px 7px 10px rgba(0,0,0,.4);
+  box-shadow: 4px 7px 10px rgba(0,0,0,.75);
 }
 
 .progressBarContainer {

@@ -78,10 +78,10 @@ function setToExam() {
         <div class="selectionButtons">
 
           <div class="onlyButtons">
-            <button :class="{ lightButton: !isSetToExam, blueButton: isSetToExam }" @click="setToPractise">Practise</button>
-            <button :class="{ lightButton: isSetToExam, blueButton: !isSetToExam }" @click="setToExam">Exam</button>
+            <v-btn :class="{ lightButton: !isSetToExam, blueButton: isSetToExam }" @click="setToPractise">Practise</v-btn>
+            <v-btn :class="{ lightButton: isSetToExam, blueButton: !isSetToExam }" @click="setToExam">Exam</v-btn>
             <div class="buttonContent">
-              <button class="blueButton" @click="startQuiz()">Start Quiz</button>
+              <v-btm class="blueButton" @click="startQuiz()">Start Quiz</v-btm>
             </div>
           </div>
           <div>
@@ -206,28 +206,32 @@ function setToExam() {
 
 .blueButton {
   background-color: #053B50;
+  text-transform: none;
+  font-family: initial;
   color: white;
   border: none;
   padding: 10px 20px;
   font-size: 16px;
   border-radius: 5px;
   width: 150px;
-  height: 40px;
+  height: 40px !important;
   margin: 10px auto;
-  box-shadow: 4px 7px 10px rgba(0,0,0,.4);
+  box-shadow: 4px 7px 10px rgba(0,0,0,.75);
 }
 
 .lightButton {
   background-color: #64CCC5;
+  text-transform: none;
+  font-family: initial;
   color: white;
   border: none;
   padding: 10px 20px;
   font-size: 16px;
   border-radius: 5px;
   width: 150px;
-  height: 40px;
+  height: 40px !important;
   margin: 10px auto;
-  box-shadow: 4px 7px 10px rgba(0,0,0,.4);
+  box-shadow: 4px 7px 10px rgba(0,0,0,.75);
 }
 
 @media (max-width: 1800px) {
