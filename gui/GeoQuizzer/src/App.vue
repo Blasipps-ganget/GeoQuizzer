@@ -87,6 +87,9 @@ onMounted(() =>{
       </ul>
 
     </div>
+
+
+<div class="buttonSpaceCompensation"></div>
     <div class="logo">
 
       <RouterLink to="/"><img src="./assets/images/logga.png" alt=""></RouterLink>
@@ -100,8 +103,8 @@ onMounted(() =>{
 
       </div>
       <div class="buttonsTopRight">
-        <v-btn class="custom-btn" density="default" rounded="xl" @click=" !generalStore.isLoggedIn ? showModalLogin() : this.$router.push({ path:`/userProfile/${generalStore.loggedInUser}` }); ">{{ !generalStore.isLoggedIn ? "login" : generalStore.loggedInUser}}</v-btn>
-        <v-btn class="custom-btn" density="default" rounded="xl" @click=" !generalStore.isLoggedIn ? showModalRegister(): logout();">{{ !generalStore.isLoggedIn ? 'Register' : 'Logout' }}</v-btn>
+        <v-btn class="custom-btn" density="default"  @click=" !generalStore.isLoggedIn ? showModalLogin() : this.$router.push({ path:`/userProfile/${generalStore.loggedInUser}` }); ">{{ !generalStore.isLoggedIn ? "login" : generalStore.loggedInUser}}</v-btn>
+        <v-btn class="custom-btn" density="default"  @click=" !generalStore.isLoggedIn ? showModalRegister(): logout();">{{ !generalStore.isLoggedIn ? 'Register' : 'Logout' }}</v-btn>
 
       </div>
 
@@ -299,17 +302,23 @@ onMounted(() =>{
   font-size: larger;
 }
 
+.buttonSpaceCompensation {
+  width: 20px;
+}
+
 .custom-btn {
 
+  text-transform: none;
+  font-family: initial;
+  font-size: 16px;
   background-color: #053B50;
   display: flex;
   color: #EEEEEE;
-  font-weight: bolder;
-  width: 85px;
+  width: 120px;
   padding: 20px;
   margin: 10px;
-  border-radius: 15px;
-  box-shadow: 1px 3px 5px 0px rgba(0,0,0,0.75);
+  border-radius: 5px;
+  box-shadow: 1px 3px 5px 0 rgba(0,0,0,0.75);
 
 }
 

@@ -274,6 +274,7 @@ function setToExam() {
   .highScoreContainer {
     margin-left: auto;
   }
+
 }
 
 
