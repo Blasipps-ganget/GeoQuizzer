@@ -93,12 +93,10 @@ const displayNext = async () => {
     generalStore.showResultModal = true;
     if (props.currentQuiz === "capital") {
       await postCapitalResult(correctAnswersArray, guessesArray, generalStore.selectedRegion)
+      quizStore.correctAmount = 0;
     } else {
-      await postFlagResult(
-          correctAnswersArray,
-          guessesArray,
-          generalStore.selectedRegion
-      )
+      await postFlagResult(correctAnswersArray, guessesArray, generalStore.selectedRegion)
+      quizStore.correctAmount = 0;
     }
   } else {
     generateRandomAnswers();

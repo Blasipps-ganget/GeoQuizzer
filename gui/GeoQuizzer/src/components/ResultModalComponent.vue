@@ -55,7 +55,7 @@ console.log(noQuestions);
           </div>
           <div>
             <button v-if="mapView" class="retryButton" @click="generalStore.showResultModal = false">Select region</button>
-            <RouterLink v-else to="/quiz" @click="generalStore.showResultModal = false" class="retryButton">Retry the quiz</RouterLink>
+            <RouterLink v-else to="/quiz" @click="generalStore.showResultModal = false" class="retryButton">Select region</RouterLink>
             <RouterLink to="/" class="retryButton" @click="generalStore.showResultModal = false">Return home</RouterLink>
           </div>
         </div>
