@@ -111,7 +111,7 @@ router.get("/getClassroomInvite/:name", (req, res) => {
     const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE);
     let inviteLink = `http://localhost:5173/joinclass/`;
 
-    const {name } = req.params;
+    const {name} = req.params;
     const query = 'SELECT classRoom FROM users WHERE name = ?'
     if (name) {
         db.get(query, name, (err, result) => {
@@ -131,11 +131,10 @@ router.get("/getClassroomInvite/:name", (req, res) => {
 
 router.get("/joinclass/:link/:name", (req, res) => {
     const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE);
-    const {link, name } = req.params;
+    const {link, name} = req.params;
     const query2 = 'UPDATE users SET classRoom = ? WHERE name = ?'
     db.run(query2, link, name, (err) => {
         if (err) {
-            console.error("Error joining classroom", err)
             res.status(500).send("Error")
         } else {
             res.status(200).send("Success")
@@ -156,6 +155,5 @@ router.post("/removeStudent", (req, res) => {
         }
     })
 })
-
 
 module.exports = router;

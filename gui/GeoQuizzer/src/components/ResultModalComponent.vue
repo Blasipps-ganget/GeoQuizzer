@@ -1,7 +1,9 @@
 <script setup>
-import { useGeneralStore } from '@/stores/general';
+import {useGeneralStore} from '@/stores/general';
+
 const generalStore = useGeneralStore();
-import { computed } from 'vue';
+import {computed} from 'vue';
+
 const props = defineProps({
   correctGuesses: Number,
   noQuestions: Number,
@@ -12,18 +14,12 @@ const correctGuesses = props.correctGuesses;
 const noQuestions = props.noQuestions;
 
 const passed = computed(() => {
-  return correctGuesses/parseFloat(noQuestions) >= 0.6;
+  return correctGuesses / parseFloat(noQuestions) >= 0.6;
 })
 
 const percentage = computed(() => {
-  return Math.trunc(correctGuesses/parseFloat(noQuestions) * 100);
+  return Math.trunc(correctGuesses / parseFloat(noQuestions) * 100);
 })
-
-console.log(passed.value)
-console.log(percentage.value)
-console.log(correctGuesses);
-console.log(noQuestions);
-
 
 </script>
 
@@ -32,7 +28,11 @@ console.log(noQuestions);
     <div class="modal-wrapper">
       <div class="modal-content">
         <div class="header-grid">
-          <div class="grid-item"><button class="x-icon" @click="generalStore.showResultModal = false"><img alt="x" class="x-icon" src="../assets/images/icons/x-icon.png"></button></div>
+          <div class="grid-item">
+            <button class="x-icon" @click="generalStore.showResultModal = false"><img alt="x" class="x-icon"
+                                                                                      src="../assets/images/icons/x-icon.png">
+            </button>
+          </div>
           <div class="grid-item"><h1>The quiz is done!</h1></div>
         </div>
         <div class="center-content">
@@ -43,7 +43,7 @@ console.log(noQuestions);
           <div><h2>RESULTS</h2></div>
           <div class="result-boxes">
             <div class="result-box"><h1>{{ correctGuesses }} / {{ noQuestions }}</h1></div>
-            <div class="result-box"><h1>{{ percentage}}%</h1></div>
+            <div class="result-box"><h1>{{ percentage }}%</h1></div>
           </div>
 
           <div v-if="passed" class="passed">
@@ -54,9 +54,13 @@ console.log(noQuestions);
             The limit was {{ Math.trunc(0.6 * noQuestions) }}
           </div>
           <div>
-            <button v-if="mapView" class="retryButton" @click="generalStore.showResultModal = false">Select region</button>
-            <RouterLink v-else to="/quiz" @click="generalStore.showResultModal = false" class="retryButton">Select region</RouterLink>
-            <RouterLink to="/" class="retryButton" @click="generalStore.showResultModal = false">Return home</RouterLink>
+            <button v-if="mapView" class="retryButton" @click="generalStore.showResultModal = false">Select region
+            </button>
+            <RouterLink v-else to="/quiz" @click="generalStore.showResultModal = false" class="retryButton">Select
+              region
+            </RouterLink>
+            <RouterLink to="/" class="retryButton" @click="generalStore.showResultModal = false">Return home
+            </RouterLink>
           </div>
         </div>
       </div>
@@ -69,9 +73,11 @@ console.log(noQuestions);
 .passed {
   height: 40px;
 }
+
 .failed {
   height: 65px;
 }
+
 .retryButton {
   background: #053B50;
   border-radius: 15px;
@@ -171,7 +177,6 @@ a {
     padding: 15px;
     margin: 20px;
   }
-
 }
 
 </style>

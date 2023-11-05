@@ -6,7 +6,6 @@ const generalStore = useGeneralStore()
 
 const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-// const loginOption = ref(true)
 const name = ref('');
 const email = ref('');
 const password = ref('');

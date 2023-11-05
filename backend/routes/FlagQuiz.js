@@ -11,16 +11,14 @@ router.post("/postResult", express.json(), (req, res) => {
     compareResults(req.body, userName)
         .then(() => res.status(200).send())
         .catch(err => console.log(err.message));
-
 });
 
 router.get("/getFlagQuestions/:nrOfQuestions/:region", async (req, res) => {
-
     const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE);
     let nrOfQuestions = req.params.nrOfQuestions
     const region = req.params.region
-
     const query = ('SELECT COUNT(countries.id) AS count FROM countries WHERE region_id = (SELECT id FROM regions WHERE name = ?)')
+
     await db.get(query, region, async (err, result) => {
         if (err) console.error(err)
         if (result) {
@@ -31,7 +29,6 @@ router.get("/getFlagQuestions/:nrOfQuestions/:region", async (req, res) => {
             }
         }
     })
-
 });
 
 const getRandomCountries = (region, amount) => {
@@ -98,7 +95,6 @@ const fetchCountries = async (region, amount) => {
             }
         }
     }
-    console.log(results);
     return results
 };
 

@@ -7,6 +7,7 @@ import {faPlus} from '@fortawesome/free-solid-svg-icons';
 import {getInviteLink} from '../js/classroomApi';
 import {getClassroomData} from '../js/classroomApi';
 import {onMounted, ref} from 'vue';
+
 library.add(faPlus);
 
 const students = ref([]);
@@ -19,9 +20,8 @@ onMounted(async () => {
   try {
     students.value = await getClassroomData();
     inviteLink.value = await getInviteLink();
-
   } catch (err) {
-    console.error('Error fetching invitelink', err)
+    console.error('Error fetching invitelink')
   }
 });
 
@@ -35,8 +35,8 @@ function copyText() {
   navigator.clipboard.writeText(textField.value);
   isClicked.value = true;
 }
-const removeStudent =(userName) =>{
-  console.log("REMOVING")
+
+const removeStudent = (userName) => {
   students.value.students = students.value.students.filter(student => !(userName === student.username))
 }
 
@@ -44,7 +44,7 @@ const removeStudent =(userName) =>{
 <template>
   <div class="classroomContainer">
     <div class="headerSection">
-      <h1 class="classroomTitle">Welcome to {{students.owner}}'s classroom!</h1>
+      <h1 class="classroomTitle">Welcome to {{ students.owner }}'s classroom!</h1>
       <h2 class="studentTitle">Students</h2>
     </div>
     <ClassroomPopUp :open="isOpen" @close="isOpen = !isOpen">
@@ -71,7 +71,7 @@ const removeStudent =(userName) =>{
               :flags="student.totalFlag"
               :capitals="student.totalCapital"
               :owner="student.username === students.owner"
-              @remove-student = "removeStudent"
+              @remove-student="removeStudent"
           />
         </div>
       </div>
@@ -79,12 +79,8 @@ const removeStudent =(userName) =>{
         <v-btn @click="createClassAndOpen" class="createClassroomButton" size="small" density="default" rounded="l">Get
           invite link
         </v-btn>
-
-
       </div>
-
     </div>
-
   </div>
 </template>
 
@@ -92,6 +88,7 @@ const removeStudent =(userName) =>{
 .green-button {
   background-color: green;
 }
+
 .form {
   justify-content: center;
   display: flex;
@@ -190,23 +187,20 @@ const removeStudent =(userName) =>{
   text-align: center;
 }
 
-@media (max-width: 1050px)
-{
-  .row{
+@media (max-width: 1050px) {
+  .row {
     grid-template-columns: 1fr 1fr;
   }
 }
 
-@media (max-width: 650px)
-{
-  .row{
+@media (max-width: 650px) {
+  .row {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 500px)
-{
-  .headerSection{
+@media (max-width: 500px) {
+  .headerSection {
     text-align: center;
   }
 }

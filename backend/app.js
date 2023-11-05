@@ -1,13 +1,12 @@
-const express=require('express')
-const router=express.Router()
+const express = require('express')
+const router = express.Router()
 const cors = require('cors');
 const cookieparser = require('cookie-parser');
 
-const app=express();
-const PORT=8080
+const app = express();
+const PORT = 8080
 
 const capitalQuizRoute = require('./routes/CapitalQuiz')
-const countriesRoute = require('./routes/Countries')
 const countryQuizRoute = require('./routes/CountryQuiz')
 const flagQuizRoute = require('./routes/FlagQuiz')
 const userRoute = require('./routes/User')
@@ -31,18 +30,13 @@ app.use(authenticateToken)
 app.use("/capitalquiz", capitalQuizRoute);
 app.use("/flagquiz", flagQuizRoute);
 app.use("/countryquiz", countryQuizRoute);
-app.use("/countries", countriesRoute);
-app.use("/countries", countriesRoute);
 app.use("/userProfile", profileRoute);
+app.use("/highscores", highScoreRoute);
 
 app.listen(PORT, () => console.log(serverStartUpMessage));
 
-app.use("/highscores", highScoreRoute);
-
-
 router.get("/", (req, res) => {
     res.send('Content-Type', 'application/json');
-
 });
 
 const serverStartUpMessage = (`    _____                              _                                               
@@ -58,23 +52,20 @@ const serverStartUpMessage = (`    _____                              _
  |_.__/  \\__,_| \\___||_|\\_\\\\___||_| |_| \\__,_| |___/ \\__|\\__,_||_|    \\__|\\___| \\__,_|
                                                                                       
                                                                                        `);
-
 module.exports = router;
-function authenticateToken(req, res, next) {
-    if(req.method === 'POST'){
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
-    if (token == null) return res.sendStatus(401)
 
-    jwt.verify(token, jwtsecretkey, (err, user) => {
-        console.log("err")
-        if (err){
-            console.log("error", err)
-            return res.sendStatus(403)
-        }
-        console.log('user', user)
-        next()
-    });
+function authenticateToken(req, res, next) {
+    if (req.method === 'POST') {
+        const authHeader = req.headers['authorization']
+        const token = authHeader && authHeader.split(' ')[1]
+        if (token == null) return res.sendStatus(401)
+
+        jwt.verify(token, jwtsecretkey, (err, user) => {
+            if (err) {
+                return res.sendStatus(403)
+            }
+            next()
+        });
     }
     next();
 }

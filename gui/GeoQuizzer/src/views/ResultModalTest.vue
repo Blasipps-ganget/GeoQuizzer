@@ -1,9 +1,8 @@
 <script setup>
-import { ref } from 'vue'
 import ResultModalComponent from "@/components/ResultModalComponent.vue";
-import { useGeneralStore } from '../stores/general.js';
-const generalStore = useGeneralStore();
+import {useGeneralStore} from '../stores/general.js';
 
+const generalStore = useGeneralStore();
 
 </script>
 
@@ -13,7 +12,6 @@ const generalStore = useGeneralStore();
   </div>
   <ResultModalComponent correctGuesses="6" noQuestions="10" v-if="generalStore.showResultModal"></ResultModalComponent>
 </template>
-
 
 <style scoped>
 .buttonView {

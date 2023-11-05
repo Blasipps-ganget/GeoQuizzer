@@ -2,9 +2,6 @@ const userEndpoint = "http://localhost:8080/user/"
 const loginEndpoint = userEndpoint + "login";
 const registerEndpoint = userEndpoint + "signup";
 export const login = async (userLog) => {
-    const accessToken = handleToken();
-    console.log(userLog)
-    console.log(accessToken)
     return fetch(loginEndpoint, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -18,8 +15,7 @@ export const login = async (userLog) => {
         } else if (response.status === 401) {
             return null
         }
-    }).catch((error) => {
-        console.log(error)
+    }).catch(() => {
         return false;
     })
 }
@@ -36,17 +32,14 @@ export const signUpRest = (userReg) => {
             document.cookie = `refreshToken=${refreshToken}; path=/;`;
             return response.status === 201 ? parseJwt(token).name : 'login'
         }
-    }).catch((error) => {
-        console.log(error);
+    }).catch(() => {
         return false;
     })
 }
 
-
 export const getToken = () => {
     const cookies = document.cookie;
     const cookieArray = cookies.split('; ');
-
     let accessToken = null;
     let refreshToken = null;
 
@@ -92,7 +85,6 @@ export const refreshToken = async () => {
 
 export const isLoggedIn = async () => {
     const isValid = await checkValidity();
-    console.log("isvalid", isValid)
     if (isValid) {
         return true;
     } else {
@@ -100,7 +92,7 @@ export const isLoggedIn = async () => {
     }
 }
 
-export const getName =  () => {
+export const getName = () => {
     const {accessToken} = getToken();
     if (accessToken) {
         const payload = parseJwt(accessToken)
@@ -127,8 +119,3 @@ const parseJwt = (token) => {
         return null;
     }
 };
-
-export const logout = () =>{
-
-}
-

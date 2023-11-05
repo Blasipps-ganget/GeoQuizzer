@@ -6,76 +6,77 @@ import {removeStudent} from "@/js/classroomApi";
 
 const emit = defineEmits(['removeStudent'])
 defineProps({
-      image: {
-          type: String,
-          required:true,
-      },
-        name: {
-            type:String,
-            required: true,
-        },
-        countries: {
-            type: Number,
-            required: true,
-        },
-        flags: {
-        type: Number,
-        required: true,
-      },
-      capitals: {
-        type: Number,
-        required: true,
-      },
-      owner:{
-        type: Boolean,
-        required: true,
-      }
+  image: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  countries: {
+    type: Number,
+    required: true,
+  },
+  flags: {
+    type: Number,
+    required: true,
+  },
+  capitals: {
+    type: Number,
+    required: true,
+  },
+  owner: {
+    type: Boolean,
+    required: true,
+  }
 });
-const removeFromClassRoom = (userName) =>{
-    removeStudent(userName)
+
+const removeFromClassRoom = (userName) => {
+  removeStudent(userName)
   console.log("emit")
-    emit('removeStudent', userName)
+  emit('removeStudent', userName)
 }
 
 </script>
 <template>
-        <div class="profile">
-          <div class="studentInformation">
-          <span class="studentName">Name: {{name}} </span>
-            <div class="imgContent">
-              <RouterLink :to="`/userProfile/${name}`">
-              <img class="studentImg" src="../assets/images/icons/user.png" alt="">
-              </RouterLink>
-            </div>
-            <div class="studentContent">
-            <div class="resultSection">
+  <div class="profile">
+    <div class="studentInformation">
+      <span class="studentName">Name: {{ name }} </span>
+      <div class="imgContent">
+        <RouterLink :to="`/userProfile/${name}`">
+          <img class="studentImg" src="../assets/images/icons/user.png" alt="">
+        </RouterLink>
+      </div>
+      <div class="studentContent">
+        <div class="resultSection">
           <span>Best Result:</span>
-            </div>
-              <br>
-          <div class="resultSection">
-          <span class="countrySection">Countries: {{countries}}% </span>
-            <span class="progressBar">
+        </div>
+        <br>
+        <div class="resultSection">
+          <span class="countrySection">Countries: {{ countries }}% </span>
+          <span class="progressBar">
             <progress max="100" :value="countries"></progress>
               </span>
-          </div>
-              <div class="resultSection">
-          <span>Flags: {{flags}}%</span> <br>
-                <span class="progressBar">
+        </div>
+        <div class="resultSection">
+          <span>Flags: {{ flags }}%</span> <br>
+          <span class="progressBar">
                 <progress max="100" :value="flags"></progress>
                   </span>
-            </div>
-            <div class="resultSection">
-          <span>Capitals: {{capitals}}%</span> <br>
-              <span class="progressBar">
+        </div>
+        <div class="resultSection">
+          <span>Capitals: {{ capitals }}%</span> <br>
+          <span class="progressBar">
               <progress max="100" :value="capitals"></progress>
               </span>
-            </div>
-          </div>
         </div>
-          <div class="removeaStudent">
-            <v-btn v-show="!owner" @click="removeFromClassRoom(name)"  class="btnClass">Remove a student</v-btn>
-        </div>
-        </div>
+      </div>
+    </div>
+    <div class="removeaStudent">
+      <v-btn v-show="!owner" @click="removeFromClassRoom(name)" class="btnClass">Remove a student</v-btn>
+    </div>
+  </div>
 
 </template>
 
@@ -92,7 +93,7 @@ const removeFromClassRoom = (userName) =>{
   color: #EEEEEE;
   font-weight: bolder;
   margin-right: 5px;
-  margin-top:10px;
+  margin-top: 10px;
 }
 
 .imgContent {
@@ -130,7 +131,7 @@ const removeFromClassRoom = (userName) =>{
   font-weight: bold;
   gap: 1px;
   align-items: baseline;
-  display:grid;
+  display: grid;
   grid-template-columns: 280px;
   grid-template-rows: 1px;
 }

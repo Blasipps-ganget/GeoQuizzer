@@ -1,15 +1,16 @@
 <script setup>
 
 import {watch, onMounted} from 'vue'
+
 const props = defineProps({
-    amountAnswered: {
-      type: Number,
-      required: true
-    },
-    totalQuestions: {
-      type: Number,
-      required: true
-    }
+  amountAnswered: {
+    type: Number,
+    required: true
+  },
+  totalQuestions: {
+    type: Number,
+    required: true
+  }
 })
 
 onMounted(() => {
@@ -17,25 +18,23 @@ onMounted(() => {
 
       watch(() => props.amountAnswered, (newVal) => {
         if (newVal)
-          elProgress.style.width = ((newVal / props.totalQuestions)*100) + '%';
-        if(props.amountAnswered === 0)
+          elProgress.style.width = ((newVal / props.totalQuestions) * 100) + '%';
+        if (props.amountAnswered === 0)
           elProgress.style.width = '0%';
       })
-
     }
 )
 </script>
-
-
 <template>
   <div class="progress">
     <div id="progressAmount" class="progress__bar"></div>
   </div>
 </template>
 
-
 <style scoped>
-p { color: red; }
+p {
+  color: red;
+}
 
 .progress {
   margin: 5px auto;
@@ -50,15 +49,6 @@ p { color: red; }
   height: 100%;
   width: 0;
   background-color: #053B50;
-
-
-    /*animation: fill-bar 3s infinite;*/
 }
-
-/*@keyframes fill-bar {
-  from {width: 0%;}
-  to {width: 100%;}
-}*/
-
 
 </style>

@@ -13,11 +13,9 @@ export const useQuizStore = defineStore('capital', () => {
     function increment() {
         correctAmount.value++
     }
-
     function incrementCurrentQuestion() {
         currentQuestion.value++;
     }
-
     return {
         correctAnswer,
         flagUrl,

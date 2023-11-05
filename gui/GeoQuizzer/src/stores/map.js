@@ -1,10 +1,13 @@
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia'
 
 export const useMapStore = defineStore('mapStore', {
     actions: {
-        resetZoom: () => {},
-        updateMap: () => {},
-        toggleZoom: () => {},
+        resetZoom: () => {
+        },
+        updateMap: () => {
+        },
+        toggleZoom: () => {
+        },
     }
 });
 

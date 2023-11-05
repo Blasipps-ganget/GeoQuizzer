@@ -2,10 +2,7 @@ import {handleToken} from '@/js/userApi'
 
 export const postCapitalResult = async (correctAnswers, guesses, region) => {
     const accessToken = await handleToken()
-
-
     await fetch(`http://localhost:8080/capitalquiz/postResult`, {
-
         headers: {
             'Content-Type': 'application/json'
             , 'Authorization': `Bearer ${accessToken}`
@@ -17,9 +14,7 @@ export const postCapitalResult = async (correctAnswers, guesses, region) => {
             region: region
         }),
     });
-
 }
-
 
 export const fetchCapital = async (nrOfQuestions, region) => {
     const response = await fetch(`http://localhost:8080/capitalquiz/getCapitalQuestions/${nrOfQuestions}/${region}`);
@@ -27,9 +22,7 @@ export const fetchCapital = async (nrOfQuestions, region) => {
     if (!response.ok) {
         throw new Error("Failed to fetch countries");
     }
-
     const worldCountries = await response.json();
-    console.log(worldCountries)
     const result = []
     for (let index = 0; index < worldCountries.data.length; index++) {
         const info = {
@@ -40,8 +33,5 @@ export const fetchCapital = async (nrOfQuestions, region) => {
         };
         result.push(info)
     }
-
-    console.log(result)
     return {data: result, amount: worldCountries.amount}
-
 }
