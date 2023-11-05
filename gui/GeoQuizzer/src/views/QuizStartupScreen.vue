@@ -16,10 +16,16 @@ const message = computed(() => {
     return 'Learn the flags of the world';
   else if (generalStore.selectedQuiz === 'capitals')
     return 'Learn the capitals of the world';
-  else return '';
+  else return 'Something went wrong'
 });
 
-onMounted(() => generalStore.selectedRegion = '');
+onMounted(() => {
+  generalStore.selectedRegion = '';
+
+  if (generalStore.selectedQuiz !== 'flags' && generalStore.selectedQuiz !== 'capitals') {
+      generalStore.selectedQuiz = localStorage.getItem('selectedQuiz');
+  }
+});
 
 function handleRegionClick(region) {
   generalStore.selectedRegion = region;
@@ -67,7 +73,6 @@ function setToExam() {
   isSetToExam.value = true;
 }
 
-
 </script>
 <template>
   <main>
@@ -103,9 +108,7 @@ function setToExam() {
         <div class="highScoreContainer">
           <HighScoreComponent v-if="generalStore.isLoggedIn"></HighScoreComponent>
         </div>
-
       </div>
-
     </div>
   </main>
 </template>

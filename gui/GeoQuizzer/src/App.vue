@@ -2,16 +2,15 @@
 import {RouterLink, RouterView} from 'vue-router'
 
 import LoginRegistrationModal from "@/components/LoginRegistrationModal.vue";
-// const showLoginModal = ref(false);
 import {useGeneralStore} from './stores/general.js';
-import {getName, isLoggedIn} from "@/js/userApi";
-import {onMounted, ref} from "vue";
-import router from "@/router";
-
+import {getName} from "@/js/userApi";
+import {onMounted} from "vue";
 
 const generalStore = useGeneralStore()
 function selectQuiz(selection) {
   generalStore.selectedQuiz = selection
+  if(selection === 'capitals' || selection === 'flags')
+    localStorage.setItem('selectedQuiz', selection); // Saves state to localStorage for 1 browser back button press
 }
 
 const showModalLogin = () => {
@@ -27,6 +26,7 @@ const showModalRegister = () => {
 const logout = () =>{
   document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  localStorage.setItem('selectedQuiz', generalStore.selectedQuiz);
   window.location.reload();
 }
 
