@@ -112,6 +112,8 @@ onMounted(() =>{
 
 
   </div>
+
+  <div class="contentContainer">
   <div><suspense><RouterView/></suspense></div>
 
 
@@ -123,15 +125,18 @@ onMounted(() =>{
       <span>Social media</span>
     </div>
   </footer>
-  <div class="bottomFiller"></div>
+  </div>
 </template>
 
 <style scoped>
 
-.bottomFiller{
-  background-color: #176B87;
-  height: 100px;
+.contentContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 89vh;
 }
+
 
 
 /* CSS FOR HAMBURGER MENU */
