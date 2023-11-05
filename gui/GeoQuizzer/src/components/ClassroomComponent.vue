@@ -42,7 +42,6 @@ const removeStudent =(userName) =>{
 
 </script>
 <template>
-
   <div class="classroomContainer">
     <div class="headerSection">
       <h1 class="classroomTitle">Welcome to {{students.owner}}'s classroom!</h1>
