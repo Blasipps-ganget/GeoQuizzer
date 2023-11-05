@@ -14,7 +14,7 @@ const newComment = ref('');
 
 const submitComment = async () => {
   if (!newComment.value) return;
-  const commentValue = {username: userName.value, comment: newComment.value}
+  const commentValue = {username: getName(), comment: newComment.value}
   comments.value.push(commentValue);
   await createComment();
   newComment.value = '';
@@ -152,7 +152,7 @@ const createComment = async () => {
                 label="Comment"
             ></v-text-field>
             <div class="btnContent">
-              <v-btn :disabled="!newComment || generalStore.isLoggedIn" class="submitBtn" type="submit">Submit</v-btn>
+              <v-btn :disabled="!newComment || !generalStore.isLoggedIn" class="submitBtn" type="submit">Submit</v-btn>
             </div>
           </v-form>
         </v-sheet>

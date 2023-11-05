@@ -16,10 +16,10 @@ router.post("/postResult", express.json(), (req, res) => {
 
 router.get("/getCapitalQuestions/:nrOfQuestions/:region", async (req, res) => {
     const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE);
-
     const nrOfQuestions = req.params.nrOfQuestions
     const region = req.params.region
     const query = ('SELECT COUNT(countries.id) AS count FROM countries WHERE region_id = (SELECT id FROM regions WHERE name = ?)')
+
     await db.get(query, region, async (err, result) => {
         if (err) console.error(err)
         if (result) {
@@ -74,29 +74,31 @@ const getRandomUniqueCountries = (region, amount, correctCountry) => {
 
 const fetchCountries = async (region, amount) => {
     const results = [];
-    while(results.length < amount) {{
-        try {
-        let isDuplicate = true;
-        let correctCountry;
-            do {
-                correctCountry = (await getRandomCountries(region, 1))[0].name;
-                isDuplicate = results.some((question) => question.name === correctCountry);
-            } while (isDuplicate);
+    while (results.length < amount) {
+        {
+            try {
+                let isDuplicate = true;
+                let correctCountry;
+                do {
+                    correctCountry = (await getRandomCountries(region, 1))[0].name;
+                    isDuplicate = results.some((question) => question.name === correctCountry);
+                } while (isDuplicate);
 
-            const data = await getWrongCountries(correctCountry, region, 3);
-            const flagsResponse = await fetch(`https://restcountries.com/v3.1/name/${data.name}?fields=capital,coatOfArms`);
-            const flagsData = await flagsResponse.json();
-            let question = {
-                name: data.name,
-                wrongAnswers: data.wrong,
-                capital: flagsData[0].capital,
-                flagUrl: flagsData[0].coatOfArms
+                const data = await getWrongCountries(correctCountry, region, 3);
+                const flagsResponse = await fetch(`https://restcountries.com/v3.1/name/${data.name}?fields=capital,coatOfArms`);
+                const flagsData = await flagsResponse.json();
+                let question = {
+                    name: data.name,
+                    wrongAnswers: data.wrong,
+                    capital: flagsData[0].capital,
+                    flagUrl: flagsData[0].coatOfArms
+                }
+                results.push(question);
+            } catch (err) {
+                console.error(err);
             }
-            results.push(question);
-        } catch (err) {
-            console.error(err);
         }
-    }}
+    }
 
     return results
 };

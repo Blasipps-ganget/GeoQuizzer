@@ -1,8 +1,8 @@
 const sqlite3 = require('sqlite3');
-const express=require('express')
-const router=express.Router()
+const express = require('express')
+const router = express.Router()
 const dbPath = './backend/database/geoquizzer.db'
-module.exports=router;
+module.exports = router;
 express().use(express.json());
 
 router.post("/result", express.json(), (req, res) => {
@@ -20,7 +20,7 @@ router.get("/:region", (req, res) => {
 });
 
 function shuffle(array) {
-    let currentIndex = array.length,  randomIndex;
+    let currentIndex = array.length, randomIndex;
 
     while (currentIndex > 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
@@ -38,9 +38,7 @@ function connectToDatabase() {
 
 async function compareResults(results, userName) {
     let countriesFromDb = await getCountries(results.region);
-
     let amountOfQuestions = countriesFromDb.length;
-
     if (amountOfQuestions < results.answers.length) {
         console.log("Cheat detected!");
         return;
@@ -90,7 +88,6 @@ async function addToDb(data) {
     );
     db.close();
 }
-
 
 async function getAttemptNumber(user_id, db) {
     return new Promise((resolve, reject) => {

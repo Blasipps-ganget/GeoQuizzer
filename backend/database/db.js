@@ -5,19 +5,15 @@ const dbPath = './backend/database/geoquizzer.db'
 
 /* Establish a connection the database */
 const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE, (err) => {
-
     if (err) {
         console.log("no work")
         return console.error(err.message);
     }
     console.log('Connection Success', dbPath);
-
 });
-//Route för att fetcha data
+
 router.get("/insertDataFromApi", async (req, res) => {
     try {
-
-
         await insertDataFromApi();
         res.json({message: "Data inserted successfully"});
     } catch (error) {
@@ -41,14 +37,12 @@ const fetchCountryFlag = async () => {
         if (response.status === 200) {
             return response.data;
         }
-        //return europeanCountries.map((country) => country.flags.svg);
     } catch (error) {
         throw error;
     }
 };
 
 async function insertDataFromApi() {
-
     try {
         const apiData = await fetchCountryFlag();
         if (!apiData) return;
@@ -60,8 +54,7 @@ async function insertDataFromApi() {
                 if (err) {
                     console.error(err.message);
                 } else {
-                    const country_id = this.lastID; // Används för att lägga till data i regions
-
+                    const country_id = this.lastID;
                     db.run(insertRegionQuery, [region, country_id], function (err) {
                         if (err) {
                             console.error(err.message);
@@ -77,45 +70,17 @@ async function insertDataFromApi() {
     }
 }
 
-function fetchFlags(region) {
-    const query = 'SELECT countries.name FROM countries JOIN regions ON countries.id = regions.country_id WHERE regions.name = ?';
-
-    db.all(query, [region], (err, rows) => {
-        if (err) {
-            return console.error(err.message);
-        }
-        rows.forEach(row => {
-            console.log(row.name);
-        })
-    });
-
-}
-
-
-
-//1.
 createTables();
 //dropTable();
-//2.
-//insertDataFromApi();
-
-//3.
-//fetchFlags('Europe');
-
-//4.
 
 function createTables() {
-
     db.run('CREATE TABLE IF NOT EXISTS regions (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)', () => populateRegions(db));
     db.run('CREATE TABLE IF NOT EXISTS countries (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, region_id INTEGER, FOREIGN KEY(region_id) REFERENCES regions (id))', () => populateCountries(db));
     db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, password TEXT, classRoom TEXT, teacher INTEGER)');
-    db.run('CREATE TABLE IF NOT EXISTS classRoom (id INTEGER PRIMARY KEY AUTOINCREMENT, classRoomName TEXT, FOREIGN KEY(id) REFERENCES users (id))');
     db.run('CREATE TABLE IF NOT EXISTS flagquiz (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, region_id INTEGER, attemptNr INTEGER, points INTEGER, max_points INTEGER, percent INTEGER, wrongAnswers TEXT, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (region_id) REFERENCES regions(id))');
     db.run('CREATE TABLE IF NOT EXISTS capitalquiz (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, region_id INTEGER, attemptNr INTEGER, points INTEGER, max_points INTEGER, percent INTEGER, wrongAnswers TEXT, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (region_id) REFERENCES regions(id))');
     db.run('CREATE TABLE IF NOT EXISTS countryquiz (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, region_id INTEGER, attemptNr INTEGER, points INTEGER, max_points INTEGER, percent INTEGER, wrongAnswers TEXT, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (region_id) REFERENCES regions(id))');
     db.run('CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, commented_id INTEGER, comment TEXT, date DATETIME, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (commented_id) REFERENCES users(id))');
-
-
 }
 function populateRegions() {
     db.get('SELECT COUNT(*) as count FROM regions', (err, row) => {
@@ -126,9 +91,7 @@ function populateRegions() {
     });
 }
 
-
 function populateCountries() {
-
     db.get('SELECT COUNT(*) as count FROM countries', (err, row) => {
         if (err) console.error(err.message);
         else if (row.count === 0)
@@ -168,21 +131,17 @@ function populateCountries() {
 }
 
 function dropTable() {
-
+    db.run('DROP TABLE comments')
     db.run('DROP TABLE regions')
     db.run('DROP TABLE countries')
     db.run('DROP TABLE users')
-    db.run('DROP TABLE classRoom')
     db.run('DROP TABLE flagquiz')
     db.run('DROP TABLE capitalquiz')
     db.run('DROP TABLE countryquiz')
 }
 
 db.close((err) => {
-
     if (err) return console.error(err.message);
-
-
 });
 module.exports = {router};
 
