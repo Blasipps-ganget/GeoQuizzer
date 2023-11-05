@@ -7,7 +7,6 @@
   <ResultModalComponent
     :correctGuesses="quizStore.correctAmount"
         :noQuestions="generalStore.noQuestions"
-        :mapView="true"
         v-if="generalStore.showResultModal">
   </ResultModalComponent>
 </div>

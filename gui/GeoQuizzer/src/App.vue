@@ -87,6 +87,9 @@ onMounted(() =>{
       </ul>
 
     </div>
+
+
+<div class="buttonSpaceCompensation"></div>
     <div class="logo">
 
       <RouterLink to="/"><img src="./assets/images/logga.png" alt=""></RouterLink>
@@ -100,8 +103,8 @@ onMounted(() =>{
 
       </div>
       <div class="buttonsTopRight">
-        <v-btn class="custom-btn" density="default" rounded="xl" @click=" !generalStore.isLoggedIn ? showModalLogin() : this.$router.push({ path:`/userProfile/${generalStore.loggedInUser}` }); ">{{ !generalStore.isLoggedIn ? "login" : generalStore.loggedInUser}}</v-btn>
-        <v-btn class="custom-btn" density="default" rounded="xl" @click=" !generalStore.isLoggedIn ? showModalRegister(): logout();">{{ !generalStore.isLoggedIn ? 'Register' : 'Logout' }}</v-btn>
+        <v-btn class="custom-btn" density="default"  @click=" !generalStore.isLoggedIn ? showModalLogin() : this.$router.push({ path:`/userProfile/${generalStore.loggedInUser}` }); ">{{ !generalStore.isLoggedIn ? "login" : generalStore.loggedInUser}}</v-btn>
+        <v-btn class="custom-btn" density="default"  @click=" !generalStore.isLoggedIn ? showModalRegister(): logout();">{{ !generalStore.isLoggedIn ? 'Register' : 'Logout' }}</v-btn>
 
       </div>
 
@@ -120,9 +123,16 @@ onMounted(() =>{
       <span>Social media</span>
     </div>
   </footer>
+  <div class="bottomFiller"></div>
 </template>
 
 <style scoped>
+
+.bottomFiller{
+  background-color: #176B87;
+  height: 100px;
+}
+
 
 /* CSS FOR HAMBURGER MENU */
 
@@ -299,18 +309,22 @@ onMounted(() =>{
   font-size: larger;
 }
 
-.custom-btn {
+.buttonSpaceCompensation {
+  width: 30px;
+}
 
+.custom-btn {
+  text-transform: none;
+  font-family: initial;
+  font-size: 16px;
   background-color: #053B50;
+  color: white;
   display: flex;
-  color: #EEEEEE;
-  font-weight: bolder;
-  width: 85px;
+  width: 150px;
   padding: 20px;
   margin: 10px;
-  border-radius: 15px;
-  box-shadow: 1px 3px 5px 0px rgba(0,0,0,0.75);
-
+  border-radius: 5px;
+  box-shadow: 4px 7px 10px rgba(0,0,0,.4);
 }
 
 .bigMenu {

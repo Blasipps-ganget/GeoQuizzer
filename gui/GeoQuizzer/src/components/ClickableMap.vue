@@ -8,16 +8,13 @@ const props = defineProps({
   failedGuesses: Array,
   succeededGuesses: Array,
   selectingRegions: { type: Boolean, default: true },
-  scale: { type: Number, default: 140},
-  width: { type: Number, default: 885},
-  height: { type: Number, default: 650},
   markRegion: { type: Boolean, default: false}
 });
 
 const emit = defineEmits(['countryClicked', 'regionClicked']);
 const nameToIdMap = ref(new Map());
 const mouseover = ref("mouseover");
-
+const countriesMarked = ref([]);
 let europe;
 let asia;
 let africa;
@@ -26,7 +23,9 @@ let southAmerica;
 let northAmerica;
 let regionMap = {};
 let isZoomEnabled = true;
-const countriesMarked = ref([]);
+let width = 885;
+let height = 650;
+
 
 onMounted(async () => {
 
@@ -35,12 +34,8 @@ onMounted(async () => {
   mapStore.toggleZoom = toggleZoom;
 
   const svg = d3.select("#my_dataviz");
-  const width = props.width;
-  const height = props.height;
-
-
   const projection = d3.geoMercator()
-      .scale(props.scale)
+      .scale(140)
       .center([0, 20])
       .translate([width / 2, height / 2]);
 
@@ -230,8 +225,8 @@ onMounted(async () => {
 
 @media (max-width: 800px) {
   #my_dataviz {
-    width: 500px; /* Set the width to 500px when the screen is less than 800px */
-    height: auto; /* Maintain the aspect ratio */
+    width: 500px;
+    height: auto;
   }
 }
 </style>

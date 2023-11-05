@@ -1,13 +1,21 @@
 <script setup>
 import {handleToken} from "@/js/userApi";
 import { useGeneralStore } from '@/stores/general';
+import {watch, ref} from "vue";
+
 const generalStore = useGeneralStore();
+let results = await getResults();
+let resultsAsObject = JSON.parse(results);
+const region = ref(resultsAsObject.highscores);
+
+watch(() => generalStore.selectedQuiz, async () => {
+  results = await getResults();
+  resultsAsObject = JSON.parse(results);
+  region.value = resultsAsObject.highscores;
+});
 
 async function getResults() {
   const accessToken = await handleToken();
-  console.log(accessToken)
-  /* return fetch(`http://localhost:8080/highscores/?name=${userName.value}&quiz=${quiztype}`, {*/
-
   return fetch(`http://localhost:8080/highscores/?name=${generalStore.loggedInUser}&quiz=${generalStore.selectedQuiz}`, {
     headers: {'Authorization': `Bearer ${accessToken}`},
     method: 'GET',})
@@ -15,13 +23,7 @@ async function getResults() {
       .catch(error => console.error('There has been a problem with your fetch operation:', error));
 }
 
-const results = await getResults();
-const resultsAsObject = JSON.parse(results);
-const region = resultsAsObject.highscores;
-
-
 </script>
-
 
 <template>
   <div class="progressContent">
