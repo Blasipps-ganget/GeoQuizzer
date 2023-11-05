@@ -1,6 +1,6 @@
 <script setup>
 
-import {ref, computed} from "vue";
+import {ref, computed, onMounted} from "vue";
 import ClickableMap from "@/components/ClickableMap.vue";
 import { useGeneralStore } from '@/stores/general';
 import router from "@/router";
@@ -19,6 +19,8 @@ const message = computed(() => {
   else return '';
 });
 
+onMounted(() => generalStore.selectedRegion = '');
+
 function handleRegionClick(region) {
   generalStore.selectedRegion = region;
 }
@@ -36,6 +38,7 @@ function startQuiz() {
     alert('Please select a region');
     return;
   }
+
   generalStore.practiceOrExam = selectPracticeOrExam.value;
   generalStore.noQuestions = getAmountOfQuestions();
 
