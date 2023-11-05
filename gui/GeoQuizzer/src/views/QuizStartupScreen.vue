@@ -5,8 +5,8 @@ import ClickableMap from "@/components/ClickableMap.vue";
 import { useGeneralStore } from '@/stores/general';
 import router from "@/router";
 import HighScoreComponent from "@/components/HighScoreComponent.vue";
-const selectAmountOfQuestions = ref(5);
-const selectPracticeOrExam = ref("");
+const selectAmountOfQuestions = ref('5');
+const selectPracticeOrExam = ref('practice');
 const generalStore = useGeneralStore();
 const showSelectBox = ref(true);
 const isSetToExam = ref(false);
@@ -23,14 +23,21 @@ function handleRegionClick(region) {
   generalStore.selectedRegion = region;
 }
 
+function getAmountOfQuestions() {
+  if (selectAmountOfQuestions.value === 'Up to 10') return 10;
+  else if (selectAmountOfQuestions.value === 'Up to 15') return 15;
+  else if (selectAmountOfQuestions.value === 'Up to 20') return 20;
+  else if (selectAmountOfQuestions.value === 'Up to 30') return 30;
+  else return 5;
+}
+
 function startQuiz() {
   if (generalStore.selectedRegion === '') {
     alert('Please select a region');
     return;
   }
-
   generalStore.practiceOrExam = selectPracticeOrExam.value;
-  generalStore.noQuestions = selectAmountOfQuestions.value;
+  generalStore.noQuestions = getAmountOfQuestions();
 
   if (generalStore.selectedQuiz === 'flags')
     router.push({path: '/flag'});
@@ -41,7 +48,7 @@ function startQuiz() {
 function setToPractise() {
   isSetToExam.value = false;
   showSelectBox.value = true;
-  selectAmountOfQuestions.value = 5;
+  selectAmountOfQuestions.value = '5';
   selectPracticeOrExam.value = 'practice';
 }
 
@@ -51,7 +58,7 @@ function setToExam() {
     return;
   }
 
-  selectAmountOfQuestions.value = 30;
+  selectAmountOfQuestions.value = 'Up to 30';
   selectPracticeOrExam.value = 'exam';
   showSelectBox.value = false;
   isSetToExam.value = true;
@@ -84,7 +91,7 @@ function setToExam() {
             <v-select class="selectBox" v-model="selectAmountOfQuestions"
                       v-if="showSelectBox"
                       label="Nr of questions"
-                      :items="['5','10','15','20','30']"
+                      :items="['5','Up to 10','Up to 15','Up to 20','Up to 30']"
                       variant="solo-filled">
             </v-select>
 
