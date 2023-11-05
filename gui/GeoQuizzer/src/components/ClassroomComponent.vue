@@ -6,7 +6,6 @@ import {library} from '@fortawesome/fontawesome-svg-core';
 import {faPlus} from '@fortawesome/free-solid-svg-icons';
 import {getInviteLink} from '../js/classroomApi';
 import {getClassroomData} from '../js/classroomApi';
-
 import {onMounted, ref} from 'vue';
 library.add(faPlus);
 
@@ -50,18 +49,18 @@ const removeStudent =(userName) =>{
       <h1 class="classroomTitle">Welcome to {{students.owner}}'s classroom!</h1>
       <h2 class="studentTitle">Students</h2>
     </div>
-      <ClassroomPopUp :open="isOpen" @close="isOpen = !isOpen">
-        <div class="popupContent">
-          <h2 class="createClassroom">Invite-link</h2>
-          <p class="classText">Send the link to someone you want to join your classroom!</p>
-          <div class="form">
-            <input type="text" id="textField" :value="inviteLink" disabled>
-          </div>
-          <div class="copyButton">
-            <v-btn @click="copyText" :class="{'green-button': isClicked, 'popup-copy': true}">Copy</v-btn>
-          </div>
+    <ClassroomPopUp :open="isOpen" @close="isOpen = !isOpen">
+      <div class="popupContent">
+        <h2 class="createClassroom">Invite-link</h2>
+        <p class="classText">Send the link to someone you want to join your classroom!</p>
+        <div class="form">
+          <input type="text" id="textField" :value="inviteLink" disabled>
         </div>
-      </ClassroomPopUp>
+        <div class="copyButton">
+          <v-btn @click="copyText" :class="{'green-button': isClicked, 'popup-copy': true}">Copy</v-btn>
+        </div>
+      </div>
+    </ClassroomPopUp>
     <div class="classroomContent" v-if="students.length === 0">
     </div>
     <div v-else>
@@ -145,6 +144,7 @@ const removeStudent =(userName) =>{
   justify-content: center;
   text-align: center;
   display: flex;
+  margin-bottom: 50px;
 
 }
 
@@ -191,13 +191,25 @@ const removeStudent =(userName) =>{
   margin-top: 50px;
   text-align: center;
 }
+
+@media (max-width: 1050px)
+{
+  .row{
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 650px)
+{
+  .row{
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 500px)
 {
   .headerSection{
     text-align: center;
-  }
-  .row{
-    display: grid;
   }
 }
 </style>
