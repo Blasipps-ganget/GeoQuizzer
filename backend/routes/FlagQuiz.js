@@ -24,11 +24,10 @@ router.get("/getFlagQuestions/:nrOfQuestions/:region", async (req, res) => {
     await db.get(query, region, async (err, result) => {
         if (err) console.error(err)
         if (result) {
-            console.log(result.count)
             if (result.count <= 30) {
-                res.status(200).send(await fetchCountries(region, result.count))
+                res.status(200).send({data: await fetchCountries(region, result.count), amount: result.count})
             } else {
-                res.status(200).send(await fetchCountries(region, nrOfQuestions))
+                res.status(200).send({data: await fetchCountries(region, nrOfQuestions), amount: nrOfQuestions})
             }
         }
     })
@@ -75,22 +74,31 @@ const getRandomUniqueCountries = (region, amount, correctCountry) => {
 
 const fetchCountries = async (region, amount) => {
     const results = [];
-    for (let i = 0; i < amount; i++) {
-        try {
-            const correctCountry = (await getRandomCountries(region, 1))[0].name;
-            const data = await getWrongCountries(correctCountry, region, 3);
-            const flagsResponse = await fetch(`https://restcountries.com/v3.1/name/${data.name}?fields=flags`);
-            const flagsData = await flagsResponse.json();
-            let question = {
-                name: data.name,
-                wrongAnswers: data.wrong,
-                flagUrl: flagsData[0].flags
+    while (results.length < amount) {
+        {
+            try {
+                let isDuplicate = true;
+                let correctCountry;
+                do {
+                    correctCountry = (await getRandomCountries(region, 1))[0].name;
+                    isDuplicate = results.some((question) => question.name === correctCountry);
+                } while (isDuplicate);
+
+                const data = await getWrongCountries(correctCountry, region, 3);
+                const flagsResponse = await fetch(`https://restcountries.com/v3.1/name/${data.name}?fields=flags`);
+                const flagsData = await flagsResponse.json();
+                let question = {
+                    name: data.name,
+                    wrongAnswers: data.wrong,
+                    flagUrl: flagsData[0].flags
+                }
+                results.push(question);
+            } catch (err) {
+                console.error(err);
             }
-            results.push(question);
-        } catch (err) {
-            console.error(err);
         }
     }
+    console.log(results);
     return results
 };
 
@@ -127,7 +135,7 @@ async function addToDb(data) {
     const db = await connectToDatabase();
     const attemptNr = await getAttemptNumber(data.user_id, db);
     const region_id = await getRegionId(db, data.region);
-    const query = 'INSERT INTO capitalquiz (user_id, region_id, attemptNr, points, max_points, percent, wrongAnswers) VALUES (?, ?, ?, ?, ?,?,?)';
+    const query = 'INSERT INTO flagquiz (user_id, region_id, attemptNr, points, max_points, percent, wrongAnswers) VALUES (?, ?, ?, ?, ?,?,?)';
     db.run(query, [data.user_id, region_id, attemptNr, data.points, data.maxPoints, data.percent, data.wrongAnswers], err => err ? console.log(err.message) : console.log("Successfully added to db"));
     db.close();
 }
@@ -160,6 +168,7 @@ function connectToDatabase() {
         const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE, (err) => err ? reject(err) : resolve(db));
     });
 }
+
 const getNameFromToken = (req) => {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]

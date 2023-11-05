@@ -31,15 +31,17 @@ export const fetchCapital = async (nrOfQuestions, region) => {
     const worldCountries = await response.json();
     console.log(worldCountries)
     const result = []
-    for (let index = 0; index < worldCountries.length; index++) {
+    for (let index = 0; index < worldCountries.data.length; index++) {
         const info = {
-            land: worldCountries[index].name,
-            flagurl: worldCountries[index].flagUrl,
-            felsvar: worldCountries[index].wrongAnswers,
-            capital: worldCountries[index].capital
+            land: worldCountries.data[index].name,
+            flagurl: worldCountries.data[index].flagUrl,
+            felsvar: worldCountries.data[index].wrongAnswers,
+            capital: worldCountries.data[index].capital
         };
         result.push(info)
     }
 
-    return result;
+    console.log(result)
+    return {data: result, amount: worldCountries.amount}
+
 }
