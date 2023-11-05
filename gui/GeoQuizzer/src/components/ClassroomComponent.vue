@@ -15,7 +15,6 @@ const showButtonContent = ref(true);
 const isOpen = ref(false);
 const isClicked = ref(false);
 
-
 onMounted(async () => {
   try {
     students.value = await getClassroomData();

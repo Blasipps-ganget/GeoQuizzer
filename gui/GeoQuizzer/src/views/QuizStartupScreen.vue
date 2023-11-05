@@ -73,7 +73,6 @@ function setToExam() {
   isSetToExam.value = true;
 }
 
-
 </script>
 <template>
   <main>
