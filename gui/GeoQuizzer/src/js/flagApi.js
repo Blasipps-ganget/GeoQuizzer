@@ -24,16 +24,16 @@ export const fetchCountryFlag = async (nrOfQuestions, region) => {
     if (!response.ok) {
         throw new Error("Failed to fetch countries");
     }
-
     const worldCountries = await response.json();
     const result = []
-    for (let index = 0; index < worldCountries.length; index++) {
+    for (let index = 0; index < worldCountries.data.length; index++) {
         const info = {
-            land: worldCountries[index].name,
-            flagurl: worldCountries[index].flagUrl,
-            felsvar: worldCountries[index].wrongAnswers
+            land: worldCountries.data[index].name,
+            flagurl: worldCountries.data[index].flagUrl,
+            felsvar: worldCountries.data[index].wrongAnswers
         };
         result.push(info)
     }
-    return result;
+    console.log(result)
+    return {data: result, amount: worldCountries.amount}
 }

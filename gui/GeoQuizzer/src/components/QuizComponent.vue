@@ -69,36 +69,27 @@ const props = defineProps({
 });
 
 const nextQuestion = () => {
-  index.value++;
-  if (index.value < generalStore.noQuestions) {
+  if (quizStore.currentQuestion < generalStore.noQuestions) {
     if (generalStore.selectedQuiz === "capitals") {
-      quizStore.correctAnswer = questionData[index.value].land
-      quizStore.capitalName = questionData[index.value].capital[0]
-      quizStore.flagUrl = questionData[index.value].flagurl.svg
-      quizStore.wrongAnswers = questionData[index.value].felsvar
-    } else {
-      quizStore.correctAnswer = questionData[index.value].land
-      quizStore.flagUrl = questionData[index.value].flagurl.svg
-      quizStore.wrongAnswers = questionData[index.value].felsvar
+      quizStore.capitalName = questionData.data[quizStore.currentQuestion].capital[0]
     }
+    quizStore.correctAnswer = questionData.data[quizStore.currentQuestion].land
+    quizStore.flagUrl = questionData.data[quizStore.currentQuestion].flagurl.svg
+    quizStore.wrongAnswers = questionData.data[quizStore.currentQuestion].felsvar
   }
 }
 
 const displayNext = async () => {
-  nextQuestion()
-  console.log("currentQuestion",quizStore.currentQuestion)
-  console.log("noQuestions",generalStore.noQuestions)
-  quizStore.currentQuestion++;
-  if (quizStore.currentQuestion === generalStore.noQuestions) {
+  quizStore.incrementCurrentQuestion();
+  if (quizStore.currentQuestion == generalStore.noQuestions) {
     generalStore.showResultModal = true;
     if (props.currentQuiz === "capital") {
       await postCapitalResult(correctAnswersArray, guessesArray, generalStore.selectedRegion)
-      quizStore.correctAmount = 0;
     } else {
       await postFlagResult(correctAnswersArray, guessesArray, generalStore.selectedRegion)
-      quizStore.correctAmount = 0;
     }
   } else {
+    nextQuestion()
     generateRandomAnswers();
     showMessage.value = true;
   }
@@ -123,7 +114,8 @@ const generateRandomAnswers = async () => {
 };
 
 onMounted(async () => {
-  generalStore.currentQuestion = 0;
+  quizStore.correctAmount = 0;
+  quizStore.currentQuestion = 0;
   guessesArray = [];
   correctAnswersArray = [];
   if (generalStore.practiceOrExam === 'exam') {
@@ -132,16 +124,15 @@ onMounted(async () => {
 
   if (props.currentQuiz === 'capital') {
     questionData = await fetchCapital(generalStore.noQuestions, generalStore.selectedRegion);
-    quizStore.correctAnswer = questionData[index.value].land;
-    quizStore.capitalName = questionData[index.value].capital[0];
-    quizStore.flagUrl = questionData[index.value].flagurl.svg;
-    quizStore.wrongAnswers = questionData[index.value].felsvar;
+    quizStore.capitalName = questionData.data[quizStore.currentQuestion].capital[0];
   } else {
     questionData = await fetchCountryFlag(generalStore.noQuestions, generalStore.selectedRegion);
-    quizStore.correctAnswer = questionData[index.value].land;
-    quizStore.flagUrl = questionData[index.value].flagurl.svg;
-    quizStore.wrongAnswers = questionData[index.value].felsvar;
   }
+
+  quizStore.correctAnswer = questionData.data[quizStore.currentQuestion].land;
+  quizStore.flagUrl = questionData.data[quizStore.currentQuestion].flagurl.svg;
+  quizStore.wrongAnswers = questionData.data[quizStore.currentQuestion].felsvar;
+  generalStore.noQuestions = questionData.amount;
   await generateRandomAnswers();
 });
 

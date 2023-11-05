@@ -17,18 +17,16 @@ router.post("/postResult", express.json(), (req, res) => {
 router.get("/getCapitalQuestions/:nrOfQuestions/:region", async (req, res) => {
     const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE);
 
-    console.log(req.params)
     const nrOfQuestions = req.params.nrOfQuestions
     const region = req.params.region
     const query = ('SELECT COUNT(countries.id) AS count FROM countries WHERE region_id = (SELECT id FROM regions WHERE name = ?)')
     await db.get(query, region, async (err, result) => {
         if (err) console.error(err)
         if (result) {
-            console.log(result.count)
             if (result.count <= 30) {
-                res.status(200).send(await fetchCountries(region, result.count))
+                res.status(200).send({data: await fetchCountries(region, result.count), amount: result.count})
             } else {
-                res.status(200).send(await fetchCountries(region, nrOfQuestions))
+                res.status(200).send({data: await fetchCountries(region, nrOfQuestions), amount: nrOfQuestions})
             }
         }
     })
@@ -76,25 +74,29 @@ const getRandomUniqueCountries = (region, amount, correctCountry) => {
 
 const fetchCountries = async (region, amount) => {
     const results = [];
-    for (let i = 0; i < amount; i++) {
+    while(results.length < amount) {{
         try {
-            const correctCountry = (await getRandomCountries(region, 1))[0].name;
+        let isDuplicate = true;
+        let correctCountry;
+            do {
+                correctCountry = (await getRandomCountries(region, 1))[0].name;
+                isDuplicate = results.some((question) => question.name === correctCountry);
+            } while (isDuplicate);
+
             const data = await getWrongCountries(correctCountry, region, 3);
             const flagsResponse = await fetch(`https://restcountries.com/v3.1/name/${data.name}?fields=capital,coatOfArms`);
             const flagsData = await flagsResponse.json();
-            console.log(flagsData);
             let question = {
                 name: data.name,
                 wrongAnswers: data.wrong,
                 capital: flagsData[0].capital,
                 flagUrl: flagsData[0].coatOfArms
             }
-
             results.push(question);
         } catch (err) {
             console.error(err);
         }
-    }
+    }}
 
     return results
 };
@@ -165,6 +167,7 @@ function connectToDatabase() {
         const db = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE, (err) => err ? reject(err) : resolve(db));
     });
 }
+
 const getNameFromToken = (req) => {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
