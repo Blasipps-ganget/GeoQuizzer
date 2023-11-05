@@ -14,7 +14,6 @@
     "concurrently": "^8.2.1"
   },
   "dependencies": {
-    "@fortawesome/vue-fontawesome": "^3.0.3",
     "eslint": "^8.52.0"
   }
 }

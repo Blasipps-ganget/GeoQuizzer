@@ -51,10 +51,12 @@ const questionsAnswered = ref(0);
 const totalScore = ref(0);
 const showMessage = ref(false);
 const answerSubmitted = ref(false);
+
 let buttonPressed = ref(false);
 let correctCountry = ref('');
 let message = ref ('');
 let resultText = ref('');
+let landlist = [];
 
 const displayNext = () => {
   if(questionsAnswered.value < 10 && answerSubmitted.value){
@@ -71,14 +73,11 @@ const displayNext = () => {
     showMessage.value = true;
   }
 
-
   btn0color = normalColor;
   btn1color = normalColor;
   btn2color = normalColor;
   btn3color = normalColor;
 }
-
-let landlist = [];
 
 const generateRandomAnswers = async () => {
   buttonPressed.value = false;
@@ -95,17 +94,11 @@ const generateRandomAnswers = async () => {
     shuffleArray(answers);
     landlist = {...answers};
 
-
     answerOne.value = answers[0];
     answerTwo.value = answers[1];
     answerThree.value =  answers[2];
     answerFour.value = answers[3];
-
-    console.log("flaggUrl: " + data.value.flagUrl)
-    console.log("Fel länder : " + data.value.wrongAnswers)
-    console.log("Korrekt land : " + data.value.country)
   } catch (error) {
-    console.error(error);
   }
 };
 
@@ -137,7 +130,6 @@ const resetQuiz = async () => {
   await generateRandomAnswers();
 }
 
-// Validering av svar
 const checkAnswer = async (selectedAnswer) => {
   showMessage.value = true;
   buttonPressed.value = true;
@@ -148,8 +140,6 @@ const checkAnswer = async (selectedAnswer) => {
     if (questionsAnswered.value < 10) {
       totalScore.value += 1;
     }
-    console.log('Correct!');
-    console.log(landlist);
     if (selectedAnswer === answerOne.value) {
       btn0color = correctColor;
     } else if (selectedAnswer === answerTwo.value) {
@@ -162,7 +152,6 @@ const checkAnswer = async (selectedAnswer) => {
   } else {
     correctAnswer.value = false;
     message.value = `Incorrect, the correct answer is: ${correctCountry.value.land}`;
-    console.log('Incorrect!');
     if (selectedAnswer === answerOne.value) {
       btn0color = wrongColor;
     } else if (selectedAnswer === answerTwo.value) {
@@ -261,7 +250,6 @@ body {
   margin-top: 20px;
 }
 
-
 .btn-option {
   font-size: 14px;
   color: #fff;
@@ -276,10 +264,7 @@ body {
   overflow: hidden;
   border-radius: 10px;
   margin-top: 20px;
-
 }
-
-
 
 .btn::after, .btn::before{
   content: '';
@@ -323,10 +308,6 @@ body {
 .resultText {
   font-size: 30px;
 }
-
-
-
-
 
 </style>
       

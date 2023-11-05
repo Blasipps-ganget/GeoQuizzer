@@ -96,7 +96,6 @@ const createComment = async () => {
       throw new Error('Failed to create a comment');
     }
   } catch (error) {
-    console.error('Error');
     throw error;
   }
 };
@@ -170,23 +169,28 @@ const createComment = async () => {
   .centerComment {
     margin-top: 80px;
   }
+
   .userContainer {
     display: flex;
     align-items: stretch;
     flex-direction: column;
   }
+
   .userContent {
     width: 375px;
   }
+
   .resultContent {
     display: flex;
     height: 565px;
     width: 310px;
   }
+
   .resultItem {
     margin-bottom: 200px;
     height: 10px;
   }
+
   .comment-section {
 
   }
@@ -196,12 +200,15 @@ const createComment = async () => {
     margin-bottom: 10px;
   }
 }
+
 .centerTitle {
   margin-bottom: 13px;
 }
+
 .resultItem2 {
   margin-top: 100px;
 }
+
 .listRegions {
   margin-right: 20px;
   font-size: large;
@@ -217,13 +224,12 @@ const createComment = async () => {
 
   background-color: #053B50;
   color: #EEEEEE;
-
-
 }
 
 .commentsAmount {
   color: #053B50;
 }
+
 .commentsList {
   margin-top: 20px;
   display: flex;

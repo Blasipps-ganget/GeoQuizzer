@@ -35,6 +35,7 @@ const acceptInvitation = async () => {
     }
   })
 }
+
 </script>
 <template>
     <home-view></home-view>

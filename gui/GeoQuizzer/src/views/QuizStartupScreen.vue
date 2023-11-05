@@ -89,7 +89,7 @@ function setToExam() {
         <div class="selectionButtons">
 
           <div class="onlyButtons">
-            <v-btn :class="{ lightButton: !isSetToExam, blueButton: isSetToExam }" @click="setToPractise">Practise</v-btn>
+            <v-btn :class="{ lightButton: !isSetToExam, blueButton: isSetToExam }" @click="setToPractise">Practice</v-btn>
             <v-btn :class="{ lightButton: isSetToExam, blueButton: !isSetToExam }" @click="setToExam">Exam</v-btn>
             <div class="buttonContent">
               <v-btn class="blueButton" @click="startQuiz()">Start Quiz</v-btn>
@@ -133,14 +133,12 @@ function setToExam() {
   gap: 40px;
   margin: 100px auto;
 
-
 }
 
 .onlyButtons {
   display: flex;
   flex-direction: column;
   margin-bottom: auto;
-
 }
 
 .highScoreContainer{
@@ -150,7 +148,6 @@ function setToExam() {
 
 .buttonContent {
   display: flex;
-
   flex-direction: column;
   justify-content: center;
 }

@@ -37,9 +37,7 @@ onMounted(() => {
 });
 
 async function handleCountryClick(answer) {
-
   if (!question.value) return;
-
   if (answer === question.value)
     succeededGuesses.value.push(question.value);
   else
@@ -49,7 +47,6 @@ async function handleCountryClick(answer) {
   answerArray.value.push(answer);
   question.value = includedCountries.value[questionIndex];
   if (!question.value) {
-
     await sleep(500);
     await handleResults();
     await resetQuiz();
@@ -62,8 +59,6 @@ async function handleResults() {
   if (!isSetToExam.value) return;
 
   const accessToken = await handleToken();
-  console.log("token",accessToken)
-
   await fetch(`http://localhost:8080/countryquiz/result?name=${generalStore.loggedInUser}`, {
     headers: {
       'Content-Type': 'application/json',
@@ -88,9 +83,7 @@ async function handleRegionClick(region) {
   if (!region) return;
   selectingRegions.value = false;
   includedCountries.value = await d3.json(`http://localhost:8080/countryquiz/${region}?shuffle=true`);
-
   question.value = includedCountries.value[0];
-
 }
 
 async function resetQuiz() {
@@ -107,7 +100,6 @@ async function resetQuiz() {
 
 function toggleZoom() {
   mapStore.toggleZoom();
-  console.log("toggleZoom");
   isZoomEnabled.value = !isZoomEnabled.value;
 }
 
@@ -307,7 +299,6 @@ Learn the flags of the world
 
 @media (max-width: 800px) {
 
-
   .question, .title {
     color: white;
     font-size: 30px;
@@ -325,7 +316,6 @@ Learn the flags of the world
 }
 @media (max-width: 500px) {
 
-
   .question, .title {
     color: white;
     font-size: 20px;
@@ -341,6 +331,7 @@ Learn the flags of the world
 }
 
 @media (max-width: 375px) {
+
   .title {
     font-size: 18px;
   }

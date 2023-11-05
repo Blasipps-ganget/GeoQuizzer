@@ -48,7 +48,6 @@ let message = ref('');
 let correctAnswersArray = [];
 let guessesArray = [];
 
-
 const generalStore = useGeneralStore();
 const quizStore = useQuizStore();
 const normalColor = "#053B50";
@@ -59,7 +58,6 @@ let btn0color = normalColor;
 let btn1color = normalColor;
 let btn2color = normalColor;
 let btn3color = normalColor;
-const index = ref(0);
 
 let questionData;
 const showColors = computed(() => generalStore.practiceOrExam === 'practice');
@@ -93,6 +91,7 @@ const displayNext = async () => {
     generateRandomAnswers();
     showMessage.value = true;
   }
+
   btn0color = normalColor;
   btn1color = normalColor;
   btn2color = normalColor;
@@ -110,7 +109,6 @@ const generateRandomAnswers = async () => {
   answerTwo.value = answers[1];
   answerThree.value = answers[2];
   answerFour.value = answers[3];
-
 };
 
 onMounted(async () => {
@@ -225,7 +223,6 @@ const checkAnswer = async (selectedAnswer) => {
 
 body {
   height: 100vh;
-  width: 100wh;
   display: flex;
   align-items: center;
   justify-content: center;

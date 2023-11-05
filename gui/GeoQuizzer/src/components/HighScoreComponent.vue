@@ -24,7 +24,6 @@ async function getResults() {
 }
 
 </script>
-
 <template>
   <div class="progressContent">
     <h2>Best Result:</h2>
@@ -33,11 +32,7 @@ async function getResults() {
     </div>
   </div>
 </template>
-
-
-
 <style scoped>
-
 
 .progressContent {
   justify-content: space-between;
@@ -51,6 +46,5 @@ async function getResults() {
   border-radius: 8px;
   color: white;
 }
-
 
 </style>

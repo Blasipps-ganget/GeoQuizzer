@@ -3,13 +3,12 @@ const classroomEndpoint = "http://localhost:8080/classroom/";
 
 export const getClassroomData = async () => {
     const name = getName()
-    console.log(name)
     return fetch((classroomEndpoint + "getStudentsInClassRoom/" + name)).then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to fetch the list of strings');
-            }
-            return response.json();
-        })
+        if (!response.ok) {
+            throw new Error('Failed to fetch the list of strings');
+        }
+        return response.json();
+    })
         .then(stringList => {
             const stringsArray = stringList;
             const restCalls = stringsArray.students.map((student) => {
@@ -17,7 +16,7 @@ export const getClassroomData = async () => {
                 return fetch(classroomEndpoint + "getClassroom/" + student.name)
                     .then(response => {
                         if (!response.ok) {
-                            console.log("ERROR")
+                            console.log("Error")
                         }
                         return response.json();
                     })
@@ -25,7 +24,7 @@ export const getClassroomData = async () => {
                         return null;
                     });
             });
-           return Promise.all(restCalls)
+            return Promise.all(restCalls)
                 .then(results => {
                     console.log(results)
                     return {
@@ -34,14 +33,14 @@ export const getClassroomData = async () => {
                     }
                 })
                 .catch(() => {
-                    console.log("catch err")
+                    console.log("Error")
                 });
         })
         .catch(() => {
-            console.log("catch err")
+            console.log("Error")
         });
-
 }
+
 export const getInviteLink = async () => {
     try {
         const name = getName();
@@ -64,6 +63,4 @@ export const removeStudent = async (userName) => {
         headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`},
         body: JSON.stringify({userName: userName})
     })
-
 }
-

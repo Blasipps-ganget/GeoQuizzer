@@ -1,15 +1,11 @@
 <script setup>
-
-
 import UserPage from "@/components/UserPage.vue";
-</script>
 
+</script>
 <template>
 
-<UserPage/>
+  <UserPage/>
 
 </template>
-
 <style scoped>
-
 </style>

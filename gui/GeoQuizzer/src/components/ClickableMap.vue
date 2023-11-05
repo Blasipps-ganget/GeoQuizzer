@@ -1,14 +1,14 @@
 <script setup>
 import * as d3 from 'd3';
-import { ref, onMounted} from 'vue';
-import { useMapStore } from '@/stores/map';
+import {ref, onMounted} from 'vue';
+import {useMapStore} from '@/stores/map';
 
 const mapStore = useMapStore();
 const props = defineProps({
   failedGuesses: Array,
   succeededGuesses: Array,
-  selectingRegions: { type: Boolean, default: true },
-  markRegion: { type: Boolean, default: false}
+  selectingRegions: {type: Boolean, default: true},
+  markRegion: {type: Boolean, default: false}
 });
 
 const emit = defineEmits(['countryClicked', 'regionClicked']);
@@ -26,9 +26,7 @@ let isZoomEnabled = true;
 let width = 885;
 let height = 650;
 
-
 onMounted(async () => {
-
   mapStore.resetZoom = resetZoom;
   mapStore.updateMap = updateMap;
   mapStore.toggleZoom = toggleZoom;
@@ -44,7 +42,6 @@ onMounted(async () => {
 
   const geoData = await d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson");
   await populateRegions();
-
 
   geoData.features.forEach(feature => nameToIdMap.value.set(feature.properties.name, feature.id));
   appendCountryPaths(geoData);
@@ -67,7 +64,7 @@ onMounted(async () => {
         .on("click", mouseClick);
   }
 
-  function updateMap(){
+  function updateMap() {
     svg.selectAll("path.Country")
         .attr("d", d3.geoPath().projection(projection))
         .attr("fill", d => getCountryColor(d))
@@ -78,12 +75,10 @@ onMounted(async () => {
     if (!props.selectingRegions) {
       if (props.failedGuesses.map(getIdFromName).includes(d.id)) return "red";
       if (props.succeededGuesses.map(getIdFromName).includes(d.id)) return "green";
-    }
-    else if (props.markRegion)
+    } else if (props.markRegion)
       if (countriesMarked.value.map(getIdFromName).includes(d.id)) return "#022831";
     return "lightgrey";
   }
-
 
   function mouseOver() {
     mouseover.value = d3.select(this).datum().properties.name;
@@ -112,7 +107,7 @@ onMounted(async () => {
     const hoveredCountryName = d3.select(this).datum().properties.name;
     const region = findRegionForCountry(hoveredCountryName);
     const regionArray = regionMap[region];
-    if(!regionArray)
+    if (!regionArray)
       return;
 
     d3.selectAll(".Country")
@@ -149,16 +144,40 @@ onMounted(async () => {
 
     if (props.selectingRegions) {
 
-      let fractionX; // 0 is leftmost, 1 is rightmost, 0.5 is middle
-      let fractionY; // 0 is topmost, 1 is bottommost, 0.5 is middle
-      let scale;       // 1 is normal, 2 is double size, 0.5 is half size
+      let fractionX;
+      let fractionY;
+      let scale;
 
-      if (region === "europe") { fractionX = 0.55; fractionY = 0.25; scale = 3.8; }
-      if (region === "asia") { fractionX = 0.9; fractionY = 0.41; scale = 2.8; }
-      if (region === "oceania") { fractionX = 1; fractionY = 0.721; scale = 5; }
-      if (region === "africa") { fractionX = 0.6; fractionY = 0.6; scale = 3.4; }
-      if (region === "northAmerica") { fractionX = 0.15; fractionY = 0.3; scale = 2.8; }
-      if (region === "southAmerica") { fractionX = 0.22; fractionY = 0.758; scale = 3.25; }
+      if (region === "europe") {
+        fractionX = 0.55;
+        fractionY = 0.25;
+        scale = 3.8;
+      }
+      if (region === "asia") {
+        fractionX = 0.9;
+        fractionY = 0.41;
+        scale = 2.8;
+      }
+      if (region === "oceania") {
+        fractionX = 1;
+        fractionY = 0.721;
+        scale = 5;
+      }
+      if (region === "africa") {
+        fractionX = 0.6;
+        fractionY = 0.6;
+        scale = 3.4;
+      }
+      if (region === "northAmerica") {
+        fractionX = 0.15;
+        fractionY = 0.3;
+        scale = 2.8;
+      }
+      if (region === "southAmerica") {
+        fractionX = 0.22;
+        fractionY = 0.758;
+        scale = 3.25;
+      }
 
       let translateX = (width * fractionX) - (scale * width * fractionX);
       let translateY = (height * fractionY) - (scale * height * fractionY);

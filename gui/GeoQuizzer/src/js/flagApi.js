@@ -1,8 +1,7 @@
 import {handleToken} from '@/js/userApi'
 
-export const postFlagResult = async (correctAnswers, guesses,region) => {
+export const postFlagResult = async (correctAnswers, guesses, region) => {
     const accessToken = await handleToken()
-
     await fetch(`http://localhost:8080/flagquiz/postResult`, {
         headers: {
             'Content-Type': 'application/json'
@@ -15,7 +14,6 @@ export const postFlagResult = async (correctAnswers, guesses,region) => {
             region: region
         }),
     });
-
 }
 
 export const fetchCountryFlag = async (nrOfQuestions, region) => {
@@ -34,6 +32,5 @@ export const fetchCountryFlag = async (nrOfQuestions, region) => {
         };
         result.push(info)
     }
-    console.log(result)
     return {data: result, amount: worldCountries.amount}
 }
